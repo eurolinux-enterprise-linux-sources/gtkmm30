@@ -23,29 +23,24 @@ namespace Gtk
 
 ComboBoxText::ComboBoxText(bool has_entry)
 :
-  //TODO The settings of entry-text-column and id-column can be removed,
-  //when old versions of GTK+ (before 2011-12-30) need not be supported.
-  //These properties are now set in gtk_combo_box_text_constructor().
-  //See bug 612396 (gtk+) and 653579 (gtkmm).
-
   //The entry-text-column and id-column values are copied from gtk_combo_box_text_new():
-  _CONSTRUCT("has-entry", gboolean(has_entry), "entry-text-column", 0, "id-column", 1)
+  _CONSTRUCT("has-entry", gboolean(has_entry))
 {}
 
 void ComboBoxText::set_active_text(const Glib::ustring& text)
 {
   //Look for the row with this text, and activate it:
-  Glib::RefPtr<Gtk::TreeModel> model = get_model();
+  auto model = get_model();
   if(model)
   {
-    for(Gtk::TreeModel::iterator iter = model->children().begin(); iter != model->children().end(); ++iter)
+    for(const auto& row : model->children())
     {
       Glib::ustring this_text;
-      iter->get_value(0, this_text);
+      row.get_value(0, this_text);
 
       if(this_text == text)
       {
-        set_active(iter);
+        set_active(row);
         return; //success
       }
     }

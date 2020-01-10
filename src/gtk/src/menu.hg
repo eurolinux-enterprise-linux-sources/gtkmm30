@@ -18,7 +18,7 @@
 _DEFS(gtkmm,gtk)
 _PINCLUDE(gtkmm/private/menushell_p.h)
 
-//#include <gtk/gtkmenu.h>
+#include <gdkmm/window.h>
 #include <gtkmm/menushell.h>
 #include <gtkmm/menuitem.h>
 
@@ -40,10 +40,26 @@ class AccelGroup;
 class Menu : public MenuShell
 {
   _CLASS_GTKOBJECT(Menu,GtkMenu,GTK_MENU,Gtk::MenuShell,GtkMenuShell)
-
-  _IGNORE(gtk_menu_append, gtk_menu_prepend, gtk_menu_insert) //deprecated.
 public:
   _CTOR_DEFAULT
+
+  //This is custom-implemented because the gtk_menu_new_from_model() does more
+  //than just call g_object_new. See https://bugzilla.gnome.org/show_bug.cgi?id=704671
+  /** Creates a new Menu and populates it with menu items
+   * and submenus according to the @a model.
+   *
+   * The created menu items are connected to actions found in the
+   * ApplicationWindow to which the menu belongs - typically
+   * by means of being attached to a widget (see attach_to_widget())
+   * that is contained within the ApplicationWindow's widget hierarchy.
+   *
+   * @param model
+   *
+   * @newin{3,10}
+   */
+  explicit Menu(const Glib::RefPtr<Gio::MenuModel>& model);
+  _IGNORE(gtk_menu_new_from_model)
+
 
 /* append, prepend, and insert are defined in MenuShell */
 
@@ -69,6 +85,7 @@ public:
    * @param position_calc_slot A user supplied function used to position the menu, or <tt>0</tt>.
    * @param button The mouse button which was pressed to initiate the event.
    * @param activate_time The time at which the activation event occurred.
+   * @param device A Gdk::Device.
    */
   void popup(const SlotPositionCalc& position_calc_slot, guint button, guint32 activate_time, const Glib::RefPtr<Gdk::Device>& device = Glib::RefPtr<Gdk::Device>());
 
@@ -76,8 +93,13 @@ public:
    * Applications can use this function to display context-sensitive menus, at the current pointer position.
    * @param button The button which was pressed to initiate the event.
    * @param activate_time The time at which the activation event occurred.
+   * @param device A Gdk::Device.
    */
   void popup(guint button, guint32 activate_time, const Glib::RefPtr<Gdk::Device>& device = Glib::RefPtr<Gdk::Device>());
+
+  _WRAP_METHOD(void popup_at_rect(const Glib::RefPtr<Gdk::Window>& rect_window, const Gdk::Rectangle& rect, Gdk::Gravity rect_anchor, Gdk::Gravity menu_anchor, const GdkEvent* trigger_event), gtk_menu_popup_at_rect)
+  _WRAP_METHOD(void popup_at_widget(Widget* widget, Gdk::Gravity widget_anchor, Gdk::Gravity menu_anchor, const GdkEvent* trigger_event), gtk_menu_popup_at_widget)
+  _WRAP_METHOD(void popup_at_pointer(const GdkEvent* trigger_event), gtk_menu_popup_at_pointer)
 
   _WRAP_METHOD(void reposition(), gtk_menu_reposition)
 
@@ -99,18 +121,23 @@ public:
   _WRAP_METHOD(Widget* get_attach_widget(), gtk_menu_get_attach_widget)
   _WRAP_METHOD(const Widget* get_attach_widget() const, gtk_menu_get_attach_widget, constversion)
 
-  _WRAP_METHOD(void set_tearoff_state(bool torn_off = true), gtk_menu_set_tearoff_state)
-  _WRAP_METHOD(bool get_tearoff_state() const, gtk_menu_get_tearoff_state)
+  _WRAP_METHOD(void set_tearoff_state(bool torn_off = true), gtk_menu_set_tearoff_state, deprecated "No replacement available.")
+  _WRAP_METHOD(bool get_tearoff_state() const, gtk_menu_get_tearoff_state, deprecated "No replacement available.")
 
-  _WRAP_METHOD(void set_title(const Glib::ustring& title), gtk_menu_set_title)
+  _WRAP_METHOD(void set_title(const Glib::ustring& title), gtk_menu_set_title, deprecated "No replacement available.")
+_DEPRECATE_IFDEF_START
+  /** @deprecated No replacement available.
+   */
   void unset_title();
-  _WRAP_METHOD(Glib::ustring get_title() const, gtk_menu_get_title)
+_DEPRECATE_IFDEF_END
+  _WRAP_METHOD(Glib::ustring get_title() const, gtk_menu_get_title, deprecated "No replacement available.")
   _WRAP_METHOD(void set_screen(const Glib::RefPtr<Gdk::Screen>& screen), gtk_menu_set_screen)
 
   _WRAP_METHOD(void attach(Gtk::Widget& child, guint left_attach, guint right_attach, guint top_attach, guint bottom_attach), gtk_menu_attach)
 
   _WRAP_METHOD(void set_monitor(int monitor_num), gtk_menu_set_monitor)
   _WRAP_METHOD(int get_monitor() const, gtk_menu_get_monitor)
+  //TODO: Wrap or ignore gtk_menu_place_on_monitor(). It's not documented. Does it mean it's private?
 
   void reorder_child(const MenuItem& child, int position);
   _IGNORE(gtk_menu_reorder_child)
@@ -118,25 +145,8 @@ public:
   _WRAP_METHOD(void set_reserve_toggle_size(bool reserve_toggle_size = true), gtk_menu_set_reserve_toggle_size)
   _WRAP_METHOD(bool get_reserve_toggle_size() const, gtk_menu_get_reserve_toggle_size)
 
-  _IGNORE_SIGNAL("move_scroll")
-
-
-  _WRAP_PROPERTY("active", int)
-  _WRAP_PROPERTY("accel-group", Glib::RefPtr<AccelGroup>)
-  _WRAP_PROPERTY("accel-path", Glib::ustring)
-  _WRAP_PROPERTY("attach-widget", Widget*)
-  _WRAP_PROPERTY("tearoff-title", Glib::ustring)
-  _WRAP_PROPERTY("tearoff-state", bool)
-  _WRAP_PROPERTY("monitor", int)
-  _WRAP_PROPERTY("reserve-toggle-size", bool)
-
-protected:
-
-  //We can not wrap this as a slot because there is no data parameter, and no destroy callback to destroy that data.
-  typedef void (*GtkMenuDetachFunc)   (GtkWidget *attach_widget, GtkMenu   *menu);
-  _WRAP_METHOD(void attach_to_widget(Widget& attach_widget, GtkMenuDetachFunc detacher), gtk_menu_attach_to_widget)
-
   //TODO: What does "attach" actually mean here? murrayc
+  //  Part answer: It has become more important now that it is mentioned in the (apparently newer) gtk_menu_new_from_model() documentation.
   /** Attaches the menu to the widget.
    *
    * @param attach_widget The Widget that the menu will be attached to.
@@ -144,6 +154,32 @@ protected:
    * @newin{2,10}
    */
   void attach_to_widget(Widget& attach_widget);
+
+  _IGNORE_SIGNAL("move_scroll")dnl// action signal
+  // no_default_handler because the wrapped C signal has no default handler.
+#m4 _CONVERSION(`gpointer',`const Gdk::Rectangle*',`&Glib::wrap((GdkRectangle*)$3)')
+  _WRAP_SIGNAL(void popped_up(const Gdk::Rectangle* flipped_rect, const Gdk::Rectangle* final_rect, bool flipped_x, bool flipped_y), "popped-up", no_default_handler)
+
+  _WRAP_PROPERTY("active", int)
+  _WRAP_PROPERTY("accel-group", Glib::RefPtr<AccelGroup>)
+  _WRAP_PROPERTY("accel-path", Glib::ustring)
+  _WRAP_PROPERTY("attach-widget", Widget*)
+  _WRAP_PROPERTY("tearoff-title", Glib::ustring, deprecated "No replacement available.")
+  _WRAP_PROPERTY("tearoff-state", bool, deprecated "No replacement available.")
+  _WRAP_PROPERTY("monitor", int)
+  _WRAP_PROPERTY("reserve-toggle-size", bool)
+  _WRAP_PROPERTY("anchor-hints", Gdk::AnchorHints)
+  _WRAP_PROPERTY("rect-anchor-dx", int)
+  _WRAP_PROPERTY("rect-anchor-dy", int)
+  _WRAP_PROPERTY("menu-type-hint", Gdk::WindowTypeHint)
+
+protected:
+
+  //TODO: Remove this if it has never been used, at the next ABI break?
+  //We can not wrap this as a slot because there is no data parameter, and no destroy callback to destroy that data.
+  typedef void (*GtkMenuDetachFunc)   (GtkWidget *attach_widget, GtkMenu   *menu);
+  _WRAP_METHOD(void attach_to_widget(Widget& attach_widget, GtkMenuDetachFunc detacher), gtk_menu_attach_to_widget)
+
 };
 
 } // namespace Gtk

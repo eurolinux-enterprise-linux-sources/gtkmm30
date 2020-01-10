@@ -4,7 +4,7 @@ class MyButton : public Gtk::Button
 {
 public:
     MyButton();
-    virtual ~MyButton();
+    ~MyButton() override;
 };
 
 MyButton::MyButton()
@@ -20,7 +20,7 @@ class ExampleWindow : public Gtk::Window
 {
 public:
     ExampleWindow();
-    virtual ~ExampleWindow();
+    ~ExampleWindow() override;
 
 protected:
 
@@ -33,7 +33,7 @@ ExampleWindow::ExampleWindow()
 
     m_button = manage(new MyButton);
     add(*m_button);
-	
+
     show_all_children();
 }
 

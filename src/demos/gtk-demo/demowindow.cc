@@ -1,5 +1,3 @@
-/* $Id$ */
-
 /* Copyright (C) 2001 The gtkmm Development Team
  *
  * This library is free software; you can redistribute it and/or
@@ -21,35 +19,19 @@
 #include "config.h"
 #endif
 
-#include <gtkmm/main.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/treeviewcolumn.h>
-#include <gtkmm/box.h>
+#include <glibmm/bytes.h>
 #include <glibmm/convert.h>
+#include <giomm/resource.h>
 #include "demowindow.h"
 #include "textwidget.h"
 #include "demos.h"
-#include <vector>
-#include <cctype>
-#include <cerrno>
-#include <stdio.h>
-
+#include <iostream>
 #include <cstring>
 
 using std::isspace;
 using std::strlen;
-
-#include "demo-common.h"
-
-#ifdef NEED_FLOCKFILE_PROTO
-extern "C" void flockfile (FILE *);
-#endif
-#ifdef NEED_FUNLOCKFILE_PROTO
-extern "C" void funlockfile (FILE *);
-#endif
-#ifdef NEED_GETC_UNLOCKED_PROTO
-extern "C" int getc_unlocked (FILE *);
-#endif
 
 namespace
 {
@@ -75,13 +57,14 @@ const DemoColumns& demo_columns()
 
 
 DemoWindow::DemoWindow()
-: m_HBox(Gtk::ORIENTATION_HORIZONTAL),
+: m_RunButton("Run"),
+  m_HBox(Gtk::ORIENTATION_HORIZONTAL),
   m_TextWidget_Info(false),
   m_TextWidget_Source(true)
 {
-  m_pWindow_Example = 0;
+  m_pWindow_Example = nullptr;
 
-  set_title("gtkmm Code Demos");
+  configure_header_bar();
 
   add(m_HBox);
 
@@ -97,17 +80,36 @@ DemoWindow::DemoWindow()
 
   fill_tree();
 
-  m_HBox.pack_start(m_TreeView, Gtk::PACK_SHRINK);
+  //SideBar
+  m_SideBar.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+  m_SideBar.get_style_context()->add_class("sidebar");
+  m_SideBar.add(m_TreeView);
+  m_HBox.pack_start(m_SideBar, Gtk::PACK_SHRINK);
 
   //Notebook:
+  m_Notebook.popup_enable();
+  m_Notebook.set_scrollable();
   m_Notebook.append_page(m_TextWidget_Info, "_Info", true);  //true = use mnemonic.
   m_Notebook.append_page(m_TextWidget_Source, "_Source", true);  //true = use mnemonic.
+  m_Notebook.child_property_tab_expand(m_TextWidget_Info) = true;
+  m_Notebook.child_property_tab_expand(m_TextWidget_Source) = true;
   m_HBox.pack_start(m_Notebook);
 
-  set_default_size (600, 400);
+  set_default_size (800, 600);
 
   load_file (testgtk_demos[0].filename);
   show_all();
+}
+
+void DemoWindow::configure_header_bar()
+{
+  m_HeaderBar.set_show_close_button();
+  m_HeaderBar.pack_start(m_RunButton);
+
+  m_RunButton.get_style_context()->add_class("suggested-action");
+  m_RunButton.signal_clicked().connect(sigc::mem_fun(*this, &DemoWindow::on_run_button_clicked));
+
+  set_titlebar(m_HeaderBar);
 }
 
 void DemoWindow::fill_tree()
@@ -157,27 +159,44 @@ DemoWindow::~DemoWindow()
   on_example_window_hide(); //delete the example window if there is one.
 }
 
+void DemoWindow::on_run_button_clicked()
+{
+  if(m_pWindow_Example == nullptr) //Don't open a second window.
+  {
+    if(const Gtk::TreeModel::iterator iter = m_refTreeSelection->get_selected())
+    {
+      m_TreePath = m_refTreeStore->get_path(iter);
+
+      run_example(*iter);
+    }
+  }
+}
+
 void DemoWindow::on_treeview_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* /* model */)
 {
   m_TreePath = path;
 
-  if(m_pWindow_Example == 0) //Don't open a second window.
+  if(m_pWindow_Example == nullptr) //Don't open a second window.
   {
     if(const Gtk::TreeModel::iterator iter = m_TreeView.get_model()->get_iter(m_TreePath))
     {
-      Gtk::TreeModel::Row row = *iter;
-      const DemoColumns& columns = demo_columns();
-
-      const type_slotDo& slot = row[columns.slot];
-
-      if(slot && (m_pWindow_Example = slot()))
-      {
-        row[columns.italic] = true;
-
-        m_pWindow_Example->signal_hide().connect(sigc::mem_fun(*this, &DemoWindow::on_example_window_hide));
-        m_pWindow_Example->show();
-      }
+      run_example(*iter);
     }
+  }
+}
+
+void DemoWindow::run_example(const Gtk::TreeModel::Row& row)
+{
+  const DemoColumns& columns = demo_columns();
+
+  const type_slotDo& slot = row[columns.slot];
+
+  if(slot && (m_pWindow_Example = slot()))
+  {
+    row[columns.italic] = true;
+
+    m_pWindow_Example->signal_hide().connect(sigc::mem_fun(*this, &DemoWindow::on_example_window_hide));
+    m_pWindow_Example->show();
   }
 }
 
@@ -193,61 +212,12 @@ void DemoWindow::on_treeselection_changed()
   if(const Gtk::TreeModel::iterator iter = m_refTreeSelection->get_selected())
   {
     const Glib::ustring filename = (*iter)[demo_columns().filename];
+    const Glib::ustring title = (*iter)[demo_columns().title];
 
     load_file(Glib::filename_from_utf8(filename));
+    m_HeaderBar.set_title(title);
   }
 }
-
-bool DemoWindow::read_line (FILE *stream, GString *str)
-{
-  int n_read = 0;
-
-#ifdef HAVE_FLOCKFILE
-  flockfile (stream);
-#endif
-
-  g_string_truncate (str, 0);
-
-  while (1)
-    {
-      int c;
-
-#ifdef HAVE_GETC_UNLOCKED
-      c = getc_unlocked (stream);
-#endif //GLIBMM_PROPERTIES_ENABLED
-      if (c == EOF)
-	goto done;
-      else
-	n_read++;
-
-      switch (c)
-	{
-	case '\r':
-	case '\n':
-	  {
-#ifdef HAVE_GETC_UNLOCKED
-	    int next_c = getc_unlocked (stream);
-#endif //GLIBMM_PROPERTIES_ENABLED
-	    if (!(next_c == EOF ||
-		  (c == '\r' && next_c == '\n') ||
-		  (c == '\n' && next_c == '\r')))
-	      ungetc (next_c, stream);
-	
-	    goto done;
-	  }
-	default:
-	  g_string_append_c (str, c);
-	}
-    }
-
- done:
-
-#ifdef HAVE_FUNLOCKFILE
-  funlockfile (stream);
-#endif
-  return n_read > 0;
-}
-
 
 void DemoWindow::load_file(const std::string& filename)
 {
@@ -257,6 +227,10 @@ void DemoWindow::load_file(const std::string& filename)
   }
   else
   {
+    // Show extra data files for this demo, if any.
+    remove_data_tabs();
+    add_data_tabs(filename);
+
     m_current_filename = filename;
 
     m_TextWidget_Info.wipe();
@@ -265,31 +239,35 @@ void DemoWindow::load_file(const std::string& filename)
     Glib::RefPtr<Gtk::TextBuffer> refBufferInfo = m_TextWidget_Info.get_buffer();
     Glib::RefPtr<Gtk::TextBuffer> refBufferSource = m_TextWidget_Source.get_buffer();
 
-    FILE* file = fopen (filename.c_str(), "r");
-    if (!file)
+    Glib::RefPtr<const Glib::Bytes> bytes;
+    try
     {
-      std::string installed = demo_find_file(filename);
-      file = fopen (installed.c_str(), "r");
+      bytes = Gio::Resource::lookup_data_global("/sources/" + filename);
     }
-
-    if (!file)
+    catch (const Gio::ResourceError& ex)
     {
-      g_warning ("Cannot open %s: %s\n", filename.c_str(), g_strerror (errno));
+      std::cerr << "Cannot open source for " << filename << ": " << ex.what() << std::endl;
       return;
     }
 
-    GString *buffer = g_string_new (NULL);
+    gsize data_size = 0;
+    gchar** lines = g_strsplit(static_cast<const gchar*>(bytes->get_data(data_size)), "\n", -1);
+    bytes.reset();
+
     int state = 0;
     bool in_para = false;
     Gtk::TextBuffer::iterator start = refBufferInfo->get_iter_at_offset(0);
-    while (read_line (file, buffer))
+    for (int i = 0; lines[i] != NULL; i++)
     {
-      gchar *p = buffer->str;
-      gchar *q = 0;
-      gchar *r = 0;
+      /* Make sure \r is stripped at the end for the poor windows people */
+      lines[i] = g_strchomp(lines[i]);
+
+      gchar *p = lines[i];
+      gchar *q = nullptr;
+      gchar *r = nullptr;
 
       switch (state)
-    	{
+      {
       	case 0:
       	  /* Reading title */
       	  while (*p == '/' || *p == '*' || isspace (*p))
@@ -311,7 +289,7 @@ void DemoWindow::load_file(const std::string& filename)
     	    {
     	      Gtk::TextBuffer::iterator end = start;
 
-              const Glib::ustring strTemp (p, q);
+            const Glib::ustring strTemp (p, q);
     	      end = refBufferInfo->insert(end, strTemp);
     	      start = end;
 
@@ -319,11 +297,11 @@ void DemoWindow::load_file(const std::string& filename)
     	      refBufferInfo->apply_tag_by_name("title", start, end);
 
     	      start = end;
-      	
+
     	      state++;
     	    }
     	    break;
-  	
+
       	case 1:
       	  /* Reading body of info section */
       	  while (isspace (*p))
@@ -337,14 +315,14 @@ void DemoWindow::load_file(const std::string& filename)
       	  else
     	    {
     	      int len;
-        	
+
     	      while (*p == '*' || isspace (*p))
     		      p++;
 
     	      len = strlen (p);
     	      while (isspace (*(p + len - 1)))
     		     len--;
-        	
+
     	      if (len > 0)
                 {
                   if (in_para)
@@ -368,27 +346,99 @@ void DemoWindow::load_file(const std::string& filename)
       	  while (isspace (*p))
       	    p++;
 
-      	  if (*p)
-    	    {
-    	      p = buffer->str;
-    	      state++;
-    	      /* Fall through */
-    	    }
+          if (*p)
+          {
+            p = lines[i];
+            state++;
+            /* Fall through */
+          }
       	  else
       	    break;
-        	
+
       	case 3:
       	  /* Reading program body */
       	  start = refBufferSource->insert(start, p);
       	  start = refBufferSource->insert(start, "\n");
       	  break;
-      	}
-     }
+      } // end switch state
+    } // end for i
+
+    g_strfreev (lines);
 
     m_TextWidget_Source.fontify();
   }
 }
 
+void DemoWindow::add_data_tabs(const std::string& filename)
+{
+  // We can get the resource_dir from the filename by removing "example_" and ".cc".
+  const std::string resource_dir = "/" + filename.substr(8, filename.size()-11);
+  std::vector<std::string> resources;
+  try
+  {
+    resources = Gio::Resource::enumerate_children_global(resource_dir);
+  }
+  catch (const Gio::ResourceError& ex)
+  {
+    // Ignore this exception. It's no error, if resource_dir does not exist.
+  }
+  for (unsigned int i = 0; i < resources.size(); ++i)
+  {
+    const std::string resource_name = resource_dir + "/" + resources[i];
+    Gtk::Widget* widget = nullptr;
+    Gtk::Image* image = new Gtk::Image();
+    image->set_from_resource(resource_name);
+    if (image->get_pixbuf() || image->get_animation())
+    {
+      widget = image;
+    }
+    else
+    {
+      // So we've used the best API available to figure out it's
+      // not an image. Let's try something else then.
+      delete image;
+      image = nullptr;
+
+      Glib::RefPtr<const Glib::Bytes> bytes;
+      try
+      {
+        bytes = Gio::Resource::lookup_data_global(resource_name);
+      }
+      catch (const Gio::ResourceError& ex)
+      {
+        std::cerr << "Can't get data from resource '" << resource_name << "': " << ex.what() << std::endl;
+        continue;
+      }
+      gsize data_size = 0;
+      const char* data = static_cast<const char*>(bytes->get_data(data_size));
+      if (g_utf8_validate(data, data_size, nullptr))
+      {
+        // Looks like it parses as text. Dump it into a TextWidget then!
+        TextWidget* textwidget = new TextWidget(false);
+        Glib::RefPtr<Gtk::TextBuffer> refBuffer = textwidget->get_buffer();
+        refBuffer->set_text(data, data + data_size);
+        widget = textwidget;
+      }
+      else
+      {
+        std::cerr << "Don't know how to display resource '" << resource_name << "'" << std::endl;
+        continue;
+      }
+    }
+    widget->show_all();
+    m_Notebook.append_page(*Gtk::manage(widget), resources[i]);
+    m_Notebook.child_property_tab_expand(*widget) = true;
+  }
+}
+
+void DemoWindow::remove_data_tabs()
+{
+  // Remove all tabs except Info and Source.
+  for (int i = m_Notebook.get_n_pages(); i > 1; --i)
+  {
+    m_Notebook.remove_page(i);
+  }
+}
 
 void DemoWindow::on_example_window_hide()
 {
@@ -399,7 +449,7 @@ void DemoWindow::on_example_window_hide()
       (*iter)[demo_columns().italic] = false;
 
       delete m_pWindow_Example;
-      m_pWindow_Example = 0;
+      m_pWindow_Example = nullptr;
     }
   }
 }

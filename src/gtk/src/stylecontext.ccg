@@ -30,6 +30,8 @@ Gdk::RGBA StyleContext::get_color(StateFlags state) const
   return Gdk::RGBA(&crgba, true);
 }
 
+_DEPRECATE_IFDEF_START
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 Gdk::RGBA StyleContext::get_background_color(StateFlags state) const
 {
   GdkRGBA crgba;
@@ -42,6 +44,17 @@ Gdk::RGBA StyleContext::get_border_color(StateFlags state) const
   GdkRGBA crgba;
   gtk_style_context_get_border_color(const_cast<GtkStyleContext*>(gobj()), ((GtkStateFlags)(state)), &crgba);
   return Gdk::RGBA(&crgba, true);
+}
+G_GNUC_END_IGNORE_DEPRECATIONS
+_DEPRECATE_IFDEF_END
+
+Pango::FontDescription StyleContext::get_font(StateFlags state) const
+{
+  // gtk_style_context_get_font() is deprecated.
+  PangoFontDescription* description = nullptr;
+  gtk_style_context_get(const_cast<GtkStyleContext*>(gobj()), (GtkStateFlags)state, "font", &description, NULL);
+  // gtk_style_context_get() returns a newly allocated font description, owned by the caller.
+  return Glib::wrap(description, false);
 }
 
 Border StyleContext::get_border(StateFlags state) const
@@ -67,7 +80,7 @@ Border StyleContext::get_margin(StateFlags state) const
 
 void StyleContext::unset_parent()
 {
-  gtk_style_context_set_parent(gobj(), 0);
+  gtk_style_context_set_parent(gobj(), nullptr);
 }
 
 

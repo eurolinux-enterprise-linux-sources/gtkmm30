@@ -14,7 +14,14 @@
 ;;   GTK_LICENSE_BSD,
 ;;   GTK_LICENSE_MIT_X11,
 ;; 
-;;   GTK_LICENSE_ARTISTIC
+;;   GTK_LICENSE_ARTISTIC,
+;; 
+;;   GTK_LICENSE_GPL_2_0_ONLY,
+;;   GTK_LICENSE_GPL_3_0_ONLY,
+;;   GTK_LICENSE_LGPL_2_1_ONLY,
+;;   GTK_LICENSE_LGPL_3_0_ONLY,
+;; 
+;;   GTK_LICENSE_AGPL_3_0
 ;; } GtkLicense;
 
 (define-enum-extended License
@@ -30,6 +37,11 @@
     '("bsd" "GTK_LICENSE_BSD" "6")
     '("mit-x11" "GTK_LICENSE_MIT_X11" "7")
     '("artistic" "GTK_LICENSE_ARTISTIC" "8")
+    '("gpl-2-0-only" "GTK_LICENSE_GPL_2_0_ONLY" "9")
+    '("gpl-3-0-only" "GTK_LICENSE_GPL_3_0_ONLY" "10")
+    '("lgpl-2-1-only" "GTK_LICENSE_LGPL_2_1_ONLY" "11")
+    '("lgpl-3-0-only" "GTK_LICENSE_LGPL_3_0_ONLY" "12")
+    '("agpl-3-0" "GTK_LICENSE_AGPL_3_0" "13")
   )
 )
 
@@ -38,8 +50,8 @@
 ;; Original typedef:
 ;; typedef enum
 ;; {
-;;   GTK_ACCEL_VISIBLE        = 1 << 0,	/* display in GtkAccelLabel? */
-;;   GTK_ACCEL_LOCKED         = 1 << 1,	/* is it removable? */
+;;   GTK_ACCEL_VISIBLE        = 1 << 0,
+;;   GTK_ACCEL_LOCKED         = 1 << 1,
 ;;   GTK_ACCEL_MASK           = 0x07
 ;; } GtkAccelFlags;
 
@@ -50,26 +62,6 @@
     '("visible" "GTK_ACCEL_VISIBLE" "1 << 0")
     '("locked" "GTK_ACCEL_LOCKED" "1 << 1")
     '("mask" "GTK_ACCEL_MASK" "0x07")
-  )
-)
-
-;; From gtkactionhelper.h
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_ACTION_HELPER_ROLE_NORMAL,
-;;   GTK_ACTION_HELPER_ROLE_TOGGLE,
-;;   GTK_ACTION_HELPER_ROLE_RADIO
-;; } GtkActionHelperRole;
-
-(define-enum-extended ActionHelperRole
-  (in-module "Gtk")
-  (c-name "GtkActionHelperRole")
-  (values
-    '("normal" "GTK_ACTION_HELPER_ROLE_NORMAL" "0")
-    '("toggle" "GTK_ACTION_HELPER_ROLE_TOGGLE" "1")
-    '("radio" "GTK_ACTION_HELPER_ROLE_RADIO" "2")
   )
 )
 
@@ -121,6 +113,32 @@
   )
 )
 
+;; From gtkbbox.h
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_BUTTONBOX_SPREAD = 1,
+;;   GTK_BUTTONBOX_EDGE,
+;;   GTK_BUTTONBOX_START,
+;;   GTK_BUTTONBOX_END,
+;;   GTK_BUTTONBOX_CENTER,
+;;   GTK_BUTTONBOX_EXPAND
+;; } GtkButtonBoxStyle;
+
+(define-enum-extended ButtonBoxStyle
+  (in-module "Gtk")
+  (c-name "GtkButtonBoxStyle")
+  (values
+    '("spread" "GTK_BUTTONBOX_SPREAD" "1")
+    '("edge" "GTK_BUTTONBOX_EDGE" "2")
+    '("start" "GTK_BUTTONBOX_START" "3")
+    '("end" "GTK_BUTTONBOX_END" "4")
+    '("center" "GTK_BUTTONBOX_CENTER" "5")
+    '("expand" "GTK_BUTTONBOX_EXPAND" "6")
+  )
+)
+
 ;; From gtkbuilder.h
 
 ;; Original typedef:
@@ -134,7 +152,12 @@
 ;;   GTK_BUILDER_ERROR_MISSING_PROPERTY_VALUE,
 ;;   GTK_BUILDER_ERROR_INVALID_VALUE,
 ;;   GTK_BUILDER_ERROR_VERSION_MISMATCH,
-;;   GTK_BUILDER_ERROR_DUPLICATE_ID
+;;   GTK_BUILDER_ERROR_DUPLICATE_ID,
+;;   GTK_BUILDER_ERROR_OBJECT_TYPE_REFUSED,
+;;   GTK_BUILDER_ERROR_TEMPLATE_MISMATCH,
+;;   GTK_BUILDER_ERROR_INVALID_PROPERTY,
+;;   GTK_BUILDER_ERROR_INVALID_SIGNAL,
+;;   GTK_BUILDER_ERROR_INVALID_ID
 ;; } GtkBuilderError;
 
 (define-enum-extended BuilderError
@@ -150,6 +173,11 @@
     '("invalid-value" "GTK_BUILDER_ERROR_INVALID_VALUE" "6")
     '("version-mismatch" "GTK_BUILDER_ERROR_VERSION_MISMATCH" "7")
     '("duplicate-id" "GTK_BUILDER_ERROR_DUPLICATE_ID" "8")
+    '("object-type-refused" "GTK_BUILDER_ERROR_OBJECT_TYPE_REFUSED" "9")
+    '("template-mismatch" "GTK_BUILDER_ERROR_TEMPLATE_MISMATCH" "10")
+    '("invalid-property" "GTK_BUILDER_ERROR_INVALID_PROPERTY" "11")
+    '("invalid-signal" "GTK_BUILDER_ERROR_INVALID_SIGNAL" "12")
+    '("invalid-id" "GTK_BUILDER_ERROR_INVALID_ID" "13")
   )
 )
 
@@ -242,48 +270,23 @@
   )
 )
 
-;; From gtkcolorscaleprivate.h
+;; From gtkcontainer.h
 
 ;; Original typedef:
 ;; typedef enum
 ;; {
-;;   GTK_COLOR_SCALE_HUE,
-;;   GTK_COLOR_SCALE_ALPHA
-;; } GtkColorScaleType;
+;;   GTK_RESIZE_PARENT,
+;;   GTK_RESIZE_QUEUE,
+;;   GTK_RESIZE_IMMEDIATE
+;; } GtkResizeMode;
 
-(define-enum-extended ColorScaleType
+(define-enum-extended ResizeMode
   (in-module "Gtk")
-  (c-name "GtkColorScaleType")
+  (c-name "GtkResizeMode")
   (values
-    '("hue" "GTK_COLOR_SCALE_HUE" "0")
-    '("alpha" "GTK_COLOR_SCALE_ALPHA" "1")
-  )
-)
-
-;; From gtkcssnumbervalueprivate.h
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_POSITIVE_ONLY = (1 << 0),
-;;   GTK_CSS_PARSE_PERCENT = (1 << 1),
-;;   GTK_CSS_PARSE_NUMBER = (1 << 2),
-;;   GTK_CSS_NUMBER_AS_PIXELS = (1 << 3),
-;;   GTK_CSS_PARSE_LENGTH = (1 << 4),
-;;   GTK_CSS_PARSE_ANGLE = (1 << 5),
-;;   GTK_CSS_PARSE_TIME = (1 << 6)
-;; } GtkCssNumberParseFlags;
-
-(define-flags-extended CssNumberParseFlags
-  (in-module "Gtk")
-  (c-name "GtkCssNumberParseFlags")
-  (values
-    '("positive-only" "GTK_CSS_POSITIVE_ONLY" "(1 << 0)")
-    '("parse-percent" "GTK_CSS_PARSE_PERCENT" "(1 << 1)")
-    '("parse-number" "GTK_CSS_PARSE_NUMBER" "(1 << 2)")
-    '("number-as-pixels" "GTK_CSS_NUMBER_AS_PIXELS" "(1 << 3)")
-    '("parse-length" "GTK_CSS_PARSE_LENGTH" "(1 << 4)")
-    '("parse-angle" "GTK_CSS_PARSE_ANGLE" "(1 << 5)")
-    '("parse-time" "GTK_CSS_PARSE_TIME" "(1 << 6)")
+    '("parent" "GTK_RESIZE_PARENT" "0")
+    '("queue" "GTK_RESIZE_QUEUE" "1")
+    '("immediate" "GTK_RESIZE_IMMEDIATE" "2")
   )
 )
 
@@ -310,29 +313,6 @@
     '("name" "GTK_CSS_PROVIDER_ERROR_NAME" "3")
     '("deprecated" "GTK_CSS_PROVIDER_ERROR_DEPRECATED" "4")
     '("unknown-value" "GTK_CSS_PROVIDER_ERROR_UNKNOWN_VALUE" "5")
-  )
-)
-
-;; From gtkcssrepeatvalueprivate.h
-
-;; Original typedef:
-;; typedef enum {
-;;   GTK_CSS_REPEAT_STYLE_NO_REPEAT,
-;;   GTK_CSS_REPEAT_STYLE_STRETCH = GTK_CSS_REPEAT_STYLE_NO_REPEAT,
-;;   GTK_CSS_REPEAT_STYLE_REPEAT,
-;;   GTK_CSS_REPEAT_STYLE_ROUND,
-;;   GTK_CSS_REPEAT_STYLE_SPACE
-;; } GtkCssRepeatStyle;
-
-(define-enum-extended CssRepeatStyle
-  (in-module "Gtk")
-  (c-name "GtkCssRepeatStyle")
-  (values
-    '("no-repeat" "GTK_CSS_REPEAT_STYLE_NO_REPEAT" "0")
-    '("stretch" "GTK_CSS_REPEAT_STYLE_STRETCH" "0")
-    '("repeat" "GTK_CSS_REPEAT_STYLE_REPEAT" "1")
-    '("round" "GTK_CSS_REPEAT_STYLE_ROUND" "2")
-    '("space" "GTK_CSS_REPEAT_STYLE_SPACE" "3")
   )
 )
 
@@ -368,273 +348,6 @@
   )
 )
 
-;; From gtkcsstypesprivate.h
-
-;; Original typedef:
-;; typedef enum { /*< skip >*/
-;;   GTK_CSS_CHANGE_CLASS                    = (1 <<  0),
-;;   GTK_CSS_CHANGE_NAME                     = (1 <<  1),
-;;   GTK_CSS_CHANGE_ID                       = GTK_CSS_CHANGE_NAME,
-;;   GTK_CSS_CHANGE_REGION                   = GTK_CSS_CHANGE_NAME,
-;;   GTK_CSS_CHANGE_POSITION                 = (1 <<  2),
-;;   GTK_CSS_CHANGE_STATE                    = (1 <<  3),
-;;   GTK_CSS_CHANGE_SIBLING_CLASS            = (1 <<  4),
-;;   GTK_CSS_CHANGE_SIBLING_NAME             = (1 <<  5),
-;;   GTK_CSS_CHANGE_SIBLING_POSITION         = (1 <<  6),
-;;   GTK_CSS_CHANGE_SIBLING_STATE            = (1 <<  7),
-;;   GTK_CSS_CHANGE_PARENT_CLASS             = (1 <<  8),
-;;   GTK_CSS_CHANGE_PARENT_NAME              = (1 <<  9),
-;;   GTK_CSS_CHANGE_PARENT_REGION            = GTK_CSS_CHANGE_PARENT_NAME,
-;;   GTK_CSS_CHANGE_PARENT_POSITION          = (1 << 10),
-;;   GTK_CSS_CHANGE_PARENT_STATE             = (1 << 11),
-;;   GTK_CSS_CHANGE_PARENT_SIBLING_CLASS     = (1 << 12),
-;;   GTK_CSS_CHANGE_PARENT_SIBLING_NAME      = (1 << 13),
-;;   GTK_CSS_CHANGE_PARENT_SIBLING_POSITION  = (1 << 14),
-;;   GTK_CSS_CHANGE_PARENT_SIBLING_STATE     = (1 << 15),
-;;   /* add more */
-;;   GTK_CSS_CHANGE_SOURCE                   = (1 << 16),
-;;   GTK_CSS_CHANGE_ANIMATE                  = (1 << 17),
-;;   GTK_CSS_CHANGE_FORCE_INVALIDATE         = (1 << 18),
-;; 
-;;   GTK_CSS_CHANGE_RESERVED_BIT             = (1 << 31) /* Used internally in gtkcssselector.c */
-;; } GtkCssChange;
-
-(define-flags-extended CssChange
-  (in-module "Gtk")
-  (c-name "GtkCssChange")
-  (values
-    '("class" "GTK_CSS_CHANGE_CLASS" "(1 << 0)")
-    '("name" "GTK_CSS_CHANGE_NAME" "(1 << 1)")
-    '("id" "GTK_CSS_CHANGE_ID" "0x2")
-    '("region" "GTK_CSS_CHANGE_REGION" "0x2")
-    '("position" "GTK_CSS_CHANGE_POSITION" "(1 << 2)")
-    '("state" "GTK_CSS_CHANGE_STATE" "(1 << 3)")
-    '("sibling-class" "GTK_CSS_CHANGE_SIBLING_CLASS" "(1 << 4)")
-    '("sibling-name" "GTK_CSS_CHANGE_SIBLING_NAME" "(1 << 5)")
-    '("sibling-position" "GTK_CSS_CHANGE_SIBLING_POSITION" "(1 << 6)")
-    '("sibling-state" "GTK_CSS_CHANGE_SIBLING_STATE" "(1 << 7)")
-    '("parent-class" "GTK_CSS_CHANGE_PARENT_CLASS" "(1 << 8)")
-    '("parent-name" "GTK_CSS_CHANGE_PARENT_NAME" "(1 << 9)")
-    '("parent-region" "GTK_CSS_CHANGE_PARENT_REGION" "0x200")
-    '("parent-position" "GTK_CSS_CHANGE_PARENT_POSITION" "(1 << 10)")
-    '("parent-state" "GTK_CSS_CHANGE_PARENT_STATE" "(1 << 11)")
-    '("parent-sibling-class" "GTK_CSS_CHANGE_PARENT_SIBLING_CLASS" "(1 << 12)")
-    '("parent-sibling-name" "GTK_CSS_CHANGE_PARENT_SIBLING_NAME" "(1 << 13)")
-    '("parent-sibling-position" "GTK_CSS_CHANGE_PARENT_SIBLING_POSITION" "(1 << 14)")
-    '("parent-sibling-state" "GTK_CSS_CHANGE_PARENT_SIBLING_STATE" "(1 << 15)")
-    '("source" "GTK_CSS_CHANGE_SOURCE" "(1 << 16)")
-    '("animate" "GTK_CSS_CHANGE_ANIMATE" "(1 << 17)")
-    '("force-invalidate" "GTK_CSS_CHANGE_FORCE_INVALIDATE" "(1 << 18)")
-    '("reserved-bit" "GTK_CSS_CHANGE_RESERVED_BIT" "(1 << 31)")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_DEPENDS_ON_PARENT = (1 << 0),
-;;   GTK_CSS_EQUALS_PARENT = (1 << 1),
-;;   GTK_CSS_DEPENDS_ON_COLOR = (1 << 2),
-;;   GTK_CSS_DEPENDS_ON_FONT_SIZE = (1 << 3)
-;; } GtkCssDependencies;
-
-(define-flags-extended CssDependencies
-  (in-module "Gtk")
-  (c-name "GtkCssDependencies")
-  (values
-    '("depends-on-parent" "GTK_CSS_DEPENDS_ON_PARENT" "(1 << 0)")
-    '("equals-parent" "GTK_CSS_EQUALS_PARENT" "(1 << 1)")
-    '("depends-on-color" "GTK_CSS_DEPENDS_ON_COLOR" "(1 << 2)")
-    '("depends-on-font-size" "GTK_CSS_DEPENDS_ON_FONT_SIZE" "(1 << 3)")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_AREA_BORDER_BOX,
-;;   GTK_CSS_AREA_PADDING_BOX,
-;;   GTK_CSS_AREA_CONTENT_BOX
-;; } GtkCssArea;
-
-(define-enum-extended CssArea
-  (in-module "Gtk")
-  (c-name "GtkCssArea")
-  (values
-    '("border-box" "GTK_CSS_AREA_BORDER_BOX" "0")
-    '("padding-box" "GTK_CSS_AREA_PADDING_BOX" "1")
-    '("content-box" "GTK_CSS_AREA_CONTENT_BOX" "2")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_DIRECTION_NORMAL,
-;;   GTK_CSS_DIRECTION_REVERSE,
-;;   GTK_CSS_DIRECTION_ALTERNATE,
-;;   GTK_CSS_DIRECTION_ALTERNATE_REVERSE
-;; } GtkCssDirection;
-
-(define-enum-extended CssDirection
-  (in-module "Gtk")
-  (c-name "GtkCssDirection")
-  (values
-    '("normal" "GTK_CSS_DIRECTION_NORMAL" "0")
-    '("reverse" "GTK_CSS_DIRECTION_REVERSE" "1")
-    '("alternate" "GTK_CSS_DIRECTION_ALTERNATE" "2")
-    '("alternate-reverse" "GTK_CSS_DIRECTION_ALTERNATE_REVERSE" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_PLAY_STATE_RUNNING,
-;;   GTK_CSS_PLAY_STATE_PAUSED
-;; } GtkCssPlayState;
-
-(define-enum-extended CssPlayState
-  (in-module "Gtk")
-  (c-name "GtkCssPlayState")
-  (values
-    '("running" "GTK_CSS_PLAY_STATE_RUNNING" "0")
-    '("paused" "GTK_CSS_PLAY_STATE_PAUSED" "1")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_FILL_NONE,
-;;   GTK_CSS_FILL_FORWARDS,
-;;   GTK_CSS_FILL_BACKWARDS,
-;;   GTK_CSS_FILL_BOTH
-;; } GtkCssFillMode;
-
-(define-enum-extended CssFillMode
-  (in-module "Gtk")
-  (c-name "GtkCssFillMode")
-  (values
-    '("none" "GTK_CSS_FILL_NONE" "0")
-    '("forwards" "GTK_CSS_FILL_FORWARDS" "1")
-    '("backwards" "GTK_CSS_FILL_BACKWARDS" "2")
-    '("both" "GTK_CSS_FILL_BOTH" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   /* relative font sizes */
-;;   GTK_CSS_FONT_SIZE_SMALLER,
-;;   GTK_CSS_FONT_SIZE_LARGER,
-;;   /* absolute font sizes */
-;;   GTK_CSS_FONT_SIZE_XX_SMALL,
-;;   GTK_CSS_FONT_SIZE_X_SMALL,
-;;   GTK_CSS_FONT_SIZE_SMALL,
-;;   GTK_CSS_FONT_SIZE_MEDIUM,
-;;   GTK_CSS_FONT_SIZE_LARGE,
-;;   GTK_CSS_FONT_SIZE_X_LARGE,
-;;   GTK_CSS_FONT_SIZE_XX_LARGE
-;; } GtkCssFontSize;
-
-(define-enum-extended CssFontSize
-  (in-module "Gtk")
-  (c-name "GtkCssFontSize")
-  (values
-    '("smaller" "GTK_CSS_FONT_SIZE_SMALLER" "0")
-    '("larger" "GTK_CSS_FONT_SIZE_LARGER" "1")
-    '("xx-small" "GTK_CSS_FONT_SIZE_XX_SMALL" "2")
-    '("x-small" "GTK_CSS_FONT_SIZE_X_SMALL" "3")
-    '("small" "GTK_CSS_FONT_SIZE_SMALL" "4")
-    '("medium" "GTK_CSS_FONT_SIZE_MEDIUM" "5")
-    '("large" "GTK_CSS_FONT_SIZE_LARGE" "6")
-    '("x-large" "GTK_CSS_FONT_SIZE_X_LARGE" "7")
-    '("xx-large" "GTK_CSS_FONT_SIZE_XX_LARGE" "8")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_TOP,
-;;   GTK_CSS_RIGHT,
-;;   GTK_CSS_BOTTOM,
-;;   GTK_CSS_LEFT
-;; } GtkCssSide;
-
-(define-enum-extended CssSide
-  (in-module "Gtk")
-  (c-name "GtkCssSide")
-  (values
-    '("top" "GTK_CSS_TOP" "0")
-    '("right" "GTK_CSS_RIGHT" "1")
-    '("bottom" "GTK_CSS_BOTTOM" "2")
-    '("left" "GTK_CSS_LEFT" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   GTK_CSS_TOP_LEFT,
-;;   GTK_CSS_TOP_RIGHT,
-;;   GTK_CSS_BOTTOM_RIGHT,
-;;   GTK_CSS_BOTTOM_LEFT
-;; } GtkCssCorner;
-
-(define-enum-extended CssCorner
-  (in-module "Gtk")
-  (c-name "GtkCssCorner")
-  (values
-    '("top-left" "GTK_CSS_TOP_LEFT" "0")
-    '("top-right" "GTK_CSS_TOP_RIGHT" "1")
-    '("bottom-right" "GTK_CSS_BOTTOM_RIGHT" "2")
-    '("bottom-left" "GTK_CSS_BOTTOM_LEFT" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum /*< skip >*/ {
-;;   /* CSS term: <number> */
-;;   GTK_CSS_NUMBER,
-;;   /* CSS term: <percentage> */
-;;   GTK_CSS_PERCENT,
-;;   /* CSS term: <length> */
-;;   GTK_CSS_PX,
-;;   GTK_CSS_PT,
-;;   GTK_CSS_EM,
-;;   GTK_CSS_EX,
-;;   GTK_CSS_PC,
-;;   GTK_CSS_IN,
-;;   GTK_CSS_CM,
-;;   GTK_CSS_MM,
-;;   /* CSS term: <angle> */
-;;   GTK_CSS_RAD,
-;;   GTK_CSS_DEG,
-;;   GTK_CSS_GRAD,
-;;   GTK_CSS_TURN,
-;;   /* CSS term: <time> */
-;;   GTK_CSS_S,
-;;   GTK_CSS_MS,
-;; } GtkCssUnit;
-
-(define-enum-extended CssUnit
-  (in-module "Gtk")
-  (c-name "GtkCssUnit")
-  (values
-    '("number" "GTK_CSS_NUMBER" "0")
-    '("percent" "GTK_CSS_PERCENT" "1")
-    '("px" "GTK_CSS_PX" "2")
-    '("pt" "GTK_CSS_PT" "3")
-    '("em" "GTK_CSS_EM" "4")
-    '("ex" "GTK_CSS_EX" "5")
-    '("pc" "GTK_CSS_PC" "6")
-    '("in" "GTK_CSS_IN" "7")
-    '("cm" "GTK_CSS_CM" "8")
-    '("mm" "GTK_CSS_MM" "9")
-    '("rad" "GTK_CSS_RAD" "10")
-    '("deg" "GTK_CSS_DEG" "11")
-    '("grad" "GTK_CSS_GRAD" "12")
-    '("turn" "GTK_CSS_TURN" "13")
-    '("s" "GTK_CSS_S" "14")
-    '("ms" "GTK_CSS_MS" "15")
-  )
-)
-
 ;; From gtkdebug.h
 
 ;; Original typedef:
@@ -652,7 +365,15 @@
 ;;   GTK_DEBUG_PRINTING        = 1 << 10,
 ;;   GTK_DEBUG_BUILDER         = 1 << 11,
 ;;   GTK_DEBUG_SIZE_REQUEST    = 1 << 12,
-;;   GTK_DEBUG_NO_CSS_CACHE    = 1 << 13
+;;   GTK_DEBUG_NO_CSS_CACHE    = 1 << 13,
+;;   GTK_DEBUG_BASELINES       = 1 << 14,
+;;   GTK_DEBUG_PIXEL_CACHE     = 1 << 15,
+;;   GTK_DEBUG_NO_PIXEL_CACHE  = 1 << 16,
+;;   GTK_DEBUG_INTERACTIVE     = 1 << 17,
+;;   GTK_DEBUG_TOUCHSCREEN     = 1 << 18,
+;;   GTK_DEBUG_ACTIONS         = 1 << 19,
+;;   GTK_DEBUG_RESIZE          = 1 << 20,
+;;   GTK_DEBUG_LAYOUT          = 1 << 21
 ;; } GtkDebugFlag;
 
 (define-flags-extended DebugFlag
@@ -673,6 +394,14 @@
     '("builder" "GTK_DEBUG_BUILDER" "1 << 11")
     '("size-request" "GTK_DEBUG_SIZE_REQUEST" "1 << 12")
     '("no-css-cache" "GTK_DEBUG_NO_CSS_CACHE" "1 << 13")
+    '("baselines" "GTK_DEBUG_BASELINES" "1 << 14")
+    '("pixel-cache" "GTK_DEBUG_PIXEL_CACHE" "1 << 15")
+    '("no-pixel-cache" "GTK_DEBUG_NO_PIXEL_CACHE" "1 << 16")
+    '("interactive" "GTK_DEBUG_INTERACTIVE" "1 << 17")
+    '("touchscreen" "GTK_DEBUG_TOUCHSCREEN" "1 << 18")
+    '("actions" "GTK_DEBUG_ACTIONS" "1 << 19")
+    '("resize" "GTK_DEBUG_RESIZE" "1 << 20")
+    '("layout" "GTK_DEBUG_LAYOUT" "1 << 21")
   )
 )
 
@@ -682,7 +411,8 @@
 ;; typedef enum
 ;; {
 ;;   GTK_DIALOG_MODAL               = 1 << 0,
-;;   GTK_DIALOG_DESTROY_WITH_PARENT = 1 << 1
+;;   GTK_DIALOG_DESTROY_WITH_PARENT = 1 << 1,
+;;   GTK_DIALOG_USE_HEADER_BAR      = 1 << 2
 ;; } GtkDialogFlags;
 
 (define-flags-extended DialogFlags
@@ -691,6 +421,7 @@
   (values
     '("modal" "GTK_DIALOG_MODAL" "1 << 0")
     '("destroy-with-parent" "GTK_DIALOG_DESTROY_WITH_PARENT" "1 << 1")
+    '("use-header-bar" "GTK_DIALOG_USE_HEADER_BAR" "1 << 2")
   )
 )
 
@@ -728,13 +459,13 @@
   )
 )
 
-;; From gtkdnd.h
+;; From gtkdragdest.h
 
 ;; Original typedef:
 ;; typedef enum {
-;;   GTK_DEST_DEFAULT_MOTION     = 1 << 0, /* respond to "drag_motion" */
-;;   GTK_DEST_DEFAULT_HIGHLIGHT  = 1 << 1, /* auto-highlight */
-;;   GTK_DEST_DEFAULT_DROP       = 1 << 2, /* respond to "drag_drop" */
+;;   GTK_DEST_DEFAULT_MOTION     = 1 << 0,
+;;   GTK_DEST_DEFAULT_HIGHLIGHT  = 1 << 1,
+;;   GTK_DEST_DEFAULT_DROP       = 1 << 2,
 ;;   GTK_DEST_DEFAULT_ALL        = 0x07
 ;; } GtkDestDefaults;
 
@@ -746,25 +477,6 @@
     '("highlight" "GTK_DEST_DEFAULT_HIGHLIGHT" "1 << 1")
     '("drop" "GTK_DEST_DEFAULT_DROP" "1 << 2")
     '("all" "GTK_DEST_DEFAULT_ALL" "0x07")
-  )
-)
-
-;; Original typedef:
-;; typedef enum {
-;;   GTK_TARGET_SAME_APP = 1 << 0,    /*< nick=same-app >*/
-;;   GTK_TARGET_SAME_WIDGET = 1 << 1, /*< nick=same-widget >*/
-;;   GTK_TARGET_OTHER_APP = 1 << 2,   /*< nick=other-app >*/
-;;   GTK_TARGET_OTHER_WIDGET = 1 << 3 /*< nick=other-widget >*/
-;; } GtkTargetFlags;
-
-(define-flags-extended TargetFlags
-  (in-module "Gtk")
-  (c-name "GtkTargetFlags")
-  (values
-    '("same-app" "GTK_TARGET_SAME_APP" "1 << 0")
-    '("same-widget" "GTK_TARGET_SAME_WIDGET" "1 << 1")
-    '("other-app" "GTK_TARGET_OTHER_APP" "1 << 2")
-    '("other-widget" "GTK_TARGET_OTHER_WIDGET" "1 << 3")
   )
 )
 
@@ -794,7 +506,8 @@
 ;;   GTK_ALIGN_FILL,
 ;;   GTK_ALIGN_START,
 ;;   GTK_ALIGN_END,
-;;   GTK_ALIGN_CENTER
+;;   GTK_ALIGN_CENTER,
+;;   GTK_ALIGN_BASELINE
 ;; } GtkAlign;
 
 (define-enum-extended Align
@@ -805,24 +518,7 @@
     '("start" "GTK_ALIGN_START" "1")
     '("end" "GTK_ALIGN_END" "2")
     '("center" "GTK_ALIGN_CENTER" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_ARROWS_BOTH,
-;;   GTK_ARROWS_START,
-;;   GTK_ARROWS_END
-;; } GtkArrowPlacement;
-
-(define-enum-extended ArrowPlacement
-  (in-module "Gtk")
-  (c-name "GtkArrowPlacement")
-  (values
-    '("both" "GTK_ARROWS_BOTH" "0")
-    '("start" "GTK_ARROWS_START" "1")
-    '("end" "GTK_ARROWS_END" "2")
+    '("baseline" "GTK_ALIGN_BASELINE" "4")
   )
 )
 
@@ -851,40 +547,18 @@
 ;; Original typedef:
 ;; typedef enum
 ;; {
-;;   GTK_EXPAND = 1 << 0,
-;;   GTK_SHRINK = 1 << 1,
-;;   GTK_FILL   = 1 << 2
-;; } GtkAttachOptions;
+;;   GTK_BASELINE_POSITION_TOP,
+;;   GTK_BASELINE_POSITION_CENTER,
+;;   GTK_BASELINE_POSITION_BOTTOM
+;; } GtkBaselinePosition;
 
-(define-flags-extended AttachOptions
+(define-enum-extended BaselinePosition
   (in-module "Gtk")
-  (c-name "GtkAttachOptions")
+  (c-name "GtkBaselinePosition")
   (values
-    '("expand" "GTK_EXPAND" "1 << 0")
-    '("shrink" "GTK_SHRINK" "1 << 1")
-    '("fill" "GTK_FILL" "1 << 2")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_BUTTONBOX_SPREAD = 1,
-;;   GTK_BUTTONBOX_EDGE,
-;;   GTK_BUTTONBOX_START,
-;;   GTK_BUTTONBOX_END,
-;;   GTK_BUTTONBOX_CENTER
-;; } GtkButtonBoxStyle;
-
-(define-enum-extended ButtonBoxStyle
-  (in-module "Gtk")
-  (c-name "GtkButtonBoxStyle")
-  (values
-    '("spread" "GTK_BUTTONBOX_SPREAD" "1")
-    '("edge" "GTK_BUTTONBOX_EDGE" "2")
-    '("start" "GTK_BUTTONBOX_START" "3")
-    '("end" "GTK_BUTTONBOX_END" "4")
-    '("center" "GTK_BUTTONBOX_CENTER" "5")
+    '("top" "GTK_BASELINE_POSITION_TOP" "0")
+    '("center" "GTK_BASELINE_POSITION_CENTER" "1")
+    '("bottom" "GTK_BASELINE_POSITION_BOTTOM" "2")
   )
 )
 
@@ -892,15 +566,13 @@
 ;; typedef enum
 ;; {
 ;;   GTK_DELETE_CHARS,
-;;   GTK_DELETE_WORD_ENDS,           /* delete only the portion of the word to the
-;;                                    * left/right of cursor if we're in the middle
-;;                                    * of a word */
+;;   GTK_DELETE_WORD_ENDS,
 ;;   GTK_DELETE_WORDS,
 ;;   GTK_DELETE_DISPLAY_LINES,
 ;;   GTK_DELETE_DISPLAY_LINE_ENDS,
-;;   GTK_DELETE_PARAGRAPH_ENDS,      /* like C-k in Emacs (or its reverse) */
-;;   GTK_DELETE_PARAGRAPHS,          /* C-k in pico, kill whole line */
-;;   GTK_DELETE_WHITESPACE           /* M-\ in Emacs */
+;;   GTK_DELETE_PARAGRAPH_ENDS,
+;;   GTK_DELETE_PARAGRAPHS,
+;;   GTK_DELETE_WHITESPACE
 ;; } GtkDeleteType;
 
 (define-enum-extended DeleteType
@@ -939,26 +611,6 @@
     '("down" "GTK_DIR_DOWN" "3")
     '("left" "GTK_DIR_LEFT" "4")
     '("right" "GTK_DIR_RIGHT" "5")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_EXPANDER_COLLAPSED,
-;;   GTK_EXPANDER_SEMI_COLLAPSED,
-;;   GTK_EXPANDER_SEMI_EXPANDED,
-;;   GTK_EXPANDER_EXPANDED
-;; } GtkExpanderStyle;
-
-(define-enum-extended ExpanderStyle
-  (in-module "Gtk")
-  (c-name "GtkExpanderStyle")
-  (values
-    '("collapsed" "GTK_EXPANDER_COLLAPSED" "0")
-    '("semi-collapsed" "GTK_EXPANDER_SEMI_COLLAPSED" "1")
-    '("semi-expanded" "GTK_EXPANDER_SEMI_EXPANDED" "2")
-    '("expanded" "GTK_EXPANDER_EXPANDED" "3")
   )
 )
 
@@ -1161,26 +813,6 @@
 ;; Original typedef:
 ;; typedef enum
 ;; {
-;;   GTK_CORNER_TOP_LEFT,
-;;   GTK_CORNER_BOTTOM_LEFT,
-;;   GTK_CORNER_TOP_RIGHT,
-;;   GTK_CORNER_BOTTOM_RIGHT
-;; } GtkCornerType;
-
-(define-enum-extended CornerType
-  (in-module "Gtk")
-  (c-name "GtkCornerType")
-  (values
-    '("top-left" "GTK_CORNER_TOP_LEFT" "0")
-    '("bottom-left" "GTK_CORNER_BOTTOM_LEFT" "1")
-    '("top-right" "GTK_CORNER_TOP_RIGHT" "2")
-    '("bottom-right" "GTK_CORNER_BOTTOM_RIGHT" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
 ;;   GTK_PACK_START,
 ;;   GTK_PACK_END
 ;; } GtkPackType;
@@ -1191,66 +823,6 @@
   (values
     '("start" "GTK_PACK_START" "0")
     '("end" "GTK_PACK_END" "1")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_PATH_PRIO_LOWEST      = 0,
-;;   GTK_PATH_PRIO_GTK	    = 4,
-;;   GTK_PATH_PRIO_APPLICATION = 8,
-;;   GTK_PATH_PRIO_THEME       = 10,
-;;   GTK_PATH_PRIO_RC          = 12,
-;;   GTK_PATH_PRIO_HIGHEST     = 15
-;; } GtkPathPriorityType;
-
-(define-enum-extended PathPriorityType
-  (in-module "Gtk")
-  (c-name "GtkPathPriorityType")
-  (values
-    '("lowest" "GTK_PATH_PRIO_LOWEST" "0")
-    '("gtk" "GTK_PATH_PRIO_GTK" "4")
-    '("application" "GTK_PATH_PRIO_APPLICATION" "8")
-    '("theme" "GTK_PATH_PRIO_THEME" "10")
-    '("rc" "GTK_PATH_PRIO_RC" "12")
-    '("highest" "GTK_PATH_PRIO_HIGHEST" "15")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_PATH_WIDGET,
-;;   GTK_PATH_WIDGET_CLASS,
-;;   GTK_PATH_CLASS
-;; } GtkPathType;
-
-(define-enum-extended PathType
-  (in-module "Gtk")
-  (c-name "GtkPathType")
-  (values
-    '("widget" "GTK_PATH_WIDGET" "0")
-    '("widget-class" "GTK_PATH_WIDGET_CLASS" "1")
-    '("class" "GTK_PATH_CLASS" "2")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_POLICY_ALWAYS,
-;;   GTK_POLICY_AUTOMATIC,
-;;   GTK_POLICY_NEVER
-;; } GtkPolicyType;
-
-(define-enum-extended PolicyType
-  (in-module "Gtk")
-  (c-name "GtkPolicyType")
-  (values
-    '("always" "GTK_POLICY_ALWAYS" "0")
-    '("automatic" "GTK_POLICY_AUTOMATIC" "1")
-    '("never" "GTK_POLICY_NEVER" "2")
   )
 )
 
@@ -1289,24 +861,6 @@
     '("normal" "GTK_RELIEF_NORMAL" "0")
     '("half" "GTK_RELIEF_HALF" "1")
     '("none" "GTK_RELIEF_NONE" "2")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_RESIZE_PARENT,
-;;   GTK_RESIZE_QUEUE,
-;;   GTK_RESIZE_IMMEDIATE
-;; } GtkResizeMode;
-
-(define-enum-extended ResizeMode
-  (in-module "Gtk")
-  (c-name "GtkResizeMode")
-  (values
-    '("parent" "GTK_RESIZE_PARENT" "0")
-    '("queue" "GTK_RESIZE_QUEUE" "1")
-    '("immediate" "GTK_RESIZE_IMMEDIATE" "2")
   )
 )
 
@@ -1439,44 +993,6 @@
     '("text" "GTK_TOOLBAR_TEXT" "1")
     '("both" "GTK_TOOLBAR_BOTH" "2")
     '("both-horiz" "GTK_TOOLBAR_BOTH_HORIZ" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_WIN_POS_NONE,
-;;   GTK_WIN_POS_CENTER,
-;;   GTK_WIN_POS_MOUSE,
-;;   GTK_WIN_POS_CENTER_ALWAYS,
-;;   GTK_WIN_POS_CENTER_ON_PARENT
-;; } GtkWindowPosition;
-
-(define-enum-extended WindowPosition
-  (in-module "Gtk")
-  (c-name "GtkWindowPosition")
-  (values
-    '("none" "GTK_WIN_POS_NONE" "0")
-    '("center" "GTK_WIN_POS_CENTER" "1")
-    '("mouse" "GTK_WIN_POS_MOUSE" "2")
-    '("center-always" "GTK_WIN_POS_CENTER_ALWAYS" "3")
-    '("center-on-parent" "GTK_WIN_POS_CENTER_ON_PARENT" "4")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_WINDOW_TOPLEVEL,
-;;   GTK_WINDOW_POPUP
-;; } GtkWindowType;
-
-(define-enum-extended WindowType
-  (in-module "Gtk")
-  (c-name "GtkWindowType")
-  (values
-    '("toplevel" "GTK_WINDOW_TOPLEVEL" "0")
-    '("popup" "GTK_WINDOW_POPUP" "1")
   )
 )
 
@@ -1825,7 +1341,11 @@
 ;;   GTK_STATE_FLAG_FOCUSED      = 1 << 5,
 ;;   GTK_STATE_FLAG_BACKDROP     = 1 << 6,
 ;;   GTK_STATE_FLAG_DIR_LTR      = 1 << 7,
-;;   GTK_STATE_FLAG_DIR_RTL      = 1 << 8
+;;   GTK_STATE_FLAG_DIR_RTL      = 1 << 8,
+;;   GTK_STATE_FLAG_LINK         = 1 << 9,
+;;   GTK_STATE_FLAG_VISITED      = 1 << 10,
+;;   GTK_STATE_FLAG_CHECKED      = 1 << 11,
+;;   GTK_STATE_FLAG_DROP_ACTIVE  = 1 << 12
 ;; } GtkStateFlags;
 
 (define-flags-extended StateFlags
@@ -1842,6 +1362,10 @@
     '("backdrop" "GTK_STATE_FLAG_BACKDROP" "1 << 6")
     '("dir-ltr" "GTK_STATE_FLAG_DIR_LTR" "1 << 7")
     '("dir-rtl" "GTK_STATE_FLAG_DIR_RTL" "1 << 8")
+    '("link" "GTK_STATE_FLAG_LINK" "1 << 9")
+    '("visited" "GTK_STATE_FLAG_VISITED" "1 << 10")
+    '("checked" "GTK_STATE_FLAG_CHECKED" "1 << 11")
+    '("drop-active" "GTK_STATE_FLAG_DROP_ACTIVE" "1 << 12")
   )
 )
 
@@ -1986,7 +1510,8 @@
 ;;   GTK_INPUT_HINT_UPPERCASE_CHARS     = 1 << 4,
 ;;   GTK_INPUT_HINT_UPPERCASE_WORDS     = 1 << 5,
 ;;   GTK_INPUT_HINT_UPPERCASE_SENTENCES = 1 << 6,
-;;   GTK_INPUT_HINT_INHIBIT_OSK         = 1 << 7
+;;   GTK_INPUT_HINT_INHIBIT_OSK         = 1 << 7,
+;;   GTK_INPUT_HINT_VERTICAL_WRITING    = 1 << 8
 ;; } GtkInputHints;
 
 (define-flags-extended InputHints
@@ -2002,6 +1527,81 @@
     '("uppercase-words" "GTK_INPUT_HINT_UPPERCASE_WORDS" "1 << 5")
     '("uppercase-sentences" "GTK_INPUT_HINT_UPPERCASE_SENTENCES" "1 << 6")
     '("inhibit-osk" "GTK_INPUT_HINT_INHIBIT_OSK" "1 << 7")
+    '("vertical-writing" "GTK_INPUT_HINT_VERTICAL_WRITING" "1 << 8")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_PHASE_NONE,
+;;   GTK_PHASE_CAPTURE,
+;;   GTK_PHASE_BUBBLE,
+;;   GTK_PHASE_TARGET
+;; } GtkPropagationPhase;
+
+(define-enum-extended PropagationPhase
+  (in-module "Gtk")
+  (c-name "GtkPropagationPhase")
+  (values
+    '("none" "GTK_PHASE_NONE" "0")
+    '("capture" "GTK_PHASE_CAPTURE" "1")
+    '("bubble" "GTK_PHASE_BUBBLE" "2")
+    '("target" "GTK_PHASE_TARGET" "3")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_EVENT_SEQUENCE_NONE,
+;;   GTK_EVENT_SEQUENCE_CLAIMED,
+;;   GTK_EVENT_SEQUENCE_DENIED
+;; } GtkEventSequenceState;
+
+(define-enum-extended EventSequenceState
+  (in-module "Gtk")
+  (c-name "GtkEventSequenceState")
+  (values
+    '("none" "GTK_EVENT_SEQUENCE_NONE" "0")
+    '("claimed" "GTK_EVENT_SEQUENCE_CLAIMED" "1")
+    '("denied" "GTK_EVENT_SEQUENCE_DENIED" "2")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_PAN_DIRECTION_LEFT,
+;;   GTK_PAN_DIRECTION_RIGHT,
+;;   GTK_PAN_DIRECTION_UP,
+;;   GTK_PAN_DIRECTION_DOWN
+;; } GtkPanDirection;
+
+(define-enum-extended PanDirection
+  (in-module "Gtk")
+  (c-name "GtkPanDirection")
+  (values
+    '("left" "GTK_PAN_DIRECTION_LEFT" "0")
+    '("right" "GTK_PAN_DIRECTION_RIGHT" "1")
+    '("up" "GTK_PAN_DIRECTION_UP" "2")
+    '("down" "GTK_PAN_DIRECTION_DOWN" "3")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_POPOVER_CONSTRAINT_NONE,
+;;   GTK_POPOVER_CONSTRAINT_WINDOW
+;; } GtkPopoverConstraint;
+
+(define-enum-extended PopoverConstraint
+  (in-module "Gtk")
+  (c-name "GtkPopoverConstraint")
+  (values
+    '("none" "GTK_POPOVER_CONSTRAINT_NONE" "0")
+    '("window" "GTK_POPOVER_CONSTRAINT_WINDOW" "1")
   )
 )
 
@@ -2061,74 +1661,6 @@
     '("bad-filename" "GTK_FILE_CHOOSER_ERROR_BAD_FILENAME" "1")
     '("already-exists" "GTK_FILE_CHOOSER_ERROR_ALREADY_EXISTS" "2")
     '("incomplete-hostname" "GTK_FILE_CHOOSER_ERROR_INCOMPLETE_HOSTNAME" "3")
-  )
-)
-
-;; From gtkfilechooserprivate.h
-
-;; Original typedef:
-;; typedef enum {
-;;   LOAD_EMPTY,			/* There is no model */
-;;   LOAD_PRELOAD,			/* Model is loading and a timer is running; model isn't inserted into the tree yet */
-;;   LOAD_LOADING,			/* Timeout expired, model is inserted into the tree, but not fully loaded yet */
-;;   LOAD_FINISHED			/* Model is fully loaded and inserted into the tree */
-;; } LoadState;
-
-(define-enum-extended LoadState
-  (in-module "Gtk")
-  (c-name "LoadState")
-  (values
-    '("empty" "LOAD_EMPTY" "0")
-    '("preload" "LOAD_PRELOAD" "1")
-    '("loading" "LOAD_LOADING" "2")
-    '("finished" "LOAD_FINISHED" "3")
-  )
-)
-
-;; Original typedef:
-;; typedef enum {
-;;   RELOAD_EMPTY,			/* No folder has been set */
-;;   RELOAD_HAS_FOLDER		/* We have a folder, although it may not be completely loaded yet; no need to reload */
-;; } ReloadState;
-
-(define-enum-extended ReloadState
-  (in-module "Gtk")
-  (c-name "ReloadState")
-  (values
-    '("empty" "RELOAD_EMPTY" "0")
-    '("has-folder" "RELOAD_HAS_FOLDER" "1")
-  )
-)
-
-;; Original typedef:
-;; typedef enum {
-;;   LOCATION_MODE_PATH_BAR,
-;;   LOCATION_MODE_FILENAME_ENTRY
-;; } LocationMode;
-
-(define-enum-extended LocationMode
-  (in-module "Gtk")
-  (c-name "LocationMode")
-  (values
-    '("path-bar" "LOCATION_MODE_PATH_BAR" "0")
-    '("filename-entry" "LOCATION_MODE_FILENAME_ENTRY" "1")
-  )
-)
-
-;; Original typedef:
-;; typedef enum {
-;;   OPERATION_MODE_BROWSE,
-;;   OPERATION_MODE_SEARCH,
-;;   OPERATION_MODE_RECENT
-;; } OperationMode;
-
-(define-enum-extended OperationMode
-  (in-module "Gtk")
-  (c-name "OperationMode")
-  (values
-    '("browse" "OPERATION_MODE_BROWSE" "0")
-    '("search" "OPERATION_MODE_SEARCH" "1")
-    '("recent" "OPERATION_MODE_RECENT" "2")
   )
 )
 
@@ -2226,7 +1758,11 @@
 ;;   GTK_ICON_LOOKUP_FORCE_SVG        = 1 << 1,
 ;;   GTK_ICON_LOOKUP_USE_BUILTIN      = 1 << 2,
 ;;   GTK_ICON_LOOKUP_GENERIC_FALLBACK = 1 << 3,
-;;   GTK_ICON_LOOKUP_FORCE_SIZE       = 1 << 4
+;;   GTK_ICON_LOOKUP_FORCE_SIZE       = 1 << 4,
+;;   GTK_ICON_LOOKUP_FORCE_REGULAR    = 1 << 5,
+;;   GTK_ICON_LOOKUP_FORCE_SYMBOLIC   = 1 << 6,
+;;   GTK_ICON_LOOKUP_DIR_LTR          = 1 << 7,
+;;   GTK_ICON_LOOKUP_DIR_RTL          = 1 << 8
 ;; } GtkIconLookupFlags;
 
 (define-flags-extended IconLookupFlags
@@ -2238,6 +1774,10 @@
     '("use-builtin" "GTK_ICON_LOOKUP_USE_BUILTIN" "1 << 2")
     '("generic-fallback" "GTK_ICON_LOOKUP_GENERIC_FALLBACK" "1 << 3")
     '("force-size" "GTK_ICON_LOOKUP_FORCE_SIZE" "1 << 4")
+    '("force-regular" "GTK_ICON_LOOKUP_FORCE_REGULAR" "1 << 5")
+    '("force-symbolic" "GTK_ICON_LOOKUP_FORCE_SYMBOLIC" "1 << 6")
+    '("dir-ltr" "GTK_ICON_LOOKUP_DIR_LTR" "1 << 7")
+    '("dir-rtl" "GTK_ICON_LOOKUP_DIR_RTL" "1 << 8")
   )
 )
 
@@ -2293,7 +1833,8 @@
 ;;   GTK_IMAGE_ICON_SET,
 ;;   GTK_IMAGE_ANIMATION,
 ;;   GTK_IMAGE_ICON_NAME,
-;;   GTK_IMAGE_GICON
+;;   GTK_IMAGE_GICON,
+;;   GTK_IMAGE_SURFACE
 ;; } GtkImageType;
 
 (define-enum-extended ImageType
@@ -2307,40 +1848,46 @@
     '("animation" "GTK_IMAGE_ANIMATION" "4")
     '("icon-name" "GTK_IMAGE_ICON_NAME" "5")
     '("gicon" "GTK_IMAGE_GICON" "6")
+    '("surface" "GTK_IMAGE_SURFACE" "7")
   )
 )
 
-;; From gtkmenuprivate.h
+;; From gtkmenu.h
 
 ;; Original typedef:
 ;; typedef enum
 ;; {
-;;   GTK_DIRECTION_LEFT,
-;;   GTK_DIRECTION_RIGHT
-;; } GtkSubmenuDirection;
+;;   GTK_ARROWS_BOTH,
+;;   GTK_ARROWS_START,
+;;   GTK_ARROWS_END
+;; } GtkArrowPlacement;
 
-(define-enum-extended SubmenuDirection
+(define-enum-extended ArrowPlacement
   (in-module "Gtk")
-  (c-name "GtkSubmenuDirection")
+  (c-name "GtkArrowPlacement")
   (values
-    '("left" "GTK_DIRECTION_LEFT" "0")
-    '("right" "GTK_DIRECTION_RIGHT" "1")
+    '("both" "GTK_ARROWS_BOTH" "0")
+    '("start" "GTK_ARROWS_START" "1")
+    '("end" "GTK_ARROWS_END" "2")
   )
 )
 
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_TOP_BOTTOM,
-;;   GTK_LEFT_RIGHT
-;; } GtkSubmenuPlacement;
+;; From gtkmenutrackeritem.h
 
-(define-enum-extended SubmenuPlacement
+;; Original typedef:
+;; typedef enum  {
+;;   GTK_MENU_TRACKER_ITEM_ROLE_NORMAL,
+;;   GTK_MENU_TRACKER_ITEM_ROLE_CHECK,
+;;   GTK_MENU_TRACKER_ITEM_ROLE_RADIO,
+;; } GtkMenuTrackerItemRole;
+
+(define-enum-extended MenuTrackerItemRole
   (in-module "Gtk")
-  (c-name "GtkSubmenuPlacement")
+  (c-name "GtkMenuTrackerItemRole")
   (values
-    '("top-bottom" "GTK_TOP_BOTTOM" "0")
-    '("left-right" "GTK_LEFT_RIGHT" "1")
+    '("normal" "GTK_MENU_TRACKER_ITEM_ROLE_NORMAL" "0")
+    '("check" "GTK_MENU_TRACKER_ITEM_ROLE_CHECK" "1")
+    '("radio" "GTK_MENU_TRACKER_ITEM_ROLE_RADIO" "2")
   )
 )
 
@@ -2370,6 +1917,25 @@
   )
 )
 
+;; From gtkmodelbutton.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_BUTTON_ROLE_NORMAL,
+;;   GTK_BUTTON_ROLE_CHECK,
+;;   GTK_BUTTON_ROLE_RADIO
+;; } GtkButtonRole;
+
+(define-enum-extended ButtonRole
+  (in-module "Gtk")
+  (c-name "GtkButtonRole")
+  (values
+    '("normal" "GTK_BUTTON_ROLE_NORMAL" "0")
+    '("check" "GTK_BUTTON_ROLE_CHECK" "1")
+    '("radio" "GTK_BUTTON_ROLE_RADIO" "2")
+  )
+)
+
 ;; From gtknotebook.h
 
 ;; Original typedef:
@@ -2385,6 +1951,44 @@
   (values
     '("first" "GTK_NOTEBOOK_TAB_FIRST" "0")
     '("last" "GTK_NOTEBOOK_TAB_LAST" "1")
+  )
+)
+
+;; From gtkpadcontroller.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_PAD_ACTION_BUTTON,
+;;   GTK_PAD_ACTION_RING,
+;;   GTK_PAD_ACTION_STRIP
+;; } GtkPadActionType;
+
+(define-enum-extended PadActionType
+  (in-module "Gtk")
+  (c-name "GtkPadActionType")
+  (values
+    '("button" "GTK_PAD_ACTION_BUTTON" "0")
+    '("ring" "GTK_PAD_ACTION_RING" "1")
+    '("strip" "GTK_PAD_ACTION_STRIP" "2")
+  )
+)
+
+;; From gtkplacessidebar.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_PLACES_OPEN_NORMAL     = 1 << 0,
+;;   GTK_PLACES_OPEN_NEW_TAB    = 1 << 1,
+;;   GTK_PLACES_OPEN_NEW_WINDOW = 1 << 2
+;; } GtkPlacesOpenFlags;
+
+(define-flags-extended PlacesOpenFlags
+  (in-module "Gtk")
+  (c-name "GtkPlacesOpenFlags")
+  (values
+    '("normal" "GTK_PLACES_OPEN_NORMAL" "1 << 0")
+    '("new-tab" "GTK_PLACES_OPEN_NEW_TAB" "1 << 1")
+    '("new-window" "GTK_PLACES_OPEN_NEW_WINDOW" "1 << 2")
   )
 )
 
@@ -2581,26 +2185,6 @@
   )
 )
 
-;; From gtkprintoperation-private.h
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_PAGE_DRAWING_STATE_READY,
-;;   GTK_PAGE_DRAWING_STATE_DRAWING,
-;;   GTK_PAGE_DRAWING_STATE_DEFERRED_DRAWING
-;; } GtkPageDrawingState;
-
-(define-enum-extended PageDrawingState
-  (in-module "Gtk")
-  (c-name "GtkPageDrawingState")
-  (values
-    '("ready" "GTK_PAGE_DRAWING_STATE_READY" "0")
-    '("drawing" "GTK_PAGE_DRAWING_STATE_DRAWING" "1")
-    '("deferred-drawing" "GTK_PAGE_DRAWING_STATE_DEFERRED_DRAWING" "2")
-  )
-)
-
 ;; From gtkrbtree.h
 
 ;; Original typedef:
@@ -2766,19 +2350,120 @@
   )
 )
 
-;; From gtksizegroup-private.h
+;; From gtkrevealer.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_REVEALER_TRANSITION_TYPE_NONE,
+;;   GTK_REVEALER_TRANSITION_TYPE_CROSSFADE,
+;;   GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT,
+;;   GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT,
+;;   GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP,
+;;   GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
+;; } GtkRevealerTransitionType;
+
+(define-enum-extended RevealerTransitionType
+  (in-module "Gtk")
+  (c-name "GtkRevealerTransitionType")
+  (values
+    '("none" "GTK_REVEALER_TRANSITION_TYPE_NONE" "0")
+    '("crossfade" "GTK_REVEALER_TRANSITION_TYPE_CROSSFADE" "1")
+    '("slide-right" "GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT" "2")
+    '("slide-left" "GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT" "3")
+    '("slide-up" "GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP" "4")
+    '("slide-down" "GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN" "5")
+  )
+)
+
+;; From gtkscrolledwindow.h
 
 ;; Original typedef:
 ;; typedef enum
 ;; {
-;;   GTK_QUEUE_RESIZE_INVALIDATE_ONLY = 1 << 0
-;; } GtkQueueResizeFlags;
+;;   GTK_CORNER_TOP_LEFT,
+;;   GTK_CORNER_BOTTOM_LEFT,
+;;   GTK_CORNER_TOP_RIGHT,
+;;   GTK_CORNER_BOTTOM_RIGHT
+;; } GtkCornerType;
 
-(define-flags-extended QueueResizeFlags
+(define-enum-extended CornerType
   (in-module "Gtk")
-  (c-name "GtkQueueResizeFlags")
+  (c-name "GtkCornerType")
   (values
-    '("invalidate-only" "GTK_QUEUE_RESIZE_INVALIDATE_ONLY" "1 << 0")
+    '("top-left" "GTK_CORNER_TOP_LEFT" "0")
+    '("bottom-left" "GTK_CORNER_BOTTOM_LEFT" "1")
+    '("top-right" "GTK_CORNER_TOP_RIGHT" "2")
+    '("bottom-right" "GTK_CORNER_BOTTOM_RIGHT" "3")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_POLICY_ALWAYS,
+;;   GTK_POLICY_AUTOMATIC,
+;;   GTK_POLICY_NEVER,
+;;   GTK_POLICY_EXTERNAL
+;; } GtkPolicyType;
+
+(define-enum-extended PolicyType
+  (in-module "Gtk")
+  (c-name "GtkPolicyType")
+  (values
+    '("always" "GTK_POLICY_ALWAYS" "0")
+    '("automatic" "GTK_POLICY_AUTOMATIC" "1")
+    '("never" "GTK_POLICY_NEVER" "2")
+    '("external" "GTK_POLICY_EXTERNAL" "3")
+  )
+)
+
+;; From gtkselection.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_TARGET_SAME_APP = 1 << 0,    /*< nick=same-app >*/
+;;   GTK_TARGET_SAME_WIDGET = 1 << 1, /*< nick=same-widget >*/
+;;   GTK_TARGET_OTHER_APP = 1 << 2,   /*< nick=other-app >*/
+;;   GTK_TARGET_OTHER_WIDGET = 1 << 3 /*< nick=other-widget >*/
+;; } GtkTargetFlags;
+
+(define-flags-extended TargetFlags
+  (in-module "Gtk")
+  (c-name "GtkTargetFlags")
+  (values
+    '("same-app" "GTK_TARGET_SAME_APP" "1 << 0")
+    '("same-widget" "GTK_TARGET_SAME_WIDGET" "1 << 1")
+    '("other-app" "GTK_TARGET_OTHER_APP" "1 << 2")
+    '("other-widget" "GTK_TARGET_OTHER_WIDGET" "1 << 3")
+  )
+)
+
+;; From gtkshortcutsshortcut.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_SHORTCUT_ACCELERATOR,
+;;   GTK_SHORTCUT_GESTURE_PINCH,
+;;   GTK_SHORTCUT_GESTURE_STRETCH,
+;;   GTK_SHORTCUT_GESTURE_ROTATE_CLOCKWISE,
+;;   GTK_SHORTCUT_GESTURE_ROTATE_COUNTERCLOCKWISE,
+;;   GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_LEFT,
+;;   GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_RIGHT,
+;;   GTK_SHORTCUT_GESTURE
+;; } GtkShortcutType;
+
+(define-enum-extended ShortcutType
+  (in-module "Gtk")
+  (c-name "GtkShortcutType")
+  (values
+    '("accelerator" "GTK_SHORTCUT_ACCELERATOR" "0")
+    '("gesture-pinch" "GTK_SHORTCUT_GESTURE_PINCH" "1")
+    '("gesture-stretch" "GTK_SHORTCUT_GESTURE_STRETCH" "2")
+    '("gesture-rotate-clockwise" "GTK_SHORTCUT_GESTURE_ROTATE_CLOCKWISE" "3")
+    '("gesture-rotate-counterclockwise" "GTK_SHORTCUT_GESTURE_ROTATE_COUNTERCLOCKWISE" "4")
+    '("gesture-two-finger-swipe-left" "GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_LEFT" "5")
+    '("gesture-two-finger-swipe-right" "GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_RIGHT" "6")
+    '("gesture" "GTK_SHORTCUT_GESTURE" "7")
   )
 )
 
@@ -2826,6 +2511,78 @@
   )
 )
 
+;; From gtkstack.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_STACK_TRANSITION_TYPE_NONE,
+;;   GTK_STACK_TRANSITION_TYPE_CROSSFADE,
+;;   GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT,
+;;   GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT,
+;;   GTK_STACK_TRANSITION_TYPE_SLIDE_UP,
+;;   GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN,
+;;   GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT,
+;;   GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_UP,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_DOWN,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_LEFT,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_RIGHT,
+;;   GTK_STACK_TRANSITION_TYPE_UNDER_UP,
+;;   GTK_STACK_TRANSITION_TYPE_UNDER_DOWN,
+;;   GTK_STACK_TRANSITION_TYPE_UNDER_LEFT,
+;;   GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT,
+;;   GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT
+;; } GtkStackTransitionType;
+
+(define-enum-extended StackTransitionType
+  (in-module "Gtk")
+  (c-name "GtkStackTransitionType")
+  (values
+    '("none" "GTK_STACK_TRANSITION_TYPE_NONE" "0")
+    '("crossfade" "GTK_STACK_TRANSITION_TYPE_CROSSFADE" "1")
+    '("slide-right" "GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT" "2")
+    '("slide-left" "GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT" "3")
+    '("slide-up" "GTK_STACK_TRANSITION_TYPE_SLIDE_UP" "4")
+    '("slide-down" "GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN" "5")
+    '("slide-left-right" "GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT" "6")
+    '("slide-up-down" "GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN" "7")
+    '("over-up" "GTK_STACK_TRANSITION_TYPE_OVER_UP" "8")
+    '("over-down" "GTK_STACK_TRANSITION_TYPE_OVER_DOWN" "9")
+    '("over-left" "GTK_STACK_TRANSITION_TYPE_OVER_LEFT" "10")
+    '("over-right" "GTK_STACK_TRANSITION_TYPE_OVER_RIGHT" "11")
+    '("under-up" "GTK_STACK_TRANSITION_TYPE_UNDER_UP" "12")
+    '("under-down" "GTK_STACK_TRANSITION_TYPE_UNDER_DOWN" "13")
+    '("under-left" "GTK_STACK_TRANSITION_TYPE_UNDER_LEFT" "14")
+    '("under-right" "GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT" "15")
+    '("over-up-down" "GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN" "16")
+    '("over-down-up" "GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP" "17")
+    '("over-left-right" "GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT" "18")
+    '("over-right-left" "GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT" "19")
+  )
+)
+
+;; From gtkstylecontext.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_STYLE_CONTEXT_PRINT_NONE         = 0,
+;;   GTK_STYLE_CONTEXT_PRINT_RECURSE      = 1 << 0,
+;;   GTK_STYLE_CONTEXT_PRINT_SHOW_STYLE   = 1 << 1
+;; } GtkStyleContextPrintFlags;
+
+(define-flags-extended StyleContextPrintFlags
+  (in-module "Gtk")
+  (c-name "GtkStyleContextPrintFlags")
+  (values
+    '("none" "GTK_STYLE_CONTEXT_PRINT_NONE" "0x0")
+    '("recurse" "GTK_STYLE_CONTEXT_PRINT_RECURSE" "1 << 0")
+    '("show-style" "GTK_STYLE_CONTEXT_PRINT_SHOW_STYLE" "1 << 1")
+  )
+)
+
 ;; From gtktextbuffer.h
 
 ;; Original typedef:
@@ -2843,44 +2600,6 @@
     '("buffer-contents" "GTK_TEXT_BUFFER_TARGET_INFO_BUFFER_CONTENTS" "-1")
     '("rich-text" "GTK_TEXT_BUFFER_TARGET_INFO_RICH_TEXT" "-2")
     '("text" "GTK_TEXT_BUFFER_TARGET_INFO_TEXT" "-3")
-  )
-)
-
-;; From gtktexthandleprivate.h
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_TEXT_HANDLE_POSITION_CURSOR,
-;;   GTK_TEXT_HANDLE_POSITION_SELECTION_START,
-;;   GTK_TEXT_HANDLE_POSITION_SELECTION_END = GTK_TEXT_HANDLE_POSITION_CURSOR
-;; } GtkTextHandlePosition;
-
-(define-enum-extended TextHandlePosition
-  (in-module "Gtk")
-  (c-name "GtkTextHandlePosition")
-  (values
-    '("cursor" "GTK_TEXT_HANDLE_POSITION_CURSOR" "0")
-    '("selection-start" "GTK_TEXT_HANDLE_POSITION_SELECTION_START" "1")
-    '("selection-end" "GTK_TEXT_HANDLE_POSITION_SELECTION_END" "0")
-  )
-)
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_TEXT_HANDLE_MODE_NONE,
-;;   GTK_TEXT_HANDLE_MODE_CURSOR,
-;;   GTK_TEXT_HANDLE_MODE_SELECTION
-;; } GtkTextHandleMode;
-
-(define-enum-extended TextHandleMode
-  (in-module "Gtk")
-  (c-name "GtkTextHandleMode")
-  (values
-    '("none" "GTK_TEXT_HANDLE_MODE_NONE" "0")
-    '("cursor" "GTK_TEXT_HANDLE_MODE_CURSOR" "1")
-    '("selection" "GTK_TEXT_HANDLE_MODE_SELECTION" "2")
   )
 )
 
@@ -2909,7 +2628,9 @@
 ;; Original typedef:
 ;; typedef enum
 ;; {
+;;   /*< private >*/
 ;;   GTK_TEXT_WINDOW_PRIVATE,
+;;   /*< public >*/
 ;;   GTK_TEXT_WINDOW_WIDGET,
 ;;   GTK_TEXT_WINDOW_TEXT,
 ;;   GTK_TEXT_WINDOW_LEFT,
@@ -2929,6 +2650,42 @@
     '("right" "GTK_TEXT_WINDOW_RIGHT" "4")
     '("top" "GTK_TEXT_WINDOW_TOP" "5")
     '("bottom" "GTK_TEXT_WINDOW_BOTTOM" "6")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_TEXT_VIEW_LAYER_BELOW,
+;;   GTK_TEXT_VIEW_LAYER_ABOVE,
+;;   GTK_TEXT_VIEW_LAYER_BELOW_TEXT,
+;;   GTK_TEXT_VIEW_LAYER_ABOVE_TEXT
+;; } GtkTextViewLayer;
+
+(define-enum-extended TextViewLayer
+  (in-module "Gtk")
+  (c-name "GtkTextViewLayer")
+  (values
+    '("below" "GTK_TEXT_VIEW_LAYER_BELOW" "0")
+    '("above" "GTK_TEXT_VIEW_LAYER_ABOVE" "1")
+    '("below-text" "GTK_TEXT_VIEW_LAYER_BELOW_TEXT" "2")
+    '("above-text" "GTK_TEXT_VIEW_LAYER_ABOVE_TEXT" "3")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_TEXT_EXTEND_SELECTION_WORD,
+;;   GTK_TEXT_EXTEND_SELECTION_LINE
+;; } GtkTextExtendSelection;
+
+(define-enum-extended TextExtendSelection
+  (in-module "Gtk")
+  (c-name "GtkTextExtendSelection")
+  (values
+    '("word" "GTK_TEXT_EXTEND_SELECTION_WORD" "0")
+    '("line" "GTK_TEXT_EXTEND_SELECTION_LINE" "1")
   )
 )
 
@@ -2987,25 +2744,6 @@
   )
 )
 
-;; From gtktreeprivate.h
-
-;; Original typedef:
-;; typedef enum
-;; {
-;;   GTK_TREE_SELECT_MODE_TOGGLE = 1 << 0,
-;;   GTK_TREE_SELECT_MODE_EXTEND = 1 << 1
-;; }
-;; GtkTreeSelectMode;
-
-(define-flags-extended TreeSelectMode
-  (in-module "Gtk")
-  (c-name "GtkTreeSelectMode")
-  (values
-    '("toggle" "GTK_TREE_SELECT_MODE_TOGGLE" "1 << 0")
-    '("extend" "GTK_TREE_SELECT_MODE_EXTEND" "1 << 1")
-  )
-)
-
 ;; From gtktreeviewcolumn.h
 
 ;; Original typedef:
@@ -3049,41 +2787,6 @@
     '("after" "GTK_TREE_VIEW_DROP_AFTER" "1")
     '("into-or-before" "GTK_TREE_VIEW_DROP_INTO_OR_BEFORE" "2")
     '("into-or-after" "GTK_TREE_VIEW_DROP_INTO_OR_AFTER" "3")
-  )
-)
-
-;; From gtkuimanager.h
-
-;; Original typedef:
-;; typedef enum {
-;;   GTK_UI_MANAGER_AUTO              = 0,
-;;   GTK_UI_MANAGER_MENUBAR           = 1 << 0,
-;;   GTK_UI_MANAGER_MENU              = 1 << 1,
-;;   GTK_UI_MANAGER_TOOLBAR           = 1 << 2,
-;;   GTK_UI_MANAGER_PLACEHOLDER       = 1 << 3,
-;;   GTK_UI_MANAGER_POPUP             = 1 << 4,
-;;   GTK_UI_MANAGER_MENUITEM          = 1 << 5,
-;;   GTK_UI_MANAGER_TOOLITEM          = 1 << 6,
-;;   GTK_UI_MANAGER_SEPARATOR         = 1 << 7,
-;;   GTK_UI_MANAGER_ACCELERATOR       = 1 << 8,
-;;   GTK_UI_MANAGER_POPUP_WITH_ACCELS = 1 << 9
-;; } GtkUIManagerItemType;
-
-(define-flags-extended UIManagerItemType
-  (in-module "Gtk")
-  (c-name "GtkUIManagerItemType")
-  (values
-    '("auto" "GTK_UI_MANAGER_AUTO" "0x0")
-    '("menubar" "GTK_UI_MANAGER_MENUBAR" "1 << 0")
-    '("menu" "GTK_UI_MANAGER_MENU" "1 << 1")
-    '("toolbar" "GTK_UI_MANAGER_TOOLBAR" "1 << 2")
-    '("placeholder" "GTK_UI_MANAGER_PLACEHOLDER" "1 << 3")
-    '("popup" "GTK_UI_MANAGER_POPUP" "1 << 4")
-    '("menuitem" "GTK_UI_MANAGER_MENUITEM" "1 << 5")
-    '("toolitem" "GTK_UI_MANAGER_TOOLITEM" "1 << 6")
-    '("separator" "GTK_UI_MANAGER_SEPARATOR" "1 << 7")
-    '("accelerator" "GTK_UI_MANAGER_ACCELERATOR" "1 << 8")
-    '("popup-with-accels" "GTK_UI_MANAGER_POPUP_WITH_ACCELS" "1 << 9")
   )
 )
 
@@ -3152,6 +2855,46 @@
     '("grab-key" "GTK_WIN32_EMBED_GRAB_KEY" "12")
     '("ungrab-key" "GTK_WIN32_EMBED_UNGRAB_KEY" "13")
     '("last" "GTK_WIN32_EMBED_LAST" "14")
+  )
+)
+
+;; From gtkwindow.h
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_WINDOW_TOPLEVEL,
+;;   GTK_WINDOW_POPUP
+;; } GtkWindowType;
+
+(define-enum-extended WindowType
+  (in-module "Gtk")
+  (c-name "GtkWindowType")
+  (values
+    '("toplevel" "GTK_WINDOW_TOPLEVEL" "0")
+    '("popup" "GTK_WINDOW_POPUP" "1")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_WIN_POS_NONE,
+;;   GTK_WIN_POS_CENTER,
+;;   GTK_WIN_POS_MOUSE,
+;;   GTK_WIN_POS_CENTER_ALWAYS,
+;;   GTK_WIN_POS_CENTER_ON_PARENT
+;; } GtkWindowPosition;
+
+(define-enum-extended WindowPosition
+  (in-module "Gtk")
+  (c-name "GtkWindowPosition")
+  (values
+    '("none" "GTK_WIN_POS_NONE" "0")
+    '("center" "GTK_WIN_POS_CENTER" "1")
+    '("mouse" "GTK_WIN_POS_MOUSE" "2")
+    '("center-always" "GTK_WIN_POS_CENTER_ALWAYS" "3")
+    '("center-on-parent" "GTK_WIN_POS_CENTER_ON_PARENT" "4")
   )
 )
 
@@ -3308,6 +3051,125 @@
     '("color" "GTK_RC_TOKEN_COLOR" "(G_TOKEN_LAST) + 37")
     '("unbind" "GTK_RC_TOKEN_UNBIND" "(G_TOKEN_LAST) + 38")
     '("last" "GTK_RC_TOKEN_LAST" "(G_TOKEN_LAST) + 39")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_PATH_PRIO_LOWEST      = 0,
+;;   GTK_PATH_PRIO_GTK         = 4,
+;;   GTK_PATH_PRIO_APPLICATION = 8,
+;;   GTK_PATH_PRIO_THEME       = 10,
+;;   GTK_PATH_PRIO_RC          = 12,
+;;   GTK_PATH_PRIO_HIGHEST     = 15
+;; } GtkPathPriorityType;
+
+(define-enum-extended PathPriorityType
+  (in-module "Gtk")
+  (c-name "GtkPathPriorityType")
+  (values
+    '("lowest" "GTK_PATH_PRIO_LOWEST" "0")
+    '("gtk" "GTK_PATH_PRIO_GTK" "4")
+    '("application" "GTK_PATH_PRIO_APPLICATION" "8")
+    '("theme" "GTK_PATH_PRIO_THEME" "10")
+    '("rc" "GTK_PATH_PRIO_RC" "12")
+    '("highest" "GTK_PATH_PRIO_HIGHEST" "15")
+  )
+)
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_PATH_WIDGET,
+;;   GTK_PATH_WIDGET_CLASS,
+;;   GTK_PATH_CLASS
+;; } GtkPathType;
+
+(define-enum-extended PathType
+  (in-module "Gtk")
+  (c-name "GtkPathType")
+  (values
+    '("widget" "GTK_PATH_WIDGET" "0")
+    '("widget-class" "GTK_PATH_WIDGET_CLASS" "1")
+    '("class" "GTK_PATH_CLASS" "2")
+  )
+)
+
+;; From gtkstyle.h
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_EXPANDER_COLLAPSED,
+;;   GTK_EXPANDER_SEMI_COLLAPSED,
+;;   GTK_EXPANDER_SEMI_EXPANDED,
+;;   GTK_EXPANDER_EXPANDED
+;; } GtkExpanderStyle;
+
+(define-enum-extended ExpanderStyle
+  (in-module "Gtk")
+  (c-name "GtkExpanderStyle")
+  (values
+    '("collapsed" "GTK_EXPANDER_COLLAPSED" "0")
+    '("semi-collapsed" "GTK_EXPANDER_SEMI_COLLAPSED" "1")
+    '("semi-expanded" "GTK_EXPANDER_SEMI_EXPANDED" "2")
+    '("expanded" "GTK_EXPANDER_EXPANDED" "3")
+  )
+)
+
+;; From gtktable.h
+
+;; Original typedef:
+;; typedef enum
+;; {
+;;   GTK_EXPAND = 1 << 0,
+;;   GTK_SHRINK = 1 << 1,
+;;   GTK_FILL   = 1 << 2
+;; } GtkAttachOptions;
+
+(define-flags-extended AttachOptions
+  (in-module "Gtk")
+  (c-name "GtkAttachOptions")
+  (values
+    '("expand" "GTK_EXPAND" "1 << 0")
+    '("shrink" "GTK_SHRINK" "1 << 1")
+    '("fill" "GTK_FILL" "1 << 2")
+  )
+)
+
+;; From gtkuimanager.h
+
+;; Original typedef:
+;; typedef enum {
+;;   GTK_UI_MANAGER_AUTO              = 0,
+;;   GTK_UI_MANAGER_MENUBAR           = 1 << 0,
+;;   GTK_UI_MANAGER_MENU              = 1 << 1,
+;;   GTK_UI_MANAGER_TOOLBAR           = 1 << 2,
+;;   GTK_UI_MANAGER_PLACEHOLDER       = 1 << 3,
+;;   GTK_UI_MANAGER_POPUP             = 1 << 4,
+;;   GTK_UI_MANAGER_MENUITEM          = 1 << 5,
+;;   GTK_UI_MANAGER_TOOLITEM          = 1 << 6,
+;;   GTK_UI_MANAGER_SEPARATOR         = 1 << 7,
+;;   GTK_UI_MANAGER_ACCELERATOR       = 1 << 8,
+;;   GTK_UI_MANAGER_POPUP_WITH_ACCELS = 1 << 9
+;; } GtkUIManagerItemType;
+
+(define-flags-extended UIManagerItemType
+  (in-module "Gtk")
+  (c-name "GtkUIManagerItemType")
+  (values
+    '("auto" "GTK_UI_MANAGER_AUTO" "0x0")
+    '("menubar" "GTK_UI_MANAGER_MENUBAR" "1 << 0")
+    '("menu" "GTK_UI_MANAGER_MENU" "1 << 1")
+    '("toolbar" "GTK_UI_MANAGER_TOOLBAR" "1 << 2")
+    '("placeholder" "GTK_UI_MANAGER_PLACEHOLDER" "1 << 3")
+    '("popup" "GTK_UI_MANAGER_POPUP" "1 << 4")
+    '("menuitem" "GTK_UI_MANAGER_MENUITEM" "1 << 5")
+    '("toolitem" "GTK_UI_MANAGER_TOOLITEM" "1 << 6")
+    '("separator" "GTK_UI_MANAGER_SEPARATOR" "1 << 7")
+    '("accelerator" "GTK_UI_MANAGER_ACCELERATOR" "1 << 8")
+    '("popup-with-accels" "GTK_UI_MANAGER_POPUP_WITH_ACCELS" "1 << 9")
   )
 )
 

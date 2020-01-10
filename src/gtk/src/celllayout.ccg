@@ -23,7 +23,7 @@
 
 static void SignalProxy_CellData_gtk_callback(GtkCellLayout* /* cell_layout */, GtkCellRenderer* /* cell */, GtkTreeModel* tree_model, GtkTreeIter* iter, gpointer data)
 {
-  Gtk::CellLayout::SlotCellData* the_slot = static_cast<Gtk::CellLayout::SlotCellData*>(data);
+  auto the_slot = static_cast<Gtk::CellLayout::SlotCellData*>(data);
 
   try
   {
@@ -62,7 +62,7 @@ void CellLayout::set_cell_data_func(CellRenderer& cell, const SlotCellData& slot
   // Create a copy of the slot object.  A pointer to this will be passed
   // through the callback's data parameter.  It will be deleted
   // when SignalProxy_CellData_gtk_callback_destroy() is called.
-  SlotCellData* slot_copy = new SlotCellData(slot);
+  auto slot_copy = new SlotCellData(slot);
 
   gtk_cell_layout_set_cell_data_func(gobj(), cell.gobj(),
       &SignalProxy_CellData_gtk_callback, slot_copy,
@@ -71,12 +71,11 @@ void CellLayout::set_cell_data_func(CellRenderer& cell, const SlotCellData& slot
 
 CellRenderer* CellLayout::get_first_cell()
 {
-  typedef std::vector<Gtk::CellRenderer*> type_vecCellRenderers;
-  type_vecCellRenderers vecCellRenderers = get_cells();
+  auto vecCellRenderers = get_cells();
   if(!vecCellRenderers.empty())
     return vecCellRenderers[0];
   else
-    return 0;
+    return nullptr;
 }
 
 const CellRenderer* CellLayout::get_first_cell() const

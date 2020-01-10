@@ -47,7 +47,7 @@ namespace Gtk
  *
  * @ingroup Widgets
  */
-class InfoBar : public HBox //Note: The C object really derives from this convenience type.
+class InfoBar : public HBox //Note: The C object derives from GtkBox.
 {
   _CLASS_GTKOBJECT(InfoBar, GtkInfoBar, GTK_INFO_BAR, Gtk::HBox, GtkHBox)
 public:
@@ -67,7 +67,7 @@ public:
   _WRAP_METHOD(void add_action_widget(Widget& child, int response_id), gtk_info_bar_add_action_widget)
 
   _WRAP_METHOD(Button* add_button(const Glib::ustring& button_text, int response_id), gtk_info_bar_add_button)
-  _WRAP_METHOD(Button* add_button(const Gtk::StockID& stock_id, int response_id), gtk_info_bar_add_button)
+  _WRAP_METHOD(Button* add_button(const Gtk::StockID& stock_id, int response_id), gtk_info_bar_add_button, deprecated "Use the add_button() that takes a Glib::ustring instead.")
 
   _IGNORE(gtk_info_bar_add_buttons)
   _WRAP_METHOD(void set_response_sensitive(int response_id, bool setting = true), gtk_info_bar_set_response_sensitive)
@@ -78,12 +78,16 @@ public:
   _WRAP_METHOD(void set_message_type(MessageType message_type), gtk_info_bar_set_message_type)
   _WRAP_METHOD(MessageType get_message_type() const, gtk_info_bar_get_message_type)
 
+  _WRAP_METHOD(void set_show_close_button(bool setting = true), gtk_info_bar_set_show_close_button)
+  _WRAP_METHOD(bool get_show_close_button() const, gtk_info_bar_get_show_close_button)
+
 
   _IGNORE_SIGNAL("close")
 
   _WRAP_SIGNAL(void response(int response_id), "response")
 
   _WRAP_PROPERTY("message-type", MessageType)
+  _WRAP_PROPERTY("show-close-button", bool)
 };
 
 } // namespace Gtk

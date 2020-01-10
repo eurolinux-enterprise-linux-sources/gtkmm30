@@ -11,7 +11,7 @@ class Example_Dialog : public Gtk::Window
 {
 public:
   Example_Dialog();
-  virtual ~Example_Dialog();
+  ~Example_Dialog() override;
 
 protected:
   //Signal handlers:
@@ -23,7 +23,7 @@ protected:
   Gtk::Box m_VBox, m_VBox2;
   Gtk::Box m_HBox, m_HBox2;
   Gtk::Button m_Button_Message, m_Button_Interactive;
-  Gtk::Grid m_Table;
+  Gtk::Grid m_Grid;
   Gtk::Label m_Label1, m_Label2;
   Gtk::Entry m_Entry1, m_Entry2;
 
@@ -34,7 +34,7 @@ class Dialog_Interactive : public Gtk::Dialog
 {
 public:
   Dialog_Interactive(Gtk::Window& parent, const Glib::ustring& entry1, const Glib::ustring& entry2);
-  virtual ~Dialog_Interactive();
+  ~Dialog_Interactive() override;
 
   Glib::ustring get_entry1() const;
   Glib::ustring get_entry2() const;
@@ -42,7 +42,7 @@ public:
 protected:
   //Member widgets:
   Gtk::Box m_HBox;
-  Gtk::Grid m_Table;
+  Gtk::Grid m_Grid;
   Gtk::Label m_Label1, m_Label2;
   Gtk::Entry m_Entry1, m_Entry2;
   Gtk::Image m_Image;
@@ -61,7 +61,8 @@ Example_Dialog::Example_Dialog()
   m_VBox(Gtk::ORIENTATION_VERTICAL, 8),
   m_HBox(Gtk::ORIENTATION_HORIZONTAL, 8), m_HBox2(Gtk::ORIENTATION_HORIZONTAL, 8),
   m_Button_Message("_Message Dialog", true), m_Button_Interactive("_Interactive Dialog", true),
-  m_Label1("_Entry 1", true), m_Label2("E_ntry 2")
+  m_Label1("_Entry 1", true),
+  m_Label2("E_ntry 2", true)
 {
   m_count = 0;
 
@@ -88,16 +89,16 @@ Example_Dialog::Example_Dialog()
   m_VBox2.pack_start(m_Button_Interactive, Gtk::PACK_SHRINK);
 
 
-  m_Table.set_row_spacing(4);
-  m_Table.set_column_spacing(4);
-  m_HBox2.pack_start(m_Table, Gtk::PACK_SHRINK);
+  m_Grid.set_row_spacing(4);
+  m_Grid.set_column_spacing(4);
+  m_HBox2.pack_start(m_Grid, Gtk::PACK_SHRINK);
 
-  m_Table.attach(m_Label1, 0, 1, 0, 1);
-  m_Table.attach(m_Entry1, 1, 2, 0, 1);
+  m_Grid.attach(m_Label1, 0, 0, 1, 1);
+  m_Grid.attach(m_Entry1, 1, 0, 1, 1);
   m_Label1.set_mnemonic_widget(m_Entry1);
 
-  m_Table.attach(m_Label2, 0, 1, 1, 2);
-  m_Table.attach(m_Entry2, 1, 2, 1, 2);
+  m_Grid.attach(m_Label2, 0, 1, 1, 1);
+  m_Grid.attach(m_Entry2, 1, 1, 1, 1);
   m_Label2.set_mnemonic_widget(m_Entry2);
 
   show_all();
@@ -112,10 +113,10 @@ void Example_Dialog::on_button_message()
   Glib::ustring strMessage = "This message box has been popped up the following\n"
                              "number of times:\n\n";
   {
-    Glib::ScopedPtr<char> buf (g_strdup_printf("%d", m_count));
+    auto buf = Glib::make_unique_ptr_gfree(g_strdup_printf("%d", m_count));
     strMessage += buf.get();
   }
-  Gtk::MessageDialog dialog(strMessage, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true); //true = modal
+  Gtk::MessageDialog dialog(*this, strMessage, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true); //true = modal
   /*int response =*/ dialog.run();
 
   m_count++;
@@ -135,27 +136,28 @@ Dialog_Interactive::Dialog_Interactive(Gtk::Window& parent, const Glib::ustring&
 : Gtk::Dialog("Interactive Dialog", parent, true),
   m_HBox(Gtk::ORIENTATION_HORIZONTAL, 8),
   m_Label1("_Entry 1", true), m_Label2("E_ntry 2", true),
-  m_Image(Gtk::Stock::DIALOG_QUESTION, Gtk::ICON_SIZE_DIALOG)
+  m_Image()
 {
-  add_button(Gtk::Stock::OK, Gtk::RESPONSE_OK);
-  add_button("_Non-stock Button", Gtk::RESPONSE_CANCEL);
+  m_Image.set_from_icon_name("dialog-question", Gtk::ICON_SIZE_DIALOG);
+  add_button("_OK", Gtk::RESPONSE_OK);
+  add_button("_Cancel", Gtk::RESPONSE_CANCEL);
 
   m_HBox.set_border_width(8);
   get_content_area()->pack_start(m_HBox, Gtk::PACK_SHRINK);
   m_HBox.pack_start(m_Image, Gtk::PACK_SHRINK);
 
-  m_Table.set_row_spacing(4);
-  m_Table.set_column_spacing(4);
-  m_HBox.pack_start(m_Table);
+  m_Grid.set_row_spacing(4);
+  m_Grid.set_column_spacing(4);
+  m_HBox.pack_start(m_Grid);
 
-  m_Table.attach(m_Label1, 0, 1, 0, 1);
+  m_Grid.attach(m_Label1, 0, 0, 1, 1);
   m_Entry1.set_text(entry1);
-  m_Table.attach(m_Entry1, 1, 2, 0, 1);
+  m_Grid.attach(m_Entry1, 1, 0, 1, 1);
   m_Label1.set_mnemonic_widget(m_Entry1);
 
-  m_Table.attach(m_Label2, 0, 1, 1, 2);
+  m_Grid.attach(m_Label2, 0, 1, 1, 1);
   m_Entry2.set_text(entry2);
-  m_Table.attach(m_Entry2,  1, 2, 1, 2);
+  m_Grid.attach(m_Entry2, 1, 1, 1, 1);
   m_Label2.set_mnemonic_widget(m_Entry2);
 
   show_all();

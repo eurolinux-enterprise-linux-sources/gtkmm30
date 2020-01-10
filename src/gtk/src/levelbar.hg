@@ -26,6 +26,9 @@ namespace Gtk
 
 _WRAP_ENUM(LevelBarMode, GtkLevelBarMode)
 
+//TODO: Derive/Implement from Gtk::Orientable (and remove our mention of that
+//in the class documentation when we can break ABI.
+
 /** A bar that can used as a level indicator
  *
  * Typical use cases are displaying the strength
@@ -61,6 +64,14 @@ public:
   _CTOR_DEFAULT()
   _IGNORE(gtk_level_bar_new)
 
+  //TODO: Remove this when we can break ABI to derive from Orientable.
+  /** Sets the orientation of the widget.
+   *
+   * @newin{3,18}
+   *
+   * @param orientation The widget’s new orientation.
+   */
+  void set_orientation(Orientation orientation);
 
   _WRAP_METHOD(void set_mode(LevelBarMode mode), gtk_level_bar_set_mode)
   _WRAP_METHOD(LevelBarMode get_mode() const, gtk_level_bar_get_mode)

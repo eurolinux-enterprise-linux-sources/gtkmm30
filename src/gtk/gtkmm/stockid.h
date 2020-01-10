@@ -2,6 +2,8 @@
 #ifndef _GTKMM_STOCKID_H
 #define _GTKMM_STOCKID_H
 
+#ifndef GTKMM_DISABLE_DEPRECATED // This whole file is deprecated.
+
 /* $Id$ */
 
 /* stockid.h
@@ -32,6 +34,7 @@ namespace Gtk
 struct BuiltinStockID;
 
 /** See also Gtk::BuiltinStockID.
+ * @deprecated Use icon names instead of StockItem, StockID and BuiltinStockID.
  */
 class StockID
 {
@@ -55,9 +58,9 @@ public:
    * @param id string representation of the stock id. Usually something like "gtk-about".
    *
    * If id is 0 an empty StockID will be created.
-   */  
+   */
   explicit StockID(const char* id);
-  ~StockID();
+  ~StockID() noexcept;
 
   /** Create a StockID as copy from another.
    * @param other: StockID to copy.
@@ -69,9 +72,9 @@ public:
    */
   StockID& operator=(const StockID& other);
 
-  /** This typedef is just to make it more obvious that 
+  /** This typedef is just to make it more obvious that
    * our operator const void* should be used like operator bool().
-   */ 
+   */
   typedef const void* BoolExpr;
 
   /** Tests whether the StockID is not empty.
@@ -106,11 +109,13 @@ protected:
   Glib::ustring id_;
 };
 
-/** @relates Gtk::StockID */
+/** @deprecated Use icon names instead of StockItem, StockID and BuiltinStockID.
+ * @relates Gtk::StockID */
 inline bool operator==(const StockID& lhs, const StockID& rhs)
   { return lhs.equal(rhs); }
 
-/** @relates Gtk::StockID */
+/** @deprecated Use icon names instead of StockItem, StockID and BuiltinStockID.
+ * @relates Gtk::StockID */
 inline bool operator!=(const StockID& lhs, const StockID& rhs)
   { return !lhs.equal(rhs); }
 
@@ -145,6 +150,6 @@ public:
 } // namespace Glib
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
+#endif // GTKMM_DISABLE_DEPRECATED
 
 #endif /* _GTKMM_STOCKID_H */
-

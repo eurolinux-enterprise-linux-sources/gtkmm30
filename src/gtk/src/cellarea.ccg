@@ -24,7 +24,7 @@ namespace //anonymous namespace
 static gboolean proxy_foreach_callback(GtkCellRenderer* cell, void* data)
 {
   typedef Gtk::CellArea::SlotForeach SlotType;
-  SlotType& slot = *static_cast<SlotType*>(data);
+  auto& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -41,7 +41,7 @@ static gboolean proxy_foreach_callback(GtkCellRenderer* cell, void* data)
 static gboolean proxy_foreach_alloc_callback(GtkCellRenderer* cell, const GdkRectangle* cell_area, const GdkRectangle* cell_background, void* data)
 {
   typedef Gtk::CellArea::SlotForeachAlloc SlotType;
-  SlotType& slot = *static_cast<SlotType*>(data);
+  auto& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -81,7 +81,7 @@ void CellArea::foreach(const Glib::RefPtr<CellAreaContext>& context, Widget* wid
 //functions may be called from gtk+ with a NULL pointer.
 void CellArea_Class::get_preferred_width_vfunc_callback(GtkCellArea* self, GtkCellAreaContext* context, GtkWidget* widget, gint* minimum_width, gint* natural_width)
 {
-  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
+  const auto obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -91,13 +91,11 @@ void CellArea_Class::get_preferred_width_vfunc_callback(GtkCellArea* self, GtkCe
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
+    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_width = 0;
         int nat_width = 0;
@@ -106,17 +104,15 @@ void CellArea_Class::get_preferred_width_vfunc_callback(GtkCellArea* self, GtkCe
              (minimum_width ? *minimum_width : min_width),
              (natural_width ? *natural_width : nat_width));
         return;
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  BaseClassType *const base = static_cast<BaseClassType*>(
+  const auto base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 
@@ -127,7 +123,7 @@ void CellArea_Class::get_preferred_width_vfunc_callback(GtkCellArea* self, GtkCe
 
 void CellArea_Class::get_preferred_height_for_width_vfunc_callback(GtkCellArea* self, GtkCellAreaContext* context, GtkWidget* widget, gint width, gint* minimum_height, gint* natural_height)
 {
-  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
+  const auto obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -137,13 +133,11 @@ void CellArea_Class::get_preferred_height_for_width_vfunc_callback(GtkCellArea* 
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
+    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_height = 0;
         int nat_height = 0;
@@ -152,17 +146,15 @@ void CellArea_Class::get_preferred_height_for_width_vfunc_callback(GtkCellArea* 
              (minimum_height ? *minimum_height : min_height),
              (natural_height ? *natural_height : nat_height));
         return;
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  BaseClassType *const base = static_cast<BaseClassType*>(
+  const auto base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 
@@ -173,7 +165,7 @@ void CellArea_Class::get_preferred_height_for_width_vfunc_callback(GtkCellArea* 
 
 void CellArea_Class::get_preferred_height_vfunc_callback(GtkCellArea* self, GtkCellAreaContext* context, GtkWidget* widget, gint* minimum_height, gint* natural_height)
 {
-  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
+  const auto obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -183,13 +175,11 @@ void CellArea_Class::get_preferred_height_vfunc_callback(GtkCellArea* self, GtkC
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
+    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_height = 0;
         int nat_height = 0;
@@ -198,17 +188,15 @@ void CellArea_Class::get_preferred_height_vfunc_callback(GtkCellArea* self, GtkC
              (minimum_height ? *minimum_height : min_height),
              (natural_height ? *natural_height : nat_height));
         return;
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  BaseClassType *const base = static_cast<BaseClassType*>(
+  const auto base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 
@@ -219,7 +207,7 @@ void CellArea_Class::get_preferred_height_vfunc_callback(GtkCellArea* self, GtkC
 
 void CellArea_Class::get_preferred_width_for_height_vfunc_callback(GtkCellArea* self, GtkCellAreaContext* context, GtkWidget* widget, gint height, gint* minimum_width, gint* natural_width)
 {
-  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
+  const auto obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -229,13 +217,11 @@ void CellArea_Class::get_preferred_width_for_height_vfunc_callback(GtkCellArea* 
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
+    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_width = 0;
         int nat_width = 0;
@@ -244,17 +230,15 @@ void CellArea_Class::get_preferred_width_for_height_vfunc_callback(GtkCellArea* 
              (minimum_width ? *minimum_width : min_width),
              (natural_width ? *natural_width : nat_width));
         return;
-      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
-      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  BaseClassType *const base = static_cast<BaseClassType*>(
+  const auto base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 

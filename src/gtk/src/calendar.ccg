@@ -25,18 +25,18 @@ extern "C"
 static gchar* SignalProxy_Details_gtk_callback(GtkCalendar*, guint year, guint month, guint day,
                                                gpointer user_data)
 {
-  Gtk::Calendar::SlotDetails* the_slot = static_cast<Gtk::Calendar::SlotDetails*>(user_data);
+  auto the_slot = static_cast<Gtk::Calendar::SlotDetails*>(user_data);
 
   try
   {
-    const Glib::ustring temp = (*the_slot)(year, month, day);
+    const auto temp = (*the_slot)(year, month, day);
     return g_strdup(temp.c_str()); //Freed by GtkCalendar.
   }
   catch(...)
   {
     Glib::exception_handlers_invoke();
   }
-  return 0; // arbitrary value
+  return nullptr; // arbitrary value
 }
 
 static void SignalProxy_Details_gtk_callback_destroy(void* data)
@@ -65,7 +65,7 @@ void Calendar::get_date(Glib::Date& date) const
 
 void Calendar::set_detail_func(const SlotDetails& slot)
 {
-  SlotDetails* slot_copy = new SlotDetails(slot);
+  auto slot_copy = new SlotDetails(slot);
   gtk_calendar_set_detail_func(gobj(), &SignalProxy_Details_gtk_callback, slot_copy, &SignalProxy_Details_gtk_callback_destroy);
 }
 

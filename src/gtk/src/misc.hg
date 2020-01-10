@@ -20,6 +20,14 @@
 _DEFS(gtkmm,gtk)
 _PINCLUDE(gtkmm/private/widget_p.h)
 
+#m4 _PUSH(SECTION_CC_PRE_INCLUDES)
+#undef GTK_DISABLE_DEPRECATED
+#define GDK_DISABLE_DEPRECATION_WARNINGS 1
+#m4 _POP()
+
+//TODO: Do this when we can stop using this as a base class elsewhere, when we break ABI:
+//_IS_DEPRECATED // This whole file is deprecated.
+
 namespace Gtk
 {
 
@@ -32,6 +40,10 @@ namespace Gtk
  * Without a window, widgets of this type cannot capture events.
  * To capture events place in Gtk::EventBox.
  *
+ * @deprecated The desired effect can in most cases be achieved by using the
+ * Gtk::Widget::property_halign(), Gtk::Widget::property_valign() and
+ * Gtk::Widget::property_margin() properties on the child widget.
+ * Gtk::Misc should not be used in new code.
  */
 class Misc : public Widget
 {
@@ -40,18 +52,18 @@ protected:
   _CTOR_DEFAULT
 public:
 
-  _WRAP_METHOD(void set_alignment(float xalign = 0.0, float yalign = 0.5), gtk_misc_set_alignment)
-  _WRAP_METHOD(void set_alignment(Align xalign = Gtk::ALIGN_START, Align yalign = Gtk::ALIGN_CENTER), gtk_misc_set_alignment)
+  _WRAP_METHOD(void set_alignment(float xalign = 0.0, float yalign = 0.5), gtk_misc_set_alignment, deprecated "Use Widget::set_halign() and Widget::set_valign() instead.")
+  _WRAP_METHOD(void set_alignment(Align xalign = Gtk::ALIGN_START, Align yalign = Gtk::ALIGN_CENTER), gtk_misc_set_alignment, deprecated "Use Widget::set_halign() and Widget::set_valign() instead.")
 
-  _WRAP_METHOD(void get_alignment(float& xalign, float& yalign) const, gtk_misc_get_alignment)
+  _WRAP_METHOD(void get_alignment(float& xalign, float& yalign) const, gtk_misc_get_alignment, deprecated "Use Widget::get_halign() and Widget::get_valign() instead.")
 
-  _WRAP_METHOD(void set_padding(int xpad, int ypad), gtk_misc_set_padding)
-  _WRAP_METHOD(void get_padding(int& xpad, int& ypad) const, gtk_misc_get_padding)
+  _WRAP_METHOD(void set_padding(int xpad, int ypad), gtk_misc_set_padding, deprecated "Use Widget::set_margin_start(), Widget::set_margin_end(), Widget::set_margin_top(), Widget::set_margin_bottom() instead.")
+  _WRAP_METHOD(void get_padding(int& xpad, int& ypad) const, gtk_misc_get_padding, deprecated "Use Widget::get_margin_start(), Widget::get_margin_end(), Widget::get_margin_top(), Widget::get_margin_bottom() instead.")
 
-  _WRAP_PROPERTY("xalign", float)
-  _WRAP_PROPERTY("yalign", float)
-  _WRAP_PROPERTY("xpad", int)
-  _WRAP_PROPERTY("ypad", int)
+  _WRAP_PROPERTY("xalign", float, deprecated "Use Widget::property_halign() instead.")
+  _WRAP_PROPERTY("yalign", float, deprecated "Use Widget::property_valign() instead.")
+  _WRAP_PROPERTY("xpad", int, deprecated "Use Widget::property_margin_start(), Widget::property_margin_end(), Widget::property_margin() instead.")
+  _WRAP_PROPERTY("ypad", int, deprecated "Use Widget::property_margin_top(), Widget::property_margin_bottom(), Widget::property_margin() instead.")
 };
 
 } //namespace Gtk

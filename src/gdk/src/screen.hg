@@ -85,6 +85,7 @@ public:
    *  @a screen, use get_n_monitors().
    *
    * @newin{3,6}
+   *
    * @param monitor_num The monitor number.
    * @result The monitor workarea.
    */
@@ -98,6 +99,8 @@ public:
   _WRAP_METHOD(int get_monitor_height_mm(int monitor_num) const, gdk_screen_get_monitor_height_mm)
   _WRAP_METHOD(Glib::ustring get_monitor_plug_name(int monitor_num) const, gdk_screen_get_monitor_plug_name)
 
+  _WRAP_METHOD(int get_monitor_scale_factor(int monitor_num), gdk_screen_get_monitor_scale_factor)
+
   _WRAP_METHOD(static Glib::RefPtr<Screen> get_default(), gdk_screen_get_default, refreturn)
 
   template <class ValueType>
@@ -107,7 +110,7 @@ public:
   _WRAP_METHOD(void set_font_options(const ::Cairo::FontOptions& options), gdk_screen_set_font_options)
 
   // Note: This returns a const, so we assume that we must copy it:
-  #m4 _CONVERSION(`const cairo_font_options_t*', `::Cairo::FontOptions', `::Cairo::FontOptions(const_cast<cairo_font_options_t*>($3), true /* take_reference */)')
+  #m4 _CONVERSION(`const cairo_font_options_t*', `::Cairo::FontOptions', `::Cairo::FontOptions(const_cast<cairo_font_options_t*>($3), false /* take_ownership */)')
   _WRAP_METHOD(::Cairo::FontOptions get_font_options() const, gdk_screen_get_font_options)
 
   _WRAP_METHOD(void set_resolution(double dpi), gdk_screen_set_resolution)

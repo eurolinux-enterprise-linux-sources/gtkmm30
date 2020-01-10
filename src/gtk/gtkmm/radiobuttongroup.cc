@@ -1,5 +1,3 @@
-/* $Id$ */
-
 /* Copyright(C) 2003 The gtkmm Development Team
  *
  * This library is free software; you can redistribute it and/or
@@ -17,6 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#undef GTK_DISABLE_DEPRECATED
+#define GDK_DISABLE_DEPRECATION_WARNINGS 1
+
 #include <gtkmm/radiobuttongroup.h>
 
 #include <gtkmm/radiobutton.h>
@@ -29,7 +30,7 @@ namespace Gtk
 {
 
 RadioButtonGroup::RadioButtonGroup()
-: group_(0)
+: group_(nullptr)
 {}
 
 RadioButtonGroup::RadioButtonGroup(GSList* group)
@@ -64,6 +65,7 @@ void RadioButtonGroup::add(RadioMenuItem& item)
   group_ = gtk_radio_menu_item_get_group(item.gobj());
 }
 
+#ifndef GTKMM_DISABLE_DEPRECATED
 void RadioButtonGroup::add(const Glib::RefPtr<RadioAction>& item)
 {
   item->set_group(*this);
@@ -71,6 +73,7 @@ void RadioButtonGroup::add(const Glib::RefPtr<RadioAction>& item)
   //probably not necessary:
   group_ = gtk_radio_action_get_group(item->gobj());
 }
+#endif // GTKMM_DISABLE_DEPRECATED
 
 void RadioButtonGroup::add(RadioToolButton& item)
 {

@@ -39,34 +39,42 @@ bool TextIter::get_attributes(TextAttributes& values) const
   return result;
 }
 
+bool TextIter::starts_tag() const
+{
+  return gtk_text_iter_starts_tag(const_cast<GtkTextIter*>(gobj()), nullptr /* see C docs */);
+}
+_DEPRECATE_IFDEF_START
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 bool TextIter::begins_tag() const
 {
-  return gtk_text_iter_begins_tag(const_cast<GtkTextIter*>(gobj()), 0 /* see C docs */);
+  return gtk_text_iter_begins_tag(const_cast<GtkTextIter*>(gobj()), nullptr /* see C docs */);
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
+_DEPRECATE_IFDEF_END
 
 bool TextIter::ends_tag() const
 {
-  return gtk_text_iter_ends_tag(const_cast<GtkTextIter*>(gobj()), 0 /* see C docs */);
+  return gtk_text_iter_ends_tag(const_cast<GtkTextIter*>(gobj()), nullptr /* see C docs */);
 }
 
 bool TextIter::toggles_tag() const
 {
-  return gtk_text_iter_toggles_tag(const_cast<GtkTextIter*>(gobj()), 0 /* see C docs */);
+  return gtk_text_iter_toggles_tag(const_cast<GtkTextIter*>(gobj()), nullptr /* see C docs */);
 }
 
 bool TextIter::has_tag() const
 {
-  return gtk_text_iter_has_tag(const_cast<GtkTextIter*>(gobj()), 0 /* see C docs */);
+  return gtk_text_iter_has_tag(const_cast<GtkTextIter*>(gobj()), nullptr /* see C docs */);
 }
 
 bool TextIter::forward_search(const Glib::ustring& str, TextSearchFlags flags, TextIter& match_start, TextIter& match_end) const
 {
-  return gtk_text_iter_forward_search(const_cast<GtkTextIter*>(gobj()), str.c_str(), ((GtkTextSearchFlags)(flags)), (match_start).gobj(), (match_end).gobj(), 0 /* means end() - see C docs */);
+  return gtk_text_iter_forward_search(const_cast<GtkTextIter*>(gobj()), str.c_str(), ((GtkTextSearchFlags)(flags)), (match_start).gobj(), (match_end).gobj(), nullptr /* means end() - see C docs */);
 }
 
 bool TextIter::backward_search(const Glib::ustring& str, TextSearchFlags flags, TextIter& match_start, TextIter& match_end) const
 {
-  return gtk_text_iter_backward_search(const_cast<GtkTextIter*>(gobj()), str.c_str(), ((GtkTextSearchFlags)(flags)), (match_start).gobj(), (match_end).gobj(), 0 /* means end - see C docs */);
+  return gtk_text_iter_backward_search(const_cast<GtkTextIter*>(gobj()), str.c_str(), ((GtkTextSearchFlags)(flags)), (match_start).gobj(), (match_end).gobj(), nullptr /* means end - see C docs */);
 }
 
 
