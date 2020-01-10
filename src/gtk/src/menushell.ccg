@@ -1,0 +1,102 @@
+/* Copyright 1998-2002 The gtkmm Development Team
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+#include <gtk/gtk.h>
+
+
+namespace Gtk
+{
+
+// All ctors are manually implemented just to initialize accel_window_.
+
+MenuShell::MenuShell()
+:
+  _CONSTRUCT_SPECIFIC(Gtk::Container, MenuShell),
+  accel_window_ (0)
+{}
+
+MenuShell::MenuShell(const Glib::ConstructParams& construct_params)
+:
+  Glib::ObjectBase(0),
+  Gtk::Container  (construct_params),
+  accel_window_   (0)
+{}
+
+MenuShell::MenuShell(GtkMenuShell* castitem)
+:
+  Gtk::Container((GtkContainer*) castitem),
+  accel_window_ (0)
+{}
+
+// TODO: Why do we need a custom dtor?
+MenuShell::~MenuShell()
+{}
+
+void MenuShell::accelerate(Window& window)
+{
+  // accel_window_ is used by menuitems that are added to the menushell
+  // after it has been accelerated.
+  accel_window_ = &window;
+
+  std::vector<Gtk::Widget*> items = get_children();
+
+  for(std::vector<Gtk::Widget*>::iterator iter (items.begin ()), items_end (items.end ()); iter != items_end; ++iter)
+  {
+    Gtk::MenuItem* menuitem = dynamic_cast<MenuItem*>(*iter);
+
+    if (menuitem)
+    {
+      menuitem->accelerate(window);
+    }
+  }
+}
+
+void MenuShell::accelerate(Widget& parent)
+{
+  Gtk::Window* toplevel_window
+      = dynamic_cast<Gtk::Window*>(parent.get_toplevel());
+  if(toplevel_window)
+    accelerate(*toplevel_window);
+}
+
+void MenuShell_Class::insert_vfunc_callback(GtkMenuShell* self, GtkWidget* child, int position)
+{
+  try
+  {
+    MenuShell *const obj = dynamic_cast<MenuShell*>(
+        Glib::ObjectBase::_get_current_wrapper((GObject*) self));
+
+    // If MenuShell is accelerated initialize accelerators of new MenuItem.
+    if(obj && obj->accel_window_ && GTK_IS_MENU_ITEM(child))
+    {
+      Glib::wrap((GtkMenuItem*) child)->accelerate(*obj->accel_window_);
+    }
+  }
+  catch(...)
+  {
+    Glib::exception_handlers_invoke();
+  }
+
+  GtkMenuShellClass *const base = static_cast<GtkMenuShellClass*>(
+      g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)));
+
+  if(base && base->insert)
+    (*base->insert)(self, child, position);
+}
+
+} // namespace Gtk
+
