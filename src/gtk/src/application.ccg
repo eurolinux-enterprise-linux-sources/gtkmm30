@@ -66,20 +66,21 @@ const Glib::Class& Application::custom_class_init()
 Application::Application(const Glib::ustring& application_id, Gio::ApplicationFlags flags)
 :
   // Mark this class as non-derived to allow C++ vfuncs to be skipped.
-  //Note that GApplication complains about "" but allows NULL (0), so we avoid passing "".
-  Glib::ObjectBase(0),
-  Gio::Application(Glib::ConstructParams(custom_class_init(), "application_id", (application_id.empty() ? 0 : application_id.c_str()), "flags", GApplicationFlags(flags), static_cast<char*>(0))),
+  //Note that GApplication complains about "" but allows nullptr, so we avoid passing "".
+  Glib::ObjectBase(nullptr),
+  Gio::Application(Glib::ConstructParams(custom_class_init(), "application_id", (application_id.empty() ? nullptr : application_id.c_str()), "flags", GApplicationFlags(flags), nullptr)),
   m_argc(0),
-  m_argv(0)
+  m_argv(nullptr)
 {
+  gtk_init(nullptr, nullptr);
 }
 
 Application::Application(int& argc, char**& argv, const Glib::ustring& application_id, Gio::ApplicationFlags flags)
 :
   // Mark this class as non-derived to allow C++ vfuncs to be skipped.
-  //Note that GApplication complains about "" but allows NULL (0), so we avoid passing "".
-  Glib::ObjectBase(0),
-  Gio::Application(Glib::ConstructParams(custom_class_init(), "application_id", (application_id.empty() ? 0 : application_id.c_str()), "flags", GApplicationFlags(flags), static_cast<char*>(0))),
+  //Note that GApplication complains about "" but allows nullptr, so we avoid passing "".
+  Glib::ObjectBase(nullptr),
+  Gio::Application(Glib::ConstructParams(custom_class_init(), "application_id", (application_id.empty() ? nullptr : application_id.c_str()), "flags", GApplicationFlags(flags), nullptr)),
   m_argc(argc),
   m_argv(argv)
 {
@@ -134,16 +135,13 @@ int Application::run(Window& window, int argc, char** argv)
       sigc::mem_fun(*this, &Application::on_activate_add_and_show_main_window),
       &window));
 
-  const int result = Gio::Application::run(argc, argv);
+  const auto result = Gio::Application::run(argc, argv);
   return result;
 }
 
 
 int Application::run(Window& window)
 {
-  g_assert(m_argc);
-  g_assert(m_argv);
-
   //We cannot add and show the window until the GApplication::activate signal
   //has been emitted, or we will crash because the application has not been
   //registered. (At least if window is an ApplicationWindow.)
@@ -152,16 +150,13 @@ int Application::run(Window& window)
       sigc::mem_fun(*this, &Application::on_activate_add_and_show_main_window),
       &window));
 
-  const int result = Gio::Application::run(m_argc, m_argv);
+  const auto result = Gio::Application::run(m_argc, m_argv);
   return result;
 }
 
 int Application::run()
 {
-  g_assert(m_argc);
-  g_assert(m_argv);
-
-  const int result = Gio::Application::run(m_argc, m_argv);
+  const auto result = Gio::Application::run(m_argc, m_argv);
   return result;
 }
 
@@ -174,5 +169,19 @@ void Application::on_activate_add_and_show_main_window(Window* window)
   }
 }
 
+void Application::set_accel_for_action(const Glib::ustring& detailed_action_name, const Glib::ustring& accel)
+{
+  std::vector<Glib::ustring> vec;
+  vec.push_back(accel);
+  set_accels_for_action(detailed_action_name, vec);
+}
+
+void Application::unset_accels_for_action(const Glib::ustring& detailed_action_name)
+{
+  //gtk_application_set_accels_for_action() can take an empty array, but not NULL.
+  //See https://bugzilla.gnome.org/show_bug.cgi?id=708905#c10
+  std::vector<Glib::ustring> vec;
+  set_accels_for_action(detailed_action_name, vec);
+}
 
 } // namespace Gtk

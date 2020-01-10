@@ -1,5 +1,3 @@
-/* $Id$ */
-
 /* Copyright (C) 2001 The gtkmm Development Team
  *
  * This library is free software; you can redistribute it and/or
@@ -20,12 +18,15 @@
 #ifndef _DEMOWINDOW_H
 #define _DEMOWINDOW_H
 
-#include "gtkmm/window.h"
-#include "gtkmm/notebook.h"
-#include "gtkmm/box.h"
+#include <gtkmm/window.h>
+#include <gtkmm/headerbar.h>
+#include <gtkmm/button.h>
+#include <gtkmm/notebook.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/box.h>
 
-#include "gtkmm/treestore.h"
-#include "gtkmm/treeview.h"
+#include <gtkmm/treestore.h>
+#include <gtkmm/treeview.h>
 #include "textwidget.h"
 #include <stdio.h>
 
@@ -33,22 +34,30 @@ class DemoWindow : public Gtk::Window
 {
 public:
   DemoWindow();
-  virtual ~DemoWindow();
+  ~DemoWindow() override;
 
 protected:
+  void run_example(const Gtk::TreeModel::Row& row);
+  void configure_header_bar();
+
   void fill_tree();
 
   void load_file(const std::string& filename);
-  bool read_line (FILE *stream, GString *str);
+  void add_data_tabs(const std::string& filename);
+  void remove_data_tabs();
 
   //Signal handlers:
   static bool select_function(const Glib::RefPtr<Gtk::TreeModel>& model, const Gtk::TreeModel::Path& path, bool currently_selected);
   virtual void on_treeselection_changed();
   virtual void on_treeview_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
   virtual void on_example_window_hide();
+  virtual void on_run_button_clicked();
 
   //Member widgets:
+  Gtk::HeaderBar m_HeaderBar;
+  Gtk::Button m_RunButton;
   Gtk::Notebook m_Notebook;
+  Gtk::ScrolledWindow m_SideBar;
   Gtk::Box m_HBox;
 
   Glib::RefPtr<Gtk::TreeStore> m_refTreeStore;

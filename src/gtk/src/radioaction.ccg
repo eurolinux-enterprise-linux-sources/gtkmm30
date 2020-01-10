@@ -23,20 +23,23 @@ typedef Gtk::RadioAction::Group Group; //So that the generate get_group return t
 namespace Gtk
 {
 
+_DEPRECATE_IFDEF_START
 RadioAction::RadioAction(Group& group, const Glib::ustring& name, const Gtk::StockID& stock_id, const Glib::ustring& label, const Glib::ustring& tooltip)
 :
-  _CONSTRUCT("name", name.c_str(), "stock_id", stock_id.get_c_str(), "label", (label.empty() ? 0 : label.c_str()), "tooltip", (tooltip.empty() ? 0 : tooltip.c_str()))
+  _CONSTRUCT("name", name.c_str(), "stock_id", stock_id.get_c_str(), "label", (label.empty() ? nullptr : label.c_str()), "tooltip", (tooltip.empty() ? nullptr : tooltip.c_str()))
 {
   set_group(group);
 }
 
 RadioAction::RadioAction(Group& group, const Glib::ustring& name, const Glib::ustring& icon_name, const Glib::ustring& label, const Glib::ustring& tooltip)
 :
-  _CONSTRUCT("name", name.c_str(), "icon_name", icon_name.c_str(), "label", (label.empty() ? 0 : label.c_str()), "tooltip", (tooltip.empty() ? 0 : tooltip.c_str()))
+  _CONSTRUCT("name", name.c_str(), "icon_name", icon_name.c_str(), "label", (label.empty() ? nullptr : label.c_str()), "tooltip", (tooltip.empty() ? nullptr : tooltip.c_str()))
 {
   set_group(group);
 }
+_DEPRECATE_IFDEF_END
 
+_DEPRECATE_IFDEF_START
 Glib::RefPtr<RadioAction> RadioAction::create(Group& group, const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip)
 {
   return Glib::RefPtr<RadioAction>( new RadioAction(group, name, Gtk::StockID(), label, tooltip) );
@@ -59,8 +62,6 @@ void RadioAction::set_group(Group& group)
   //The group will be updated, ready for use with the next radio action:
   group = get_group();
 }
-
-
+_DEPRECATE_IFDEF_END
 
 } // namespace Gtk
-

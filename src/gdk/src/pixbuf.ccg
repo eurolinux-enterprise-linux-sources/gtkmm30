@@ -27,8 +27,8 @@ namespace
 
 static void pixbuf_destroy_data_callback(guint8* pixels, void* user_data)
 {
-  Gdk::Pixbuf::SlotDestroyData *const slot = static_cast<Gdk::Pixbuf::SlotDestroyData*>(user_data);
-  g_return_if_fail(slot != 0);
+  const auto slot = static_cast<Gdk::Pixbuf::SlotDestroyData*>(user_data);
+  g_return_if_fail(slot != nullptr);
 
   try
   {
@@ -56,7 +56,7 @@ Pixbuf::Pixbuf(const Glib::RefPtr<Window>& src,
     src->gobj(), src_x, src_y, width, height))
 {}
 
-Pixbuf::Pixbuf(const Cairo::RefPtr<Cairo::Surface>& src,
+Pixbuf::Pixbuf(const ::Cairo::RefPtr< ::Cairo::Surface>& src,
          int src_x, int src_y, int width, int height)
 :
   Object((GObject*) gdk_pixbuf_get_from_surface(
@@ -67,9 +67,9 @@ Glib::RefPtr<Pixbuf> Pixbuf::create_from_data(const guint8* data, Colorspace col
                                               bool has_alpha, int bits_per_sample,
                                               int width, int height, int rowstride)
 {
-  GdkPixbuf *const pixbuf = gdk_pixbuf_new_from_data(
+  const auto pixbuf = gdk_pixbuf_new_from_data(
       data, (GdkColorspace) colorspace, has_alpha, bits_per_sample, width, height, rowstride,
-      0, 0);
+      nullptr, nullptr);
 
   return Glib::wrap(pixbuf);
 }
@@ -79,7 +79,7 @@ Glib::RefPtr<Pixbuf> Pixbuf::create_from_data(const guint8* data, Colorspace col
                                               int width, int height, int rowstride,
                                               const Pixbuf::SlotDestroyData& destroy_slot)
 {
-  GdkPixbuf *const pixbuf = gdk_pixbuf_new_from_data(
+  const auto pixbuf = gdk_pixbuf_new_from_data(
       data, (GdkColorspace) colorspace, has_alpha, bits_per_sample, width, height, rowstride,
       &pixbuf_destroy_data_callback, new SlotDestroyData(destroy_slot));
 
@@ -88,8 +88,8 @@ Glib::RefPtr<Pixbuf> Pixbuf::create_from_data(const guint8* data, Colorspace col
 
 Glib::RefPtr<Pixbuf> Pixbuf::create_from_stream(const Glib::RefPtr<Gio::InputStream>& stream)
 {
-  GError* gerror = 0;
-  Glib::RefPtr<Pixbuf> retvalue = Glib::wrap(gdk_pixbuf_new_from_stream(const_cast<GInputStream*>(Glib::unwrap(stream)), 0, &(gerror)));
+  GError* gerror = nullptr;
+  auto retvalue = Glib::wrap(gdk_pixbuf_new_from_stream(const_cast<GInputStream*>(Glib::unwrap(stream)), nullptr, &(gerror)));
 
   if(gerror)
     ::Glib::Error::throw_exception(gerror);
@@ -99,8 +99,8 @@ Glib::RefPtr<Pixbuf> Pixbuf::create_from_stream(const Glib::RefPtr<Gio::InputStr
 
 Glib::RefPtr<Pixbuf> Pixbuf::create_from_stream_at_scale(const Glib::RefPtr<Gio::InputStream>& stream, int width, int height, bool preserve_aspect_ratio)
 {
-  GError* gerror = 0;
-  Glib::RefPtr<Pixbuf> retvalue = Glib::wrap(gdk_pixbuf_new_from_stream_at_scale(const_cast<GInputStream*>(Glib::unwrap(stream)), width, height, static_cast<int>(preserve_aspect_ratio), 0, &(gerror)));
+  GError* gerror = nullptr;
+  auto retvalue = Glib::wrap(gdk_pixbuf_new_from_stream_at_scale(const_cast<GInputStream*>(Glib::unwrap(stream)), width, height, static_cast<int>(preserve_aspect_ratio), nullptr, &(gerror)));
 
   if(gerror)
     ::Glib::Error::throw_exception(gerror);
@@ -110,9 +110,9 @@ Glib::RefPtr<Pixbuf> Pixbuf::create_from_stream_at_scale(const Glib::RefPtr<Gio:
 
 void Pixbuf::save(const std::string& filename, const Glib::ustring& type) const
 {
-  GError* gerror = 0;
+  GError* gerror = nullptr;
   gdk_pixbuf_savev(const_cast<GdkPixbuf*>(gobj()),
-                   filename.c_str(), type.c_str(), 0, 0, &gerror);
+                   filename.c_str(), type.c_str(), nullptr, nullptr, &gerror);
 
   if(gerror)
     ::Glib::Error::throw_exception(gerror);
@@ -130,7 +130,7 @@ void Pixbuf::save(const std::string& filename, const Glib::ustring& type,
                   const std::vector<Glib::ustring>& option_keys,
                   const std::vector<Glib::ustring>& option_values) const
 {
-  GError* gerror = 0;
+  GError* gerror = nullptr;
 
   gdk_pixbuf_savev(
       const_cast<GdkPixbuf*>(gobj()), filename.c_str(), type.c_str(),
@@ -155,12 +155,12 @@ void Pixbuf::save(const std::string& filename, const Glib::ustring& type,
 void Pixbuf::save_to_buffer(gchar*& buffer, gsize& buffer_size,
                             const Glib::ustring& type) const
 {
-  GError* gerror = 0;
+  GError* gerror = nullptr;
 
   gdk_pixbuf_save_to_buffer(
       const_cast<GdkPixbuf*>(gobj()), &buffer, &buffer_size,
       type.c_str(),
-      &gerror, (void*)0);
+      &gerror, nullptr);
 
   if(gerror)
     ::Glib::Error::throw_exception(gerror);
@@ -180,7 +180,7 @@ void Pixbuf::save_to_buffer(gchar*& buffer, gsize& buffer_size,
                             const std::vector<Glib::ustring>& option_keys,
                             const std::vector<Glib::ustring>& option_values) const
 {
-  GError* gerror = 0;
+  GError* gerror = nullptr;
 
   gdk_pixbuf_save_to_bufferv(
       const_cast<GdkPixbuf*>(gobj()),

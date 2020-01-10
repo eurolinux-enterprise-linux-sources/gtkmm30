@@ -30,7 +30,7 @@ TreeModelColumnRecord::TreeModelColumnRecord()
   column_types_ ()
 {}
 
-TreeModelColumnRecord::~TreeModelColumnRecord()
+TreeModelColumnRecord::~TreeModelColumnRecord() noexcept
 {}
 
 void TreeModelColumnRecord::add(TreeModelColumnBase& column)
@@ -58,9 +58,9 @@ const GType* TreeModelColumnRecord::types() const
 
 /**** Gtk::TreeModelColumnBase *********************************************/
 
-TreeModelColumnBase::TreeModelColumnBase(GType type)
+TreeModelColumnBase::TreeModelColumnBase(GType g_type)
 :
-  type_  (type),
+  type_  (g_type),
   index_ (-1) //default to an invalid index.
 {}
 

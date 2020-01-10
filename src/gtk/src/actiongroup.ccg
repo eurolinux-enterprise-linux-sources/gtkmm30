@@ -24,10 +24,11 @@
 namespace Gtk
 {
 
+_DEPRECATE_IFDEF_START
 void ActionGroup::add(const Glib::RefPtr<Action>& action)
 {
   gtk_action_group_add_action_with_accel(gobj(), Glib::unwrap(action),
-    0 /* accelerator=0 means use the stock accelerator if this is a stock item */ );
+    nullptr /* accelerator=nullptr means use the stock accelerator if this is a stock item */ );
 }
 
 void ActionGroup::add(const Glib::RefPtr<Action>& action, const AccelKey& accel_key)
@@ -38,18 +39,18 @@ void ActionGroup::add(const Glib::RefPtr<Action>& action, const AccelKey& accel_
   //The AccelKey might have been constructed from key+mod or from an accelerator string,
   //but it the end that just produces a key+mod.
   guint key = accel_key.get_key();
-  Gdk::ModifierType mod = accel_key.get_mod();
+  auto mod = accel_key.get_mod();
   if(key)
   {
     // The AccelKey constructor can take an accel path, so I suppose we should not ignore it,
     // but I can't imagine how it would be useful with the UIManager. murrayc.
-    Glib::ustring accel_path = accel_key.get_path();
+    auto accel_path = accel_key.get_path();
     if(accel_path.empty())
     {
       //Copied from the gtk_action_group_add_action_with_accel() implementation:
 
-      gchar* action_name = 0;
-      g_object_get(G_OBJECT(Glib::unwrap(action)), "name", &action_name, static_cast<char*>(0));
+      gchar* action_name = nullptr;
+      g_object_get(G_OBJECT(Glib::unwrap(action)), "name", &action_name, nullptr);
       if(action_name)
       {
         accel_path =  "<Actions>/" + get_name() + '/' + action_name;
@@ -64,8 +65,6 @@ void ActionGroup::add(const Glib::RefPtr<Action>& action, const AccelKey& accel_
 
   gtk_action_group_add_action(gobj(), action->gobj());
 }
-
-
 
 void ActionGroup::add(const Glib::RefPtr<Action>& action, const Action::SlotActivate& slot)
 {
@@ -103,7 +102,6 @@ void ActionGroup::add(const Glib::RefPtr<Action>& action, const AccelKey& accel_
   action->set_accel_path(accel_path);
   */
 }
-
+_DEPRECATE_IFDEF_END
 
 } // namespace Gtk
-

@@ -42,7 +42,7 @@ class CellArea;
  * CellLayout is an interface to be implemented by all objects which want to provide a TreeView::Column-like API
  * for packing cells, setting attributes and data funcs.
  */
-class CellLayout : public Glib::Interface
+class GTKMM_API CellLayout : public Glib::Interface
 {
   _CLASS_INTERFACE(CellLayout, GtkCellLayout, GTK_CELL_LAYOUT, GtkCellLayoutIface)
 
@@ -60,15 +60,15 @@ public:
   _WRAP_METHOD(std::vector<CellRenderer*> get_cells(), gtk_cell_layout_get_cells)
   _WRAP_METHOD(std::vector<const CellRenderer*> get_cells() const, gtk_cell_layout_get_cells)
 
-  /** Gets the CellRenderer for the column.
+  /** Gets the CellRenderer for the first column if any has been added, or
+    * nullptr otherwise.
     * You should dynamic_cast<> to the expected derived CellRenderer type.
-    * This assumes that the CellLayout contains only one CellRenderer.
     */
   CellRenderer* get_first_cell();
 
-  /** Gets the CellRenderer for the column.
+  /** Gets the CellRenderer for the first column if any has been added, or
+    * nullptr otherwise.
     * You should dynamic_cast<> to the expected derived CellRenderer type.
-    * This assumes that the CellLayout contains only one CellRenderer.
     */
   const CellRenderer* get_first_cell() const;
 
@@ -103,7 +103,7 @@ protected:
 #m4 _CONVERSION(`const char*',`const Glib::ustring&',__GCHARP_TO_USTRING)
   _WRAP_VFUNC(void add_attribute(CellRenderer* cell, const Glib::ustring& attribute, int column), add_attribute)
 
-//TODO (added in GTK+ 2.4):  _WRAP_VFUNC(void set_cell_data_func(CellRenderer* cell, GtkCellLayoutDataFunc func, gpointer func_data, GDestroyNotify destroy), gtk_cell_layout_set_cell_data_func)
+//TODO when we can break ABI(added in GTK+ 2.4):  _WRAP_VFUNC(void set_cell_data_func(CellRenderer* cell, GtkCellLayoutDataFunc func, gpointer func_data, GDestroyNotify destroy), gtk_cell_layout_set_cell_data_func)
   _WRAP_VFUNC(void clear_attributes(CellRenderer* cell), clear_attributes)
   _WRAP_VFUNC(void reorder(CellRenderer* cell, int position), reorder)
 

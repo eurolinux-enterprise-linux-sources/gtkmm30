@@ -1,3 +1,1763 @@
+3.22.2 (stable):
+
+Gtk:
+* Editable, RecentChooser, Scale: Fix memory leaks.
+  (Kjell Ahlstedt) Bug #783360
+* PrintJob: Fix a call to Glib::throw_exception().
+  (Kjell Ahlstedt)
+
+Documentation:
+* Gdk::RGBA: Update ctor(ustring) docs from GTK+
+  (Daniel Boles) Bug #784483
+
+
+3.22.1 (stable):
+
+Unusually for a stable micro release, this release has some deprecations
+compared to 3.22.0, to match similar deprecations in GTK+ 3.22.x.
+
+Gtk:
+* Container: Deprecate the child property.
+  The underlying C property was deprecated in GTK+ 3.22.2.
+  (Kjell Ahlstedt) Bug #773642.
+* FileChooserDialog: Deprecate the constructors that take a backend
+  parameter.
+  (Kjell Ahlstedt)
+* Menu: Deprecate popup().
+  The underlying C functions were deprecated in GTK+ 3.22.2.
+  (Kjell Ahlstedt) Bug #773642
+* Widget:
+  - Deprecate is_composited() and signal_composited_changed().
+    The underlying C functions were deprecated in GTK+ 3.22.3.
+  - Deprecate drag_dest_set_proxy().
+    The underlying C functions was deprecated in GTK+ 3.22.3.
+  (Kjell Ahlstedt) Bug #773642.
+* Window: Deprecate set_wmclass().
+  The underlying C functions was deprecated in GTK+ 3.22.2.
+  (Kjell Ahlstedt) Bug #773642.
+
+Gdk:
+* Screen: Deprecate get_number(), get_width(), get_height(), get_width_mm(),
+  get_height_mm(), make_display_name(), get_n_monitors(), get_primary_monitor(),
+  get_monitor_geometry(), get_monitor_workarea(), get_monitor_at_point(),
+  get_monitor_at_window(), get_monitor_width_mm(), get_monitor_height_mm(),
+  get_monitor_plug_name(), get_monitor_scale_factor(), get_active_window().
+  The underlying C functions were deprecated in GTK+ 3.22.2.
+  (Kjell Ahlstedt) Bug #773642
+* Visual: Deprecate get_system(), get_best(), get_best_depth(), get_best_type().
+  The underlying C functions were deprecated in GTK+ 3.22.3.
+  (Kjell Ahlstedt) Bug #773642
+* Window:
+  - Deprecate process[_all]_updates().
+    The underlying C functions were deprecated in GTK+ 3.22.7.
+  - Deprecate set_background(), get_background_pattern(), set_debug_updates().
+    The underlying C functions were deprecated in GTK+ 3.22.2.
+  (Kjell Ahlstedt)
+
+Documentation:
+* Box: Correct the constructor documentation.
+  (Daniel Boles)
+* CellLayout: Improve docs of get_first_cell() funcs
+  (Daniel Boles)
+* Frame: Fix the documentation of set_label_align().
+  (Daniel Boles) Bug #774249
+* Label: Improve h/valign constructor documentation and
+  the improve the parameter names.
+  (Daniel Boles) Bug #774652
+* TreeModel: Improve docs of foreach*() functions
+  (Daniel Boles)
+* Minor cleanup of examples and demos.
+  (Daniel Boles)
+* demo: Don't call Notebook::remove_page() with invalid index.
+  (Daniel Boles)
+
+Build:
+* Update the Visual Studio builds.
+  (Chun-wei Fan)
+* GtkMainConnectionNode: Remove unused method.
+  (Kjell Ahlstedt)
+
+
+3.22.0 (stable):
+
+No changes compared to 3.21.6.
+
+3.21.6 (unstable):
+
+Gtk:
+* FileChooser: Added add_choice(), remove_choice(), set_choice(), get_choice().
+  (Kjell Ahlstedt)
+* Menu: Add popup_at_rect(), popup_at_widget(), popup_at_pointer(),
+  signal_popped_up(), and the anchor_hints, rect_anchor_dx, rect_anchor_dy,
+  and menu_type_hint properties.
+  (Kjell Ahlstedt)
+* Popover: Add popup() and popupdown(),
+  deprecating get/set_transitions_enabled().
+  (Murray Cumming)
+* RadioMenuItem, RadioToolButton: Add join_group().
+  (Kjell Ahlstedt) Bug #769374
+* ScrolledWindow:
+  - Added get/set_max_content_height/width()
+  and properties.
+  (Kjell Ahlstedt)
+  - Added get/set_propagate_natural_height/width()
+  and the properties.
+  (Murray Cumming)
+* Add the ShortcutLabel widget.
+  (Kjell Ahlstedt)
+* TreeNodeChildren: Deprecate the reverse iterator.
+  (Kjell Ahlstedt) Bug #554889 (Pavelo)
+
+Gdk:
+* Pixbuf: Added set_option(), remove_option(), and copy_options().
+  (Murray Cumming)
+* PixbufFormat: Added is_save_option_supported().
+  (Murray Cumming)
+
+Documentation:
+* Gtk::Clipboard::wait_for_uris(): Fix the documentation
+   (Kjell Ahlstedt)
+
+3.21.4 (unstable):
+
+Gtk:
+* ApplicationWindow: Add a correct wrap() method, deprecating the
+  incorrect one.
+  (Kjell Ahlstedt) Bug #767951
+* FlowBox, ListBox: Add bind_model() and bind_list_store().
+  (Kjell Ahlstedt, Murray Cumming) #755149
+* UIManager, ActionGroup, RadioAction, RecentAction, ToggleAction:
+  Deprecated, as in the C GTK+ API.
+  (Kjell Ahlstedt) Bug #768573.
+
+Build:
+* Fix silent builds
+  (Kjell Ahlstedt) Bug #768797
+
+3.21.3 (unstable):
+
+Gtk:
+* AppChooserDialog, FontChooserDialog: Add _UNMANAGEABLE.
+  (Kjell Ahlstedt)
+* ScrolledWindow: Deprecate remove_with_viewport().
+  (Kjell Ahlstedt) Bug #685739
+* SizeGroup: Deprecate set/get/property_ignore_hidden().
+  (Kjell Ahlstedt)
+* Widget: Deprecate send_expose().
+  (Kjell Ahlstedt)
+* Window: Deprecate begin_paint_rect(), begin_paint_region(),
+  end_paint() and create_cairo_context(). Add begin_draw_frame() and
+  end_draw_frame() which use the new Gdk::DrawingContext.
+  (Kjell Ahlstedt)
+
+Gdk:
+* Add DrawingContext.
+  (Kjell Ahlstedt)
+
+Build:
+* Visual Studio builds: Update gdkmm project
+  (Chun-wei Fan)
+
+3.21.2 (unstable):
+
+Gdk:
+* Clipboard: Add get_selection().
+  (Kjell Ahlstedt)
+* Device: Add get_axes(), signal_changed() and many properties.
+  (Kjell Ahlstedt)
+* Display:
+  - Add methods and signals related to Gdk::Monitor.
+  (Kjell Ahlstedt)
+  - Deprecated get_screen().
+  (Kjell Ahlstedt)
+* GLArea: Add set/get_use_es() and property.
+  (Kjell Ahlstedt)
+* GLContext: Add set/get_use_es()
+  (Kjell Ahlstedt)
+* Add Monitor.
+  (Kjell Ahlstedt)
+* ShortscutsShortcut: Add "action-name" property.
+* Visual: Deprecate get_byte_order(), get_colormap_size(), and get_bits_per_rgb().
+  (Kjell Ahlstedt)i
+* Window: create_gl_context() and signal_create_context():
+  Correct the reference counting.
+  (Kjell Ahlstedt)
+
+Gtk:
+* IconInfo, PaperSize, TextIter, TreeIter, TreePath, TreeRowReference:
+  Deprecated operator void*, replacing it with explicit operator bool.
+  (Murray Cumming)
+* PrintSettings: Make create_*() from public, not protected.
+  Noticed by Phil Wolff:
+  https://mail.gnome.org/archives/gtkmm-list/2016-May/msg00008.html
+  (Murray Cumming)
+* TreeView: _auto_store_on_cellrenderer_text_edited_numerical():
+  Catch the exception from std::stod().
+  This is a regression since version 3.17.80.
+  (Murray Cumming) Bug #765044 (Justinas)
+
+Documentation:
+* ButtonBox demo: Enable mnemonics in the buttons.
+  (Kjell Ahlstedt) Bug #766228.
+
+
+3.20.0 (stable):
+
+* No major changes compared to 3.19.12.
+
+3.19.12 (unstable):
+
+Gtk:
+* CellRendererProgress:_property_renderable(): Avoid infinite loop.
+  (Murray Cumming)
+* CellrendererToggle: Deprecate property_indicator_size().
+  (Kjell Ahlstedt)
+* ColorButton: Add property_show_editor().
+  (Kjell Ahlstedt)
+* Container: Deprecate property_resize_mode().
+  (Kjell Ahlstedt)
+* Entry: Deprecate property_shadow_type().
+  (Kjell Ahlstedt)
+* Expander: Deprecate property_spacing().
+  (Kjell Ahlstedt)
+* PlacesSidebar:
+  - Deprecate property_show_other_locations().
+  - Add property_show_other_locations_with_flags(), signal_mount() and
+    signal_unmount().
+  (Kjell Ahlstedt)
+* Settings: Add property_gtk_keynav_use_caret().
+  (Kjell Ahlstedt)
+* StyleContext: Deprecate property_direction().
+  (Kjell Ahlstedt)
+* TextView: Add reset_cursor_blink().
+  (Kjell Ahlstedt)
+
+Build:
+* Fix "make check" after sigc::mem_fun(pointer, func) was deprecated.
+  (Kjell Ahlstedt)
+* MSVC builds: Update for shortcuts widgets.
+  (Chun-wei Fan)
+* MSVC builds: Look for headers in include/gio-win32-2.0 as well
+  (Chun-wei Fan)
+
+
+3.19.11:
+
+Gtk:
+* AccelLabel: Ad get_accel().
+  (Kjell Ahlstedt)
+* ApplicationWindow:
+  * Add set/unset/get_help_overlay().
+  (Kjell Ahlstedt)
+* Builder: Make get_widget_derived() a variadic template,
+  forwarding its arguments to the constructor of the derived class.
+  (Kjell Ahlstedt) Bug #134161
+* GestureLongPress: Add property_delay_factor().
+  (Kjell Ahlstedt)
+* Popover: Add PopoverConstraint enum and
+  set/get/property_constrain_to().
+    (Kjell Ahlstedt)
+* Range: Deprecate get/set_min_slider_size().
+  (Murray Cumming)
+* Stack: Add set/get/property_interpolate_size().
+  (Kjell Ahlstedt)
+* StackSwitcher: Add property_icon_size().
+  (Kjell Ahlstedt)
+* Settings: Add reset_property() and
+  property_gtk_titlebar_double_click/middle_click/right_click().
+  (Kjell Ahlstedt)
+* Add Shortcuts* widgets, such as ShortcutsWindow.
+  (Kjell Ahlstedt)
+* TextTag: Add tag_changed() and property_strikethrough_rgba/
+  strikethrough_rgba_set/underline_rgba/underline_rgba_set/font_features/
+  font_features_set().
+  (Kjell Ahlstedt)
+* TextView: Add set/get/property_top_margin() and 
+  set/get/property_bottom_margin().
+  (Kjell Ahlstedt)
+* Replace deprecated Glib::ScopedPtr with make_unique_g_free().
+  (Murray Cumming)
+
+Gdk:
+* Add GLContext::is_legacy().
+  (Kjell Ahlstedt)
+* Seat: Add get_slaves()
+  (Kjell Ahlstedt) Bug #759806
+* Window: Deprecate parse_geometry() and set_default_geometry().
+  (Kjell Ahlstedt)
+
+Documentation:
+* Add Shortcuts Window demo.
+  (Kjell Ahlstedt)
+* treeview_editable_cells demo: Catch exception from std::stoi.
+  (Kjell Ahlstedt)
+* Misc: Mention non-deprecated get/set_margin_*() in docs.
+  (Murray Cumming)
+* Gdk::DeviceManager::get_client_pointer(): Update the deprecation message
+  (Kjell Ahlstedt) Bug #759806.
+
+Build:
+* Visual Studio builds: Update gdkmm project for GdkSeat.
+  (Chun-wei Fan)
+
+
+3.19.6:
+
+Gtk:
+* TextIter: Add starts_tag(), deprecate begins_tag().
+  (Kjell Ahlstedt)
+* TreeView: Fix a crash in get_tooltip_context_path()
+  (Philipp Lenk) Bug #760030.
+
+Gdk:
+* Add Gdk::Seat
+  (Kjell Ahlstedt) Bug #759806.
+* Device:
+  - Add get_seat().
+  - Deprecate grab() and ungrab().
+   DeviceManager, Display: Add and deprecate
+  (Kjell Ahlstedt) Bug #759806.
+* DeviceManager: Deprecate list_devices() and get_client_pointer().
+  (Kjell Ahlstedt) Bug #759806.
+* Display:
+  - Deprecate get_device_manager().
+  - Add list_seats(), get_default_seat(), signal_seat_added() and
+  signal_seat_removed().
+  (Kjell Ahlstedt) Bug #759806.
+
+Build:
+* C++11: Use the override keyword, instead of virtual, for suitable destructors.
+  (Murray Cumming)
+
+
+3.19.5:
+
+Gtk:
+* Button: Deprecate get/set_focus_on_click() and property.
+  (Kjell Ahlstedt)
+* ComboBox: Deprecate get/set_focus_on_click() and property.
+  (Kjell Ahlstedt)
+* FileChooserButotn: Deprecate set/get_focus_on_click() and property.
+  (Kjell Ahlstedt)
+* Widget:  Add set/get/property_focus_on_click(),
+  set/unset/get_font_options(), set/get_font_map(), queue_allocate(),
+  get_allocated_size().
+  (Kjell Ahlstedt)
+* Window: Deprecate resize_to_geometry().
+  (Kjell Ahlstedt)
+
+Gdk:
+* Screen::get_font_options(): Really take a copy.
+  (Kjell Ahlstedt)
+
+Build:
+* Remove #ifdefs with obsolete GLIBMM_*_ENABLED constants
+ (Kjell Ahlstedt)
+* Demos, tests: Use nullptr instead of 0.
+  (Kjell Ahlstedt)
+* Gtk: Use nullptr instead of 0
+  (Kjell Ahlstedt)
+* Gdk: Use nullptr instead of 0
+  (Kjell Ahlstedt)
+* Menushell, Widget: Use noexcept on the destructor implementation.
+  To match the generated declaration.
+  (Emeric Maschino) Bug #759263, Bug #759262
+
+
+3.19.3:
+
+* Gdk::Rectangle: Add operator==().
+  (Murray Cumming)
+* C++11: Use of the override keyword.
+  (Murray Cumming)
+
+Changes in 3.18 compared to 3.16:
+
+General:
+* Use, and require C++11, using features such as move operations, noexcept
+  auto, = delete, nulltpr, override, range-based for loops.
+  (Murray Cumming, Kjell Ahlstedt)
+
+Gtk:
+* C++11: Add move operations to widget classes.
+  (Murray Cumming)
+* C++11: Point, TimeCoord: Add move operations.
+  (Murray Cumming)
+* C++11: Mark all _CLASS_OPAQUE_REFCOUNTED classes as final.
+  (Murray Cumming)
+* Object (and Widget): Add dont_allow_use_in_glib_refptr_.
+  (Kjell Ahlstedt, Murray Cumming)
+* Actionable: Add keep_return to the _WRAP_VFUNC() for get_action_name.
+  (Kjell Ahlstedt) Bug #705124.
+* Adjustment: Deprecate changed() and value_changed().
+  (Murray Cumming)
+* Assistant: Add get/set_page_has_padding().
+  (Murray Cumming)
+* CellRendererPixbuf: Deprecate property_follow_state().
+  (Kjell Ahlstedt)
+* Entry: Add grab_focus_without_selecting()
+  (Murray Cumming)
+* FontChooser: Add get/set_font_map().
+  (Murray Cumming)
+* IconInfo: Deprecate get_builtin_pixbuf().
+  (Kjell Ahlstedt)
+* IconTheme: lookup_icon(), choose_icon(): Add default 0 for flags.
+  (Murray Cumming)
+* LevelBar: Add set_orientation().
+  (Murray Cumming) Bug #752568 (Tobias Hoffmann)
+* Add ModelButton.
+  (Kjell Ahlstedt)
+* Notebook: Add detach_tab().
+  (Murray Cumming)
+* Overlay:
+  - Add reorder_overlay() and get/set_overlay_pass_through().
+  - Add child properties.
+  (Murray Cumming)
+* Paned: Add get/set_wide_handle() and property.
+  (Murray Cumming)
+* PaperSize: Add is_ipp().
+  (Murray Cumming)
+* PlacesSidebar:
+  - Add set_drop_targets_visible().
+  (Kjell Ahlstedt)
+  - Deprecate set/get_show_connect_to_server() and the property.
+  - Add set/get_show_recent(), set/get_show_trash(),
+    set/get_show_other_locations() and properties, and the populate_all
+    property.
+  (Kjell Ahlstedt)
+* Popover:
+  - Add get/set_default_widget().
+  (Murray Cumming)
+  - Wrap the pointing-to property.
+  (Kjell Ahlstedt) Bug #723394
+* Add PopoverMenu.
+  (Kjell Ahlstedt)
+* Scrollable: Add get_border() and ScrolledWindow::signal_edge_reached()
+  (Kjell Ahlstedt)
+* ScrolledWindow: Add signal_edge_reached().
+  (Kjell Ahlstedt)
+* SearchEntry: Add handle_event() and new signals
+  (Kjell Ahlstedt)
+* StyleContext: Deprecate set_background().
+  (Kjell Ahlstedt)
+* IconView: Fix a crash in get_tooltip_context_path().
+  (Kjell Ahlstedt)
+* TreeView, TreeViewColumn: Deprecate SlotCellData, add SlotTreeCellData.
+  (Kjell Ahlstedt) Bug #657844
+* Widget: Deprecate drag_begin() without coordinates.
+  (Kjell Ahlstedt)
+* Window:
+  - Add fullscreen_on_monitor().
+  (Murray Cumming)
+  - Add get_titlebar().
+  (Murray Cumming)
+
+Gdk:
+* Cursor, Pixbuf, Window: Fix use of Cairo::xxx in namespace Gd
+  (Kjell Ahlstedt) Bug #755061 (lagerstrom15)
+* Window:
+  - Add get/set_passthrough().
+  (Murray Cumming)
+  - Deprecate get/set_composited(), set_static_gravities() and flush().
+  (Kjell Ahlstedt)
+* Deprecate open_default_libgtk_only() and supports_composite().
+  (Kjell Ahlstedt)
+
+
+Documentation:
+* Remove pixbuf-demo because it is already in the main demo.
+  (Kjell Ahlstedt)
+* Demo: Remove Icon Theme demo, replacing it by a standalone
+  Icon Broswer demo.
+  (Kjell Ahlstedt)
+* Add GLArea and example to gtkmm-demo.
+  (Daniel Hams) Bug #752314
+* Demo:
+  - Show data files in extra tabs in the Gtk::Notebook.
+  - Remove the last traces of the UIManager and stock browser demos.
+  - Add Builder demo.
+  - Use resource files for the source code and data files.
+
+
+Build:
+* MSVC build fixes.
+  (Chun-wei Fan)
+* Missing GTKMM_API for CellLayout.
+  (Mikhail Titov) Bug #748720
+* Demo:  Use getc() if HAVE_GETC_UNLOCKED is not defined.
+  (Mikhail Titov) Bug #748657
+* Don't disable more deprecation warnings than necessary
+  (Kjell Ahlstedt) Bug #750379.
+
+
+3.18.0 (stable):
+
+* Gtk::Object (and Gtk::Widget): Add dont_allow_use_in_glib_refptr_.
+  (Kjell Ahlstedt, Murray Cumming)
+* Gtk::TreeView, TreeViewColumn: Deprecate SlotCellData, add SlotTreeCellData.
+  (Kjell Ahlstedt) Bug #657844
+* Gdk::Cursor, Pixbuf, Window: Fix use of Cairo::xxx in namespace Gd
+  (Kjell Ahlstedt) Bug #755061 (lagerstrom15)
+* MSVC build fixes.
+  (Chun-wei Fan)
+
+
+3.17.90 (unstable):
+
+Gtk:
+* Entry: Add grab_focus_without_selecting()
+  (Murray Cumming)
+* LevelBar: Add set_orientation().
+  (Murray Cumming) Bug #752568 (Tobias Hoffmann)
+* Notebook: Add detach_tab().
+  (Murray Cumming)
+* Overlay:
+  - Add reorder_overlay() and get/set_overlay_pass_through().
+  - Add child properties.
+  (Murray Cumming)
+* Paned: Add get/set_wide_handle() and property.
+  (Murray Cumming)
+* PaperSize: Add is_ipp().
+  (Murray Cumming)
+* Window: Add fullscreen_on_monitor().
+  (Murray Cumming)
+
+Build:
+* MSVC Build improvements.
+  (Chun-wei Fan)
+* MSVC Build: Require MSVC .Net 2013 for C++11 support.
+  (Chun-wei Fan)
+
+
+3.17.80 (unstable):
+
+* Rebuilt with latest glibmm,
+  whose gmmproc generates C++ move operations.
+  (Murray Cumming)
+* C++11: Add move operations to widget classes.
+  (Murray Cumming)
+* C++11: Point, TimeCoord: Add move operations.
+  (Murray Cumming)
+* C++11: Mark all _CLASS_OPAQUE_REFCOUNTED classes as final.
+  (Murray Cumming)
+* C++11: Use std::stod() instead of std::strtod()
+  and Use std::stoi() instead of atod().
+  (Murray Cumming)
+
+
+3.17.70 (unstable):
+
+Gtk:
+* Add GLArea and example to gtkmm-demo.
+  (Daniel Hams) Bug #752314
+* PlacesSidebar: Add set_drop_targets_visible().
+  (Kjell Ahlstedt)
+
+Build:
+* Fix the build with -Wshadow compiler warnings.
+  (Murray Cumming, Kjell Ahlstedt) Bug #752469
+
+
+3.17.50 (unstable):
+
+Gtk:
+* PlacesSidebar:
+  - Deprecate set/get_show_connect_to_server() and the property.
+  - Add set/get_show_recent(), set/get_show_trash(),
+    set/get_show_other_locations() and properties, and the populate_all
+    property.
+  (Kjell Ahlstedt)
+* Popover: Add get/set_default_widget().
+  (Murray Cumming)
+* Window: Add get_titlebar().
+  (Murray Cumming)
+
+Build:
+* gtk_generate_extra_defs.sh: Fix for the patch command, version 2.7.5
+  (Kjell Ahlstedt)
+* C++11: Use nullptr instead of 0.
+  (Murray Cumming)
+* C++11: Use of the override keyword.
+  (Murray Cumming)
+* C++11: Use of auto.
+  (Murray Cumming)
+* C++11: Use of range-based for loops.
+  (Murray Cumming)
+* Fix the build when using -Wshadow (now used in --enable-warnings=fatal).
+  (Murray Cumming)
+
+Documentation:
+* LevelBar: Document how to workaround the lack of Orientation base class.
+  (Murray Cumming) Bug #752568 (Tobias Hoffmann)
+
+
+3.17.41 (unstable):
+
+Gtk:
+* StyleContext: Deprecate set_background().
+  (Kjell Ahlstedt)
+* IconView: Fix a crash in get_tooltip_context_path().
+  (Kjell Ahlstedt)
+
+Build:
+* Use (and require) C++11.
+  (Murray Cumming, Kjell Ahlstedt)
+
+Documentation:
+* Remove pixbuf-demo because it is already in the main demo.
+  (Kjell Ahlstedt)
+* Demo: Remove Icon Theme demo, replacing it by a standalone
+  Icon Broswer demo.
+  (Kjell Ahlstedt)
+
+
+3.17.4 (unstable):
+
+Gtk:
+* Assistant: Add get/set_page_has_padding().
+  (Murray Cumming)
+* FontChooser: Add get/set_font_map().
+  (Murray Cumming)
+* IconInfo: Deprecate get_builtin_pixbuf().
+  (Kjell Ahlstedt)
+* IconTheme: lookup_icon(), choose_icon(): Add default 0 for flags.
+  (Murray Cumming)
+* Widget: Deprecate drag_begin() without coordinates.
+  (Kjell Ahlstedt)
+
+Gdk:
+* Window: Add get/set_passthrough().
+  (Murray Cumming)
+
+* Demo: IconTheme: Don't use deprecated builtin-icon API.
+  (Murray Cumming)
+
+Build:
+* Don't disable more deprecation warnings than necessary
+  (Kjell Ahlstedt) Bug #750379.
+
+
+3.17.3 (unstable):
+
+Gdk:
+* Deprecate open_default_libgtk_only() and supports_composite().
+  (Kjell Ahlstedt)
+* Window: Deprecate get/set_composited(), set_static_gravities() and flush().
+  (Kjell Ahlstedt)
+
+Gtk:
+* Actionable: Add keep_return to the _WRAP_VFUNC() for get_action_name.
+  (Kjell Ahlstedt) Bug #705124.
+* Adjustment: Deprecate changed() and value_changed().
+  (Murray Cumming)
+* CellRendererPixbuf: Deprecate property_follow_state().
+  (Kjell Ahlstedt)
+* Add ModelButton.
+  (Kjell Ahlstedt)
+* Popover: Wrap the pointing-to property.
+  (Kjell Ahlstedt) Bug #723394
+* Add PopoverMenu.
+  (Kjell Ahlstedt)
+* Scrollable: Add get_border() and ScrolledWindow::signal_edge_reached()
+  (Kjell Ahlstedt)
+* ScrolledWindow: Add signal_edge_reached().
+  (Kjell Ahlstedt)
+* SearchEntry: Add handle_event() and new signals
+  (Kjell Ahlstedt)
+
+Documentation:
+* Demo:
+  - Show data files in extra tabs in the Gtk::Notebook.
+  - Remove the last traces of the UIManager and stock browser demos.
+  - Add Builder demo.
+  - Use resource files for the source code and data files.
+
+
+Build:
+* Missing GTKMM_API for CellLayout.
+  (Mikhail Titov) Bug #748720
+* Demo:  Use getc() if HAVE_GETC_UNLOCKED is not defined.
+  (Mikhail Titov) Bug #748657
+
+
+3.16:
+
+API additions since 3.14:
+
+Gdk:
+* Device: Add get_vendor_id() and get_product_id().
+  (Murray Cumming)
+
+Gtk:
+* CssProvider: Add CssProviderError and signal_parsing_error()
+  (Kjell Ahlstedt)
+* Add CssSection.
+  (Kjell Ahlstedt)
+* Dialog: Add constructors with DialogFlags,
+  for instance to create a dialog with a header bar.
+  (Kjell Ahlstedt) Bug #738513.
+* Grid: Add attach_next_to() without the 'sibling' parameter.
+  (Kjell Ahlstedt)  Bug #739340.
+* Label: Add get/set_xalign/yalign() and properties.
+  (Murray Cumming)
+* ScaleButton: Add a constructor without the icons.
+  (Murray Cumming)
+* ScrolledWindow: Add get/set_overlay_scrolling() and property.
+  (Juan R. García Blanco)
+* SearchEntry: Add the search_changed signal
+  (Kjell Ahlstedt)
+* Stack: Add hhomogeneous and vhomogeneous properties.
+  (Juan R. García Blanco)
+* Add StackSidebar.
+  (Kjell Ahlstedt)
+* StackSwitcher: Add unset_stack().
+  (Kjell Ahlstedt)
+* Added StyleProperty
+  (Mark Vender) Bug #673317.
+* TextTag: Add fallback, fallback-set, letter-spacing, and
+  letter-spacing-set properties.
+  (Juan R. García Blanco)
+* TextBuffer:
+  - Add insert_markup().
+  - Add the copy_target_list and paste_target_list properties.
+  - Wrap the serialize()/deserialize() methods.
+  (Kjell Ahlstedt)
+* TextView: Add monospace property.
+  (Juan R. García Blanco)
+* Widget: Added get_action_group() and list_action_prefixes().
+  (Murray Cumming)
+
+
+3.16.0 (stable):
+
+Gtk
+* Builder: Don't get gtkmm-derived GTypes while parsing TreeModel <columns>
+  (Kjell Ahlstedt) Bug #742637.
+
+
+3.15.10 (unstable);
+
+Gtk:
+* Label: Add get/set_xalign/yalign() and properties.
+  (Murray Cumming)
+* PaperSize: Define the paper name constants in the .cc file
+  (Benoît Dejean) Bug #745345
+
+Documentation:
+* CssProvider::load_from_data(): Document that this throws an exception.
+  (Murray Cumming)
+* Icon theme demo: Catch exceptions while loading icons.
+  (Kjell Ahlstedt)
+* Stock: Mention the named icons for Copy, Cut, Paste and Delete.
+  (Murray Cumming) See GTK+ bug #741969
+
+
+3.15.9 (unstable);
+
+Gtk:
+* Add StackSidebar.
+  (Kjell Ahlstedt)
+* StackSwitcher: Add unset_stack().
+  (Kjell Ahlstedt)
+* StyleContext: Deprecate list_regions(), add_region(),
+  remove_region(), has_region(), get_backgrount_color(), get_border_color(),
+  invalidate.
+  (Kjell Ahlstedt)
+* TextBuffer: Wrap the serialize()/deserialize() methods.
+  (Kjell Ahlstedt) Bug #694250
+* Widget: Deprecate  Deprecate override_color(), unset_color(),
+  override_background_color(), unset_background_color(), override_font(),
+  unset_font(), override_symbolic_color(), unset_symbolic_color(),
+  override_cursor(), unset_cursor().
+  (Kjell Ahlstedt)
+* Window: Deprecate Deprecate property_has_resize_grip(),
+  property_resize_grip_visible(), set/get_has_resize_grip(),
+  get_resize_grip_is_visible(), get_resize_grip_area().
+  (Kjell Ahlstedt)
+* Fix error messages from gmmproc by removing unnecessary _IGNORES()s.
+  (Kjell Ahlstedt)
+
+Gdk:
+* Device: Add get_vendor_id() and get_product_id().
+  (Murray Cumming)
+
+Documentation:
+* demos: Add stacksidebar demo.
+  (Kjell Ahlstedt)
+* demos: Replace calls to deprecated Widget::override_*() API.
+  (Kjell Ahlstedt)
+* Container: Remove obsolete comments that confuse doxygen.
+  (Kjell Ahlstedt)
+* Put DOXYGEN_SHOULD_SKIP_THIS around *_Class prototypes.
+  To workaround a doxygen bug, to fix the genereated DevHelp search index.
+  (Murray Cumming) Bug #743918
+
+
+3.15.4 (unstable);
+
+Gtk:
+* Builder::get_type_from_name_vfunc(): Call the base class function.
+  Instead of jusgin calling g_type_from_name(), in case the base class
+  function does more.
+  (Kjell Ahlstedt) Bug #742637.
+* TextBuffer:
+  - Add insert_markup().
+  - Add the copy_target_list and paste_target_list properties.
+  (Kjell Ahlstedt)
+
+Documentation:
+* Pixbuf: Change a mention of Glib::ResourceError to Gio::ResourceError.
+  (Kjell Ahlstedt)
+
+
+3.15.3 (unstable);
+
+Gtk:
+* CssProvider: Add CssProviderError and signal_parsing_error()
+  (Kjell Ahlstedt)
+* Add CssSection.
+  (Kjell Ahlstedt)
+* Dialog: Fix the constructors with DialogFlags.
+  (Kjell Ahlstedt) Bug #738513 (Simonas Kazlauskas)
+* ScaleButton:
+  - Correct the constructor.
+  - Add a constructor without the icons.
+  (Murray Cumming)
+* ScrolledWindow: Add get/set_overlay_scrolling() and property.
+  (Juan R. García Blanco)
+* Stack: Add hhomogeneous and vhomogeneous properties.
+  (Juan R. García Blanco)
+* TextTag: Add fallback, fallback-set, letter-spacing, and
+  letter-spacing-set properties.
+  (Juan R. García Blanco)
+* TextView: Add monospace property.
+  (Juan R. García Blanco)
+* Widget: Added get_action_group() and list_action_prefixes().
+  (Murray Cumming)
+
+Documentation:
+* Add an empty line after @newin where it's missing.
+  (Kjell Ahlstedt)
+* Fix some Doxygen warnings.
+  (Kjell Ahlstedt)
+* ScaleButton: Document the constructors.
+  (Murray Cumming)
+
+
+3.15.2 (unstable);
+
+Gtk:
+* Dialog: Add constructors with DialogFlags,
+  for instance to create a dialog with a header bar.
+  (Kjell Ahlstedt) Bug #738513.
+* Grid: Add attach_next_to() without the 'sibling' parameter.
+  (Kjell Ahlstedt)  Bug #739340.
+* Overlay:  Correct the "since" documentation.
+* SearchEntry: Add the search_changed signal
+  (Kjell Ahlstedt)
+* Added StyleProperty
+  (Mark Vender) Bug #673317.
+
+Gdk
+* Curor: Deprecate the constructor that doesn't take a Display parameter.
+  (Murray Cumming)
+* Pixbuf: Deprecate create_from_inline().
+  (Kjell Ahlstedt)
+
+
+3.14:
+
+API additions since 3.12:
+
+Gdk:
+* Device: Add get_last_event_window().
+  (Murray Cumming)
+* Pixbuf: Add get_byte_length() and create_from_resource().
+  (Murray Cumming)
+* Window: Add get/set_event_compression(), set_shadow_width(),
+  and show_window_menu().
+  (Murray Cumming)
+
+Gtk:
+* Deprecate Alignment.
+  (Murray Cumming)
+* Application: Add get_actions_for_accel(), prefers_app_menu(), and
+  get_menu_by_id().
+  (Murray Cumming)
+* Deprecate Arrow.
+  (Kjell Ahlstedt)
+* Bin: Deprecate add_label(const Glib::ustring& label, bool mnemonic, double x_align, double y_align) and
+    add_pixlabel(const std::string& pixfile, const Glib::ustring& label, double x_align, double y_align).
+    Add add_pixlabel(const std::string& pixfile, const Glib::ustring& label, Align x_align, Align y_align).
+* Box: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* CellArea: Add attribute_get_column().
+  (Murray Cumming)
+* Container: Deprecate [set|get]_resize_mode() and set_reallocate_redraws().
+* EntryCompletion: Add the no_matches signal.
+  (Murray Cumming)
+* Add EventController and Gesture* classes.
+  (Kjell Ahlstedt)
+* Grid: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* HeaderBar: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* IconInfo: Deprecate set_raw_coordinates(), get_embedded_rect(),
+  get_attach_points() and get_display_name().
+  (Murray Cumming)
+* IconTheme: Add add_resource_path() and deprecate add_builtin_icon().
+  (Murray Cumming)
+* Label: Deprecate Label(const Glib::ustring& label, float xalign, float yalign, bool mnemonic).
+* ListBox:
+  - Add selected_foreach(), get_selected_rows(), unselect_row(), select_all()
+  and unselect_all(). Add the selected_rows_changed signal.
+  (Murray Cumming)
+* ListBoxRow: Add is_selected(), set/get_selectable(), set/get_activatable().
+  Add the selectable and activatable properties.
+  (Murray Cumming)
+* Deprecate Misc (almost - it is still a base class).
+  (Kjell Ahlstedt)
+* Notebook: Add child properties tab_label, menu_label, position,
+  tab_expand, tab_fill, reorderable, and detachable.
+  (Juan R. García Blanco)
+* Deprecate NumerableIcon.
+  (Kjell Ahlstedt)
+* Add Overlay.
+  (Juan R. García Blanco)
+* Paned: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* Settings: Add the gtk_long_press_time property.
+  (Murray Cumming)
+* Stack: Add child properties name, title, icon_name, position, and
+  needs_attention.
+  (Juan R. García Blanco)
+* StatusIcon:  Deprecate this because it is deprecated in gtk+
+  (Kjell Ahlstedt)
+* StyleContext: Really add get_scale().
+  (Murray Cumming)
+* Switch: Add set/get_state(), the state property, and the state_set signal.
+* Toolbar: Add child properties expand and homogeneous.
+  (Juan R. García Blanco) Bug #140515
+* TreeView: Deprecate property_rules_hint().
+  (Kjell Ahlstedt)
+* Widget:
+  - Deprecate get/set_double_buffered() and the property.
+  - Deprecate region_intersect(),
+  get_root_window(), [set|get]_margin_[left|right](), property_style(),
+  property_margin_[left|right]().
+  (Kjell Ahlstedt)
+  - Add get/set_clip().
+  (Murray Cumming)
+* WidgetPath:  Deprecate iter_add_region(),
+  iter_remove_region(), iter_clear_regions(), iter_list_regions()
+  and iter_has_region().
+  (Murray Cumming)
+
+
+3.14.0 (stable):
+
+Documentation:
+* Headerbar demo: Update for renamed arrow icons.
+  (Kjell Ahlstedt)
+    
+Build:
+* Update and Overhaul Visual Studio 2008 and 2010 Projects.
+  (Chun-wei Fan)
+* Fix the demos on Windows.
+  (Chun-wei Fan)
+    
+
+3.13.8 (unstable):
+
+Gdk:
+* Window: Add get/set_event_compression(), set_shadow_width(),
+  and show_window_menu().
+  (Murray Cumming)
+
+Gtk:
+* Application: Add get_actions_for_accel(), prefers_app_menu(), and
+  get_menu_by_id().
+  (Murray Cumming)
+* CellArea: Add attribute_get_column().
+  (Murray Cumming)
+* EntryCompletion: Add the no_matches signal.
+  (Murray Cumming)
+* ListBox:
+  - Add selected_foreach(), get_selected_rows(), unselect_row(), select_all()
+  and unselect_all(). Add the selected_rows_changed signal.
+  (Murray Cumming)
+* ListBoxRow: Add is_selected(), set/get_selectable(), set/get_activatable().
+  Add the selectable and activatable properties.
+  (Murray Cumming)
+* Settings: Add the gtk_long_press_time property.
+  (Murray Cumming)
+* StatusIcon:  Deprecate this because it is deprecated in gtk+
+  (Kjell Ahlstedt)
+* StyleContext: Really add get_scale().
+  (Murray Cumming)
+* Widget: Add get/set_clip().
+  (Murray Cumming)
+
+
+3.13.7 (unstable):
+
+Gtk:
+* Box: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* Grid: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* HeaderBar: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* Paned: Wrap child properties
+  (Juan R. García Blanco) Bug #140515
+* TreeView: Deprecate property_rules_hint().
+  (Kjell Ahlstedt)
+
+Documentation:
+* Gtk::FileChooser::get_current_folder(): Update documentation from GTK+.
+  (Kjell Ahlstedt) Bug #734570 (da_fox)
+
+
+3.13.5 (unstable):
+
+Gtk:
+* Container: Support child properties.
+  (Juan R. García Blanco)
+* Add EventController and Gesture* classes.
+  (Kjell Ahlstedt)
+* IconTheme: Add add_resource_path() and deprecate add_builtin_icon().
+  (Murray Cumming)
+* Notebook: Add child properties tab_label, menu_label, position,
+  tab_expand, tab_fill, reorderable, and detachable.
+  (Juan R. García Blanco)
+* Stack: Add child properties name, title, icon_name, position, and
+  needs_attention.
+  (Juan R. García Blanco)
+* Switch: Add set/get_state(), the state property, and the state_set signal.
+* Toolbar: Add child properties expand and homogeneous.
+  (Juan R. García Blanco) Bug #140515
+* Widget: Deprecate get/set_double_buffered() and the property.
+  (Kjell Ahlstedt)
+
+Documentation:
+* Demo: Update notebook's tabs style to match the gtk3-demo.
+  (Juan R. García Blanco)
+* Demo: Add a gestures example, based on the gtk3-demo equivalent.
+  (Kjell Ahlstedt)
+* Add Gestures group to the reference docs
+  (Kjell Ahlstedt)
+
+
+3.13.3 (unstable):
+
+Gtk:
+* Builder: Fix ref count in get_widget() and get_widget_derived() and add test
+  case.
+  (Kjell Ahlstedt) Bug #731444 (Peter)
+* Container: Deprecate [set|get]_resize_mode() and set_reallocate_redraws().
+* Widget: Deprecate reparent(), region_intersect(),
+  get_root_window(), [set|get]_margin_[left|right](), property_style(),
+  property_margin_[left|right]().
+  (Kjell Ahlstedt) 
+* Add Overlay.
+  (Juan R. García Blanco)
+* IconInfo: Deprecate set_raw_coordinates(), get_embedded_rect(),
+  get_attach_points() and get_display_name().
+  (Murray Cumming)
+* Widget: Undeprecate and reimplement reparent() because it is still useful in
+  gtkmm.
+  (Kjell Ahlstedt)
+* WidgetPath:  Deprecate iter_add_region(),
+  iter_remove_region(), iter_clear_regions(), iter_list_regions()
+  and iter_has_region().
+  (Murray Cumming)
+
+Documentation:
+* Application: Add documentation concerning the use of quit()
+  (Kjell Ahlstedt) Bug #731126 (Glenn Rice)
+* Builder: Add documentation about widget and window lifetimes.
+  (Kjell Ahlstedt) Bug #731444 (Peter)
+* Add Overlay demo.
+  (Juan R. García Blanco)
+* demo: Avoid use of deprecated API.
+  (Murray Cumming)
+* demo: Make side bar scrollable as in the C version.
+   (Juan R. García Blanco)   
+
+
+3.13.2 (unstable):
+
+Gtk:
+* Don't assert argc/argv are non-null in Application::run()
+  (Jonathon Jongsma) Bug #729212.
+* Deprecate Alignment.
+  (Murray Cumming)
+* Deprecate Arrow.
+  (Kjell Ahlstedt)
+* Bin: Deprecate add_label(const Glib::ustring& label, bool mnemonic, double x_align, double y_align) and
+    add_pixlabel(const std::string& pixfile, const Glib::ustring& label, double x_align, double y_align).
+    Add add_pixlabel(const std::string& pixfile, const Glib::ustring& label, Align x_align, Align y_align).
+* Label: Deprecate Label(const Glib::ustring& label, float xalign, float yalign, bool mnemonic).
+* MenuItem: Don't use deprecated Misc property.
+* Deprecate Misc (almost - it is still a base class).
+  (Kjell Ahlstedt)
+* Deprecate NumerableIcon.
+  (Kjell Ahlstedt)
+
+Documentation:
+* gtkmm-demo: use HeaderBar in main window.
+  (Juan R. García Blanco)
+* Fix a segfault in the Drawing Area demo
+  (Kjell Ahlstedt )
+* Update documentation of Gtk::Dialog::run()
+  (Kjell Ahlstedt)
+*  Remove unnecessary parts of the docs_override.xml files
+  (Kjell Ahlstedt)
+
+
+3.12:
+
+API additions since 3.10:
+
+Gtk:
+* Add ActionBar.
+  (Juan R. García Blanco) Bug #723124
+* Application:
+  - Added set_accel_for_action(), get/set_accels_for_action() and
+  list_action_descriptions().
+  (Murray Cumming)
+  - Add set_accels_for_action(), deprecating add_accelerator().
+  (Murray Cumming)
+* Assistant: Add use-header-bar property.
+  (Juan R. García Blanco)
+* Box: Add get/set_center_widget() and unset_center_widget().
+  (Juan R. García Blanco)
+* Builder: Add expose_[object|widget](), [set|get]_application().
+  (Kjell Ahlstedt)
+* Button: Add set_image_from_icon_name() with a use_fallback argument.
+  (Kjell Ahlstedt)
+* CellArea: Add signal_apply_attributes().
+  (Kjell Ahlstedt)
+* Dialog: Add get/set_header_bar() and the
+  use_header_bar property.
+  (Juan R. García Blanco)
+* Entry:
+  - Add the max-width-chars property.
+  - Add get/set_max_width_chars() and the property.
+  (Juan R. García Blanco)
+  - Add set/get_attributes() and the property.
+  (Kjell Ahlstedt)
+* Add FlowBox and FlowBoxChild.
+  (Juan R. García Blanco) Bug #723801
+* HeaderBar: Addd get_decoration_layout(), get_has_subtitle(),
+  set_decoration_layout() and set_has_subtitle() and properties.
+  (Juan R. García Blanco) Bug #723199
+* IconInfo: Add is_symbolic().
+  (Juan R. García Blanco)
+* MenuButton:
+  - Add get/set_popover() and unset_popover() and the property.
+  - Add get/set_use_popover() and the property.
+  (Juan R. García Blanco)
+* PlacesSidebar: Add local-only object property and get/set methods.
+  (Juan R. García Blanco) Bug #723893
+* Add Popover.
+  (Juan R. García Blanco) Bug #723058
+* SelectionData: Add get_data(int& length).
+  (Kjell Ahlstedt)
+* Settings: Add gtk-decoration-layout, gtk-shell-shows-desktop
+  and gtk-dialogs-use-header properties.
+  (Juan R. García Blanco) Bug #723397
+* Stack: Add get_transition_running(), get_child_by_name() and
+  the transition-runnning property.
+  (Juan R. García Blanco) Bug #723397
+* ToolItem: Add unset_proxy_menu_item().
+  (Kjell Ahlstedt)
+* Widget:
+  - Added get/set_margin_start/end() and properties.
+  (Murray Cumming)
+  - Added scale-factor property.
+  (Murray Cumming)
+* Window: Add is_maximized() and the is-maximized property.
+  (Juan R. García Blanco)
+
+
+Gdk:
+* Device: Add get_last_event_window().
+  (Murray Cumming)
+* Pixbuf:
+  - Add get_byte_length() and create_from_resource().
+  (Murray Cumming)
+
+
+3.12.0 (stable):
+
+* Application: Add set_accels_for_action(), deprecating add_accelerator().
+  (Murray Cumming)
+* Button: Add set_image_from_icon_name() with a use_fallback argument.
+  (Kjell Ahlstedt)
+* demo:
+  - Add the FlowBox demo part.
+  (Juan R. Garcia Blanco, Murray Cumming)
+  - Add HeaderBar demo.
+  (Juan R. Garcia Blanco)
+
+3.11.10 (unstable):
+
+Gdk:
+* Pixbuf: Add get_byte_length().
+  (Murray Cumming)
+
+Gtk:
+* Dialog: Deprecate the const version of get_action_area() too.
+  (Kjell Ahlstedt)  
+
+Build:
+* Update Visual Studio Projects
+  (Chun-wei Fan)
+
+3.11.9 (unstable):
+
+Gdk:
+* Device: Add get_last_event_window().
+  (Murray Cumming)
+
+Gtk:
+* Application: Added set_accel_for_action(), get/set_accels_for_action() and
+  list_action_descriptions().
+  (Murray Cumming)
+* Widget:
+  - Added get/set_margin_start/end() and properties.
+  (Murray Cumming)
+  - Added scale-factor property.
+  (Murray Cumming)
+
+
+3.11.8 (unstable):
+
+Gtk:
+* Window: Add is_maximized() and the is-maximized property.
+  (Juan R. García Blanco)
+* IconInfo: Add is_symbolic().
+  (Juan R. García Blanco)
+* Assistant: Add use-header-bar property.
+  (Juan R. García Blanco)
+* ActionBar:
+  - Now inherits from GtkBin
+  - spacing and center-widget properties removed.
+  - Add unset_center_widget() method.
+  (Juan R. García Blanco)
+* Box: Add get/set_center_widget() and unset_center_widget().
+  (Juan R. García Blanco)
+* Dialog: Add get/set_header_bar() and the
+  use_header_bar property.
+  (Juan R. García Blanco)
+* Entry:
+  - Add the max-width-chars property.
+  - Add get/set_max_width_chars() and the property.
+  (Juan R. García Blanco)
+* MenuButton:
+  - Add get/set_popover() and unset_popover() and the property.
+  - Add get/set_use_popover() and the property.
+  (Juan R. García Blanco)
+* Popover: Add constructor that takes a model and
+  add bind_model().
+  (Juan R. García Blanco)
+
+
+3.11.7 (unstable):
+
+* MessageDialog: Deprecate get/set_image() and the property.
+  (Murray Cumming)
+* Popover:
+  - Add closed signal.
+  (Juan R. García Blanco)
+  - Add closed signal.
+  Correct the type of the pointing_to property and method parameter.
+  (Juan R. García Blanco)
+* FlowBoxChild: Add activate signal.
+  (Juan R. García Blanco)
+
+
+3.11.5 (unstable):
+
+Gtk:
+* Add ActionBar.
+  Bug #723124
+  (Juan R. García Blanco)
+* Builder: Add expose_[object|widget](), [set|get]_application().
+  (Kjell Ahlstedt)
+* Dialog: Deprecate set_alternative_button_order_from_array(),
+  and alternative_button_order().
+  (Murray Cumming)
+* Entry: Add set/get_attributes() and the property.
+  (Kjell Ahlstedt)
+* Add FlowBox.
+  Bug #723801
+  (Juan R. García Blanco)
+* HeaderBar: Added decoration-layout, decoration-layout-set and
+  has-subtitle object properties.
+  Addd get_decoration_layout(), get_has_subtitle(),
+  set_decoration_layout() and set_has_subtitle().
+  Bug #723199
+  (Juan R. García Blanco)
+* Main: Undeprecate add_gtk_option_group(), because it is still needed.
+  (Murray Cumming)
+* PlacesSidebar: Add local-only object property and get/set methods.
+  Bug #723893
+  (Juan R. García Blanco)
+* Add Popover.
+  Bug #723058
+  (Juan R. García Blanco)
+* Settings: Add gtk-decoration-layout, gtk-shell-shows-desktop
+  and gtk-dialogs-use-header properties.
+  Bug #723397
+  (Juan R. García Blanco)
+* Stack: Add get_transition_running(), get_child_by_name() and
+  the transition-runnning property.
+  Bug #723397
+  (Juan R. García Blanco)
+
+Documentation:
+* Update the Doxygen configuration.
+  (Kjell Ahlstedt)
+
+
+3.11.4 (unstable):
+
+Gtk:
+* Action, Activatable: Undeprecate methods that don't use a StockID.
+  We didn't mean to leave them deprecated.
+  (Kjell Ahlstedt)
+* CellArea: Add signal_apply_attributes().
+  (Kjell Ahlstedt)
+* SelectionData: Add get_data(int& length).
+  (Kjell Ahlstedt)
+* ToggleAction: Deprecate the create() that uses (deprecated) StockID
+  (Kjell Ahlstedt)
+* ToolItem: Add unset_proxy_menu_item().
+  (Kjell Ahlstedt)
+* UIManager: Deprecate the add-tearoffs property.
+  (Kjell Ahlstedt)
+
+Gdk:
+* Pixbuf: Add create_from_resource() methods.
+* RGBA, Color: Fix set_hsl(), improve documentation.
+  (Kjell Ahlstedt) Bug #720258
+
+Build:
+* CellArea: Fix documentation of typedef SlotForeachAlloc
+  An extra '>' in the docs trapped doxygen 1.8.4 in an infinite loop.
+  (Kjell Ahlstedt)
+* Fix the build with --disable-deprecated-api
+  (Kjell Ahlstedt)
+
+Documentation:
+* Add missing widget images.
+  (Kjell Ahlstedt)
+* AppChooser*: Improve documentation.
+  (Kjell Ahlstedt) Bug #650012
+* ColorChooser::get_rgba(): Add documentation
+  (Kjell Ahlstedt)
+* SelectionData: Add methods docs.
+  (Kjell Ahlstedt)
+* ToolItem: Add class docs.
+  (Kjell Ahlstedt)
+
+
+3.10.1 (stable):
+
+Gtk:
+* Avoid including deprecated stockid.h.
+  This lets applications build with deprecated API disabled.
+  (Murray Cumming)
+* RadioAction, RecentAction: Deprecate constructors and methods that
+  take StockID.
+  StockID was already deprecated so this should not affect
+  application builds.
+  (Kjell Ahlstedt)
+
+Changes in 3.10 compared to 3.8:
+
+Gtk
+* Added HeaderBar.
+  (Juan Rafael García Blanco) Bug #708194
+* Added ListBox and ListBoxRow,
+  (Kjell Ahlstedt) Bug #708115
+* Added PlacesSidebar.
+  (Juan Rafael García Blanco) Bug #705642
+* Add Revealer.
+  (Juan R. García Blanco) Bug #705460
+* Added Stack and StackSwitcher,
+  (Andrew Potter) Bug #704964
+* Deprecate Table.
+  (Kjell Ahlstedt)
+* Deprecate StockID, StockItem, BuiltinStockID, namespace Gtk::Stock.
+  (Kjell Ahlstedt)
+* Deprecate Gtk::IconFactory, IconSet, IconSource.
+  (Kjell Ahlstedt)
+* Application:
+  - add/remove_accelerator(): Add overloads without the variant parameter.
+  (Murray Cumming)
+  - Add missing gtk_init() call in one of the constructors.
+  (Murray Cumming)
+* Button: Add constructor that takes an icon_name and size.
+  (Murray Cumming)
+* CellRenderer: Deprecate property_cell_background_gdk().
+  (Kjell Ahlstedt)
+* CellRendererPixbuf: Add the surface property.
+  (Murray Cumming)
+* CellView: Deprecate property_background_gdk().
+  (Kjell Ahlstedt)
+* ColorButton: Deprecate get_alpha().
+  (Kjell Ahlstedt)
+* Container: deprecate resize_children().
+  (Kjell Ahlstedt)
+* Box: Add get/set_baseline_position() and property.
+  (Murray Cumming)
+* Entry: Add get/set_tabs() and property.
+  (Murray Cumming)
+* FileChooser: Add get_current_name().
+  (Murray Cumming)
+* HeaderBar: Make get_show_close_button() const.
+  (Juan Rafael García Blanco)
+* Grid:
+  - Add get/set_row_baseline_position()
+  and get/set_baseline_row(), and baseline-row property.
+  (Murray Cumming)
+  - Add remove_row() and remove_column().
+  (Murray Cumming) 
+* Image: Add set(Cairo::Surface)
+  (Murray Cumming)
+* InfoBar: Add get/set_show_close_button() and
+  the property.
+  (Murray Cumming)
+* IconInfo: Add load_surface() and get_base_scale().
+  (Murray Cumming)
+* IconTheme:  Add lookup_icon() method overloads that
+  take a scale parameter.
+  Add choose_icon() method overload that take a scale
+  parameter.
+  Add load_icon() method overload that takes a scale parameter.
+  Add load_surface().
+  (Murray Cumming) 
+* IconView: set_cursor(): Add a version with no cell parameter
+  (Murray Cumming)
+* Image: Deprecate methods that take an IconSet or a StockID parameter.
+* Label: Add get/set_lines() and property.
+  (Murray Cumming)
+* Menu, MenuBar: Add constructors that take Gio::MenuModels.
+  (Murray Cumming)
+* Menu: Make attach_to_widget() public.
+  (Murray Cumming)
+* MenuButton: Deprecate unset_menu().
+  (Kjell Ahlstedt)
+* MenuShell: bind_model(): Add a method overload without the
+  action_namespace parameter.
+  (Murray Cumming)
+* PlacesSidebar: Fix crash with the drag_* signals,
+  correct some OWNERSHIP_*s, pass vectors by reference in signals
+  (Murray Cumming) Bug #705642
+* RadioAction: Deprecate the constructor that uses StockID.
+  (Murray Cumming)
+* RadioToolButton: Fix set_group(). Add reset_group().
+  (Kjell Ahlstedt)
+* Scale: Constructor: Remove the default parameter value
+  to avoid ambiguity.
+  (Murray Cumming) Bug #707810 (cheshirekow)
+* Add SearchBar.
+  (Juan Rafael Garcia Blanco)
+* ScrolledWindow: Deprecate property_window_placement_set().
+* Settings:
+  - Deprecate ignored settings.
+    (Murray Cumming)
+  - Add create_action().
+    (Murray Cumming)
+* StyleContext: Deprecate [set|get]_direction() and render_icon_pixbuf().
+  (Kjell Ahlstedt)
+* ToggleAction: Deprecate the constructor that uses StockID
+  (Murray Cumming)
+* Widget:
+  - Make insert_action_group() public.
+    (Murray Cumming)
+  - Add remove_action_group()
+    (Murray Cumming)
+  - Add get_scale_factor().
+    (Murray Cumming)
+  - Add drag_begin() that takes x and y coordinates.
+    (Murray Cumming)
+  - Widget Add get_preferred_height_for_width(),
+    get_allocated_baseline() and get_valign_with_baseline().
+    (Murray Cumming)
+  - Deprecate [un]set_composite_name(),
+    [push|pop]_composite_child(), get_requisition() and methods that take a
+    StockID parameter.
+    (Kjell Ahlstedt)
+* Window:
+  - get_frame_extents(): Add const version.
+    (Murray Cumming)
+  - Add close().
+    (Murray Cumming)
+  - Deprecate reshow_with_initial_size().
+    (Kjell Ahlstedt)
+* Add missing includes in gdkmm.h and gtkmm.h.
+  (Kjell Ahlstedt) Bug #699993.
+
+Gdk:
+* Deprecate Color.
+  (Murray Cumming)
+* Cursor: Wrap some new functions.
+  (Murray Cumming)
+* Device: Add get_position() that uses doubles.
+  (Murray Cumming)
+* Display: Deprecate get_n_screens().
+  (Murray Cumming)
+* Screen: Add get_monitor_scale_factor().
+  (Murray Cumming)
+* Window:
+  - Add get_scale_factor().
+  - Add get_device_position() taking doubles.
+  - Add create_similar_image_surface().
+  - Add set_opaque_region().
+    (Murray Cumming)
+
+Build:
+* Update Visual Studio Projects
+  (Chun-wei Fan)
+* Update gtk-demo MSVC Projects
+  (Chun-wei Fan)
+* Move to a generated ChangeLog.
+  (José Alburquerque)
+
+Documentation:
+* Demos: Catch Glib::FileError from demo_find_file().
+  (Kjell Ahlstedt)
+* Demos: Add IconTheme demo.
+  (Kjell Ahlstedt)
+* Demos: Fix calls to Gtk::Grid::attach().
+  (Kjell Ahlstedt)
+
+
+
+3.10.0 (stable):
+
+Gtk
+
+* Undeprecate UIManager, Action, ActionGroup,
+  ToggleAction, RadioAction and RecentAction,
+  though they are still deprecated in the C API:
+  See https://mail.gnome.org/archives/gtkmm-list/2013-October/msg00003.html
+  (Murray Cumming)
+* RadioAction: Deprecate the constructor that uses StockID.
+  (Murray Cumming)
+* ToggleAction: Deprecate the constructor that uses StockID
+  (Murray Cumming)
+* Application:
+  - add/remove_accelerator(): Add overloads without the variant parameter.
+  (Murray Cumming)
+  - Add missing gtk_init() call in one of the constructors.
+  (Murray Cumming)
+* Button: Remove unnnecessary BuiltinStockID declaration.
+  (Murray Cumming)
+* HeaderBar: Make get_show_close_button() const.
+  (Juan Rafael García Blanco)
+* IconView: set_cursor(): Add a version with no cell parameter
+  (Murray Cumming)
+* PlacesSidebar: Fix crash with the drag_* signals,
+  correct some OWNERSHIP_*s, pass vectors by reference in signals
+  (Murray Cumming) Bug #705642
+* Settings: Add create_action().
+* SearchBar: handle_event(): Take a GdkEventKey instead of GdkEvent.
+  (Murray Cumming)
+* Window: get_frame_extents(): Add const version.
+  (Murray Cumming)
+
+Gdk:
+* Deprecate Color.
+  (Murray Cumming)
+
+Build:
+* Update gtk-demo MSVC Projects
+  (Chun-wei Fan)
+
+
+3.9.16 (unstable):
+
+Gtk:
+* Added HeaderBar.
+  (Juan Rafael García Blanco) Bug #708194
+* Added ListBox and ListBoxRow,
+  (Kjell Ahlstedt) Bug #708115
+* Added PlacesSidebar.
+  (Juan Rafael García Blanco) Bug #705642
+* Added Stack and StackSwitcher,
+  (Andrew Potter) Bug #704964
+* Widget:
+  * Make insert_action_group() public.
+  (Murray Cumming)
+  * Add remove_action_group()
+  (Murray Cumming)
+
+3.9.14 (unstable):
+
+Gtk:
+* Add SearchBar.
+  (Juan Rafael Garcia Blanco)
+* Button: Replace the icon_name ctor by set_image_from_icon_name().
+  (Kjell Ahlstedt)  Bug #707791
+* Scale: Constructor: Remove the default parameter value
+  to avoid ambiguity.
+  (Murray Cumming) Bug #707810 (cheshirekow)
+
+Gdk:
+* Window: Add set_opaque_region().
+  (Murray Cumming)
+
+Tools:
+* gtk_generate_extra_defs.sh: Add --make-patch option.
+  (Kjell Ahlstedt)
+
+Build:
+* Update Visual Studio Projects
+  (Chun-wei Fan)
+
+
+3.9.12 (unstable):
+
+Gtk:
+* Button: Add constructor that takes an icon_name and size.
+  (Murray Cumming)
+* Entry: Add get/set_tabs() and property.
+  (Murray Cumming)
+* Label: Add get/set_lines() and property.
+  (Murray Cumming)
+* Add Revealer.
+  (Juan R. García Blanco) Bug #705460
+* Widget:
+  - add get_scale_factor().
+    (Murray Cumming)
+  - Widget: Add drag_begin() that takes x and y coordinates.
+    (Murray Cumming)
+
+Gdk:
+* Cursor: Wrap some new functions.
+  (Murray Cumming)
+
+
+3.9.10 (unstable):
+
+Gdk:
+* Device: Add get_position() that uses doubles.
+  (Murray Cumming)
+* Screen: Add get_monitor_scale_factor().
+  (Murray Cumming)
+* Window: Add get_scale_factor().
+  Add get_device_position() taking doubles.
+  Add create_similar_image_surface().
+  (Murray Cumming)
+
+Gtk:
+* CellRendererPixbuf: Add the surface property.
+  (Murray Cumming)
+* Box: Add get/set_baseline_position() and property.
+  (Murray Cumming)
+* FileChooser: Add get_current_name().
+  (Murray Cumming)
+* Image: Add set(Cairo::Surface)
+  (Murray Cumming)
+* InfoBar: Add get/set_show_close_button() and
+  the property.
+  (Murray Cumming)
+* IconInfo: Add load_surface() and get_base_scale().
+  (Murray Cumming)
+* IconTheme:  Add lookup_icon() method overloads that
+  take a scale parameter.
+  Add choose_icon() method overload that take a scale
+  parameter.
+  Add load_icon() method overload that takes a scale parameter.
+  Add load_surface().
+  (Murray Cumming) 
+* Grid:
+  - Add get/set_row_baseline_position()
+  and get/set_baseline_row(), and baseline-row property.
+  (Murray Cumming)
+  - Add remove_row() and remove_column().
+  (Murray Cumming) 
+* Menu, MenuBar: Add constructors that take Gio::MenuModels.
+  (Murray Cumming)
+* Menu: Make attach_to_widget() public.
+  (Murray Cumming)
+* MenuShell: bind_model(): Add a method overload without the
+  action_namespace parameter.
+  (Murray Cumming)
+* RadioToolButton: Fix set_group(). Add reset_group().
+  (Kjell Ahlstedt)
+* Widget Add get_preferred_height_for_width(),
+  get_allocated_baseline() and get_valign_with_baseline().
+  (Murray Cumming)
+* Window: Add close().
+  (Murray Cumming)
+
+Documentation:
+* Demos: Catch Glib::FileError from demo_find_file().
+  (Kjell Ahlstedt)
+* Demos: Add IconTheme demo.
+  (Kjell Ahlstedt)
+
+
+3.9.8 (unstable):
+
+Gdk:
+* Display: Deprecate get_n_screens().
+  (Murray Cumming)
+
+Gtk:
+* Action: Deprecate all methods, signals and properties, but not yet the 
+  class itseld, because it is still used in not-yet-deprecated API.
+  Also deprecated RadioACtion, RecentAction, ToggleAction.
+  (Kjell Ahlstedt)
+* Deprecate ActionGroup.
+  (Kjell Ahlstedt)
+* CellRenderer: Deprecate property_cell_background_gdk().
+  (Kjell Ahlstedt)
+* CellView: Deprecate property_background_gdk().
+  (Kjell Ahlstedt)
+* ColorButton: Deprecate get_alpha().
+  (Kjell Ahlstedt)
+* Container: deprecate resize_children().
+  (Kjell Ahlstedt)
+* Deprecate Gtk::IconFactory, IconSet, IconSource.
+  (Kjell Ahlstedt)
+* Image: Deprecate methods that take an IconSet or a StockID parameter.
+* StyleContext: Deprecate [set|get]_direction() and render_icon_pixbuf().
+* Deprecate StockID, StockItem, BuiltinStockID, namespace Gtk::Stock.
+* MenuButton: Deprecate unset_menu().
+  (Kjell Ahlstedt)
+* MenuButton: Deprecate unset_menu().
+  (Kjell Ahlstedt)
+* ScrolledWindow:  Deprecate property_window_placement_set().
+* Settings: Deprecate ignored settings.
+* Deprecate Table.
+  (Kjell Ahlstedt)
+* Deprecate UIManager.
+  (Kjell Ahlstedt)
+* Widget: Deprecate [un]set_composite_name(),
+  [push|pop]_composite_child(), get_requisition() and methods that take a
+  StockID parameter.
+  (Kjell Ahlstedt)
+* Window: Deprecate reshow_with_initial_size().
+  (Kjell Ahlstedt)
+* Add missing includes in gdkmm.h and gtkmm.h.
+  (Kjell Ahlstedt) Bug #699993.
+
+Build:
+* Move to a generated ChangeLog.
+  (José Alburquerque)
+
+Documentation:
+* Demos: Fix calls to Gtk::Grid::attach().
+  (Kjell Ahlstedt)
+
+
 3.8.1 (stable):
 
 Gtk:

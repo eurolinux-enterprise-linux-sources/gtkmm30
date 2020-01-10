@@ -17,6 +17,7 @@
 
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/menu.h>
+#include <gtkmm/popover.h>
 #include <giomm/menumodel.h>
 _DEFS(gtkmm,gtk)
 _PINCLUDE(gtkmm/private/togglebutton_p.h)
@@ -42,31 +43,40 @@ public:
 
   _CTOR_DEFAULT
 
- 
-  _WRAP_METHOD(void set_menu(Menu& popup), gtk_menu_button_set_popup, deprecated "Use set_popup() instead.")
-  _IGNORE(gtk_menu_button_set_menu)
 
+  _WRAP_METHOD(void set_menu(Menu& menu), gtk_menu_button_set_popup, deprecated "Use set_popup() instead.")
+
+_DEPRECATE_IFDEF_START
   /** Disables the button.
    *
    * @deprecated Use unset_popup() instead.
    */
   void unset_menu();
+_DEPRECATE_IFDEF_END
 
   _WRAP_METHOD(Menu* get_menu(), gtk_menu_button_get_popup, deprecated "Use get_popup() instead.")
   _WRAP_METHOD(const Menu* get_menu() const, gtk_menu_button_get_popup, constversion, deprecated "Use get_popup() instead.")
-  _IGNORE(gtk_menu_button_get_menu)
 
-  _WRAP_METHOD(void set_popup(Menu& popup), gtk_menu_button_set_popup)
+  _WRAP_METHOD(void set_popup(Menu& menu), gtk_menu_button_set_popup)
 
-_DEPRECATE_IFDEF_START
   /** Disables the button.
    */
   void unset_popup();
-_DEPRECATE_IFDEF_END
 
   _WRAP_METHOD(Menu* get_popup(), gtk_menu_button_get_popup)
   _WRAP_METHOD(const Menu* get_popup() const, gtk_menu_button_get_popup, constversion)
-  _IGNORE(gtk_menu_button_set_menu)
+
+  _WRAP_METHOD(void set_popover(Popover& popover), gtk_menu_button_set_popover)
+
+  /** Disables the button.
+   */
+  void unset_popover();
+
+  _WRAP_METHOD(Popover* get_popover(), gtk_menu_button_get_popover)
+  _WRAP_METHOD(const Popover* get_popover() const, gtk_menu_button_get_popover, constversion)
+
+  _WRAP_METHOD(void set_use_popover(bool use_popover = true), gtk_menu_button_set_use_popover)
+  _WRAP_METHOD(bool get_use_popover(), gtk_menu_button_get_use_popover)
 
   _WRAP_METHOD(void set_direction(ArrowType   direction), gtk_menu_button_set_direction)
   _WRAP_METHOD(ArrowType get_direction() const, gtk_menu_button_get_direction)
@@ -86,7 +96,6 @@ _DEPRECATE_IFDEF_END
   _WRAP_METHOD(const Widget* get_align_widget() const, gtk_menu_button_get_align_widget)
 
 #ifndef GTKMM_DISABLE_DEPRECATED
-#ifdef GLIBMM_PROPERTIES_ENABLED
 // _WRAP_PROPERTY("menu", Menu*, deprecated "Use popup instead.")
 // The GtkMenuButton::menu property does not exist in gtk+ 3.7.0 and later. Must hand-code to avoid an API/ABI break.
 /** The dropdown menu.
@@ -106,13 +115,14 @@ _DEPRECATE_IFDEF_END
    * or receive notification when the value of the property changes.
    */
   Glib::PropertyProxy_ReadOnly< Menu* > property_menu() const;
-#endif //#GLIBMM_PROPERTIES_ENABLED
 #endif // GTKMM_DISABLE_DEPRECATED
 
   _WRAP_PROPERTY("popup", Menu*)
   _WRAP_PROPERTY("menu-model", Glib::RefPtr<Gio::MenuModel>)
   _WRAP_PROPERTY("align-widget", Widget*)
   _WRAP_PROPERTY("direction", ArrowType)
+  _WRAP_PROPERTY("use-popover", bool)
+  _WRAP_PROPERTY("popover", Popover*)
 
 };
 

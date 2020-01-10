@@ -40,11 +40,11 @@ class Menu;
 class Label : public Misc
 {
   _CLASS_GTKOBJECT(Label, GtkLabel, GTK_LABEL, Gtk::Misc,GtkMisc)
-  _IGNORE(gtk_label_get, gtk_label_parse_uline)
 public:
   Label();
   explicit Label(const Glib::ustring& label, bool mnemonic = false);
 
+_DEPRECATE_IFDEF_START
   /** This constructor is a shortcut for often used code
    * when you want to create a label with alignment different
    * than default one.
@@ -56,22 +56,25 @@ public:
    * Gtk::Label label(text, mnemonic);
    * label.set_alignment(x, y);
    * @endcode
+   *
+   * @deprecated Use another constructor.
    */
   Label(const Glib::ustring& label, float xalign, float yalign, bool mnemonic = false);
+_DEPRECATE_IFDEF_END
 
-  /** This constructor is a shortcut for often used code
-   * when you want to create a label with alignment different
-   * than default one.
+  /** This constructor is a shortcut to create a Label with Widget
+   * alignment properties different from the default ALIGN_FILL.
    * @code
-   * Gtk::Label label(text, x, y, mnemonic);
+   * Gtk::Label label(text, h, v, mnemonic);
    * @endcode
    * is equivalent to:
    * @code
    * Gtk::Label label(text, mnemonic);
-   * label.set_alignment(x, y);
+   * label.set_halign(h);
+   * label.set_valign(v);
    * @endcode
    */
-  Label(const Glib::ustring& label, Align xalign, Align yalign = ALIGN_CENTER, bool mnemonic = false);
+  Label(const Glib::ustring& label, Align halign, Align valign = ALIGN_CENTER, bool mnemonic = false);
 
 
   /// Doesn't use markup.
@@ -108,6 +111,9 @@ public:
   _WRAP_METHOD(void set_max_width_chars(int n_chars), gtk_label_set_max_width_chars)
   _WRAP_METHOD(int get_max_width_chars() const, gtk_label_get_max_width_chars)
 
+  _WRAP_METHOD(void set_lines(int lines), gtk_label_set_lines)
+  _WRAP_METHOD(int get_lines() const, gtk_label_get_lines)
+
   _WRAP_METHOD(void set_pattern(const Glib::ustring& pattern), gtk_label_set_pattern)
   _WRAP_METHOD(void set_line_wrap(bool wrap = true), gtk_label_set_line_wrap)
   _WRAP_METHOD(bool get_line_wrap() const, gtk_label_get_line_wrap)
@@ -142,6 +148,11 @@ public:
   _WRAP_METHOD(void set_track_visited_links(bool track_links = true), gtk_label_set_track_visited_links)
   _WRAP_METHOD(bool get_track_visited_links() const, gtk_label_get_track_visited_links)
 
+  _WRAP_METHOD(void set_xalign (float xalign), gtk_label_set_xalign)
+  _WRAP_METHOD(float get_xalign() const, gtk_label_get_xalign)
+  _WRAP_METHOD(void set_yalign (float yalign), gtk_label_set_yalign)
+  _WRAP_METHOD(float get_yalign() const, gtk_label_get_yalign)
+
   _WRAP_SIGNAL(void populate_popup(Menu* menu), "populate_popup")
 
   #m4 _CONVERSION(`const char*',`const Glib::ustring&',__GCHARP_TO_USTRING)
@@ -171,6 +182,9 @@ public:
   _WRAP_PROPERTY("angle", double)
   _WRAP_PROPERTY("max_width_chars", int)
   _WRAP_PROPERTY("track-visited-links", bool)
+  _WRAP_PROPERTY("lines", int)
+  _WRAP_PROPERTY("xalign", float)
+  _WRAP_PROPERTY("yalign", float)
 };
 
 }  // namespace Gtk

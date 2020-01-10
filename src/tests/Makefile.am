@@ -18,6 +18,7 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
 check_PROGRAMS =			\
+	builder/test		\
 	child_widget/test		\
 	child_widget2/test		\
 	child_widget_managed/test	\
@@ -26,13 +27,16 @@ check_PROGRAMS =			\
 	dialog_deletethis/test		\
 	main_with_options/test		\
 	menu_destruction/test		\
+	object_move/test		\
 	property_notification/test	\
 	refcount_dialog/test		\
 	scrolledwindow/test		\
 	wrap_existing/test
 
-TESTS =	test_validate_docs_xhtml.sh
+TESTS =	object_move/test \
+  test_validate_docs_xhtml.sh
 
+builder_test_SOURCES               = builder/main.cc
 child_widget_test_SOURCES          = child_widget/main.cc	\
                                      child_widget/testwindow.cc	\
                                      child_widget/testwindow.h
@@ -43,6 +47,7 @@ dialog_test_SOURCES                = dialog/main.cc
 dialog_deletethis_test_SOURCES     = dialog_deletethis/main.cc
 main_with_options_test_SOURCES     = main_with_options/main.cc
 menu_destruction_test_SOURCES      = menu_destruction/main.cc
+object_move_test_SOURCES           = object_move/main.cc
 property_notification_test_SOURCES = property_notification/main.cc
 refcount_dialog_test_SOURCES       = refcount_dialog/main.cc
 scrolledwindow_test_SOURCES        = scrolledwindow/main.cc

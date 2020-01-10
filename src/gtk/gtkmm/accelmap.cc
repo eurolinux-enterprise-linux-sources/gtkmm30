@@ -1,6 +1,3 @@
-// -*- c++ -*-
-/* $Id$ */
-
 /* Copyright (C) 2002 The gtkmm Development Team
  *
  * This library is free software; you can redistribute it and/or
@@ -27,16 +24,16 @@ namespace Gtk
 namespace AccelMap
 {
 
-void add_entry(const std::string& accel_path, 
-               guint accel_key, 
+void add_entry(const std::string& accel_path,
+               guint accel_key,
                Gdk::ModifierType accel_mods)
 {
     gtk_accel_map_add_entry(accel_path.c_str(), accel_key,
                             (GdkModifierType)accel_mods);
 }
 
-bool change_entry(const std::string& accel_path, 
-                  guint accel_key, 
+bool change_entry(const std::string& accel_path,
+                  guint accel_key,
                   Gdk::ModifierType accel_mods,
                   bool replace)
 {
@@ -79,7 +76,7 @@ bool lookup_entry(const Glib::ustring& accel_path, Gtk::AccelKey& key)
 
 bool lookup_entry(const Glib::ustring& accel_path)
 {
-  return gtk_accel_map_lookup_entry(accel_path.c_str(), 0 /* "optional", according to the C docs. */);
+  return gtk_accel_map_lookup_entry(accel_path.c_str(), nullptr /* "optional", according to the C docs. */);
 }
 
 } // namespace AccelMap

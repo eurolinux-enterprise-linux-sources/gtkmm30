@@ -27,7 +27,6 @@ namespace Gtk
 {
 
 //TODO: This documentation omits the examples from the C documentation. We should translate them to C++.
-//TODO: Find a way to markup the section titles in this doxygen comment.
 /** An abstract base class for laying out CellRenderers.
  *
  * This is an abstract base class for CellLayout widgets
@@ -41,7 +40,7 @@ namespace Gtk
  * Usually users dont have to interact with the CellArea directly
  * unless they are implementing a cell layouting widget themselves.
  *
- * Requesting area sizes
+ * <h2>Requesting area sizes</h2>
  *
  * As outlined in Gtk::Widget's
  * geometry management description, GTK+ uses a height-for-width
@@ -75,9 +74,9 @@ namespace Gtk
  * was used to request the sizes for a given TreeModel row be
  * used when rendering or processing events for that row.
  *
- * Cell Properties
+ * <h2>Cell Properties</h2>
  *
- * The CellArea introduces cell propertie
+ * The CellArea introduces cell properties
  * for CellRenderers in very much the same way that Gtk::Container
  * introduces child properties
  * for Widgets. This provides some general interfaces for defining
@@ -131,12 +130,11 @@ public:
 
 
   /** For instance,
-   * bool on_foreach(Gtk::CellRenderer* renderer, const Gdk::Rectangle& cell_area, const Gdk::Rectangle& background_area>);
+   * bool on_foreach(Gtk::CellRenderer* renderer, const Gdk::Rectangle& cell_area, const Gdk::Rectangle& background_area);
    *
    * @param renderer the cell renderer to operate on
-   * @param  cell_area the area allocated to the @a renderer inside the rectangle provided to foreach().
-   * @@param cell_background The background area for the @a renderer inside the background area provided to foreach().
-   * @param slot The slot to call for every CellRenderer.
+   * @param cell_area the area allocated to the @a renderer inside the rectangle provided to foreach().
+   * @param background_area The background area for the @a renderer inside the background area provided to foreach().
    * @returns true to stop iterating over cells.
    *
    * @newin{3,4}
@@ -158,7 +156,7 @@ public:
   void foreach(const Glib::RefPtr<CellAreaContext>& context, Widget* widget, const Gdk::Rectangle& cell_area, const Gdk::Rectangle& background_area, const SlotForeachAlloc& slot);
   _IGNORE(gtk_cell_area_foreach_alloc)
 
-  _WRAP_METHOD(int event(const Glib::RefPtr<CellAreaContext>& context, Widget& widget, GdkEvent* event, const Gdk::Rectangle& cell_area,  GtkCellRendererState  flags), gtk_cell_area_event)
+  _WRAP_METHOD(int event(const Glib::RefPtr<CellAreaContext>& context, Widget& widget, GdkEvent* gdk_event, const Gdk::Rectangle& cell_area,  GtkCellRendererState  flags), gtk_cell_area_event)
   _WRAP_METHOD(void render(const Glib::RefPtr<CellAreaContext>& context, Widget& widget, const ::Cairo::RefPtr< ::Cairo::Context>& cr, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, CellRendererState flags,  bool paint_focus), gtk_cell_area_render)
 
   _WRAP_METHOD(void get_cell_allocation(const Glib::RefPtr<CellAreaContext>& context, Widget& widget, CellRenderer& renderer,  const Gdk::Rectangle& cell_area, Gdk::Rectangle& allocation), gtk_cell_area_get_cell_allocation)
@@ -181,6 +179,8 @@ public:
   _WRAP_METHOD(void apply_attributes(const Glib::RefPtr<TreeModel>& tree_model, const TreeModel::iterator& iter,  bool is_expander, bool is_expanded), gtk_cell_area_apply_attributes)
   _WRAP_METHOD(void attribute_connect(CellRenderer& renderer, const Glib::ustring& attribute, int column), gtk_cell_area_attribute_connect)
   _WRAP_METHOD(void attribute_disconnect(CellRenderer& renderer, const Glib::ustring& attribute), gtk_cell_area_attribute_disconnect)
+
+  _WRAP_METHOD(int attribute_get_column(CellRenderer& renderer,const Glib::ustring& attribute) const, gtk_cell_area_attribute_get_column)
 
   //Ignore the C convenience functions.
   _IGNORE(gtk_cell_area_cell_set, gtk_cell_area_cell_get, gtk_cell_area_cell_set_valist, gtk_cell_area_cell_get_valist)
@@ -216,7 +216,7 @@ public:
   _WRAP_METHOD(CellEditable* get_edit_widget(), gtk_cell_area_get_edit_widget)
   _WRAP_METHOD(const CellEditable* get_edit_widget() const, gtk_cell_area_get_edit_widget, constversion)
 
-  _WRAP_METHOD(bool activate_cell(Widget& widget, CellRenderer& renderer, GdkEvent* event, const Gdk::Rectangle& cell_area, CellRendererState flags), gtk_cell_area_activate_cell)
+  _WRAP_METHOD(bool activate_cell(Widget& widget, CellRenderer& renderer, GdkEvent* gdk_event, const Gdk::Rectangle& cell_area, CellRendererState flags), gtk_cell_area_activate_cell)
   _WRAP_METHOD(void stop_editing(bool canceled), gtk_cell_area_stop_editing)
 
   _WRAP_METHOD(void inner_cell_area(Widget& widget, const Gdk::Rectangle& cell_area, Gdk::Rectangle& inner_area), gtk_cell_area_inner_cell_area)
@@ -225,9 +225,12 @@ public:
 
 protected:
   #m4 _CONVERSION(`GtkCellAreaContext*',`const Glib::RefPtr<CellAreaContext>&',`Glib::wrap($3, true)')
+#m4 _CONVERSION(`GtkTreeModel*',`const Glib::RefPtr<TreeModel>&',`Glib::wrap($3, true)')
+#m4 _CONVERSION(`GtkTreeIter*',`const TreeModel::iterator&',`Gtk::TreeModel::iterator(p0, $3)')
+  //TODO: Remove no_default_handler when we can break ABI:
+  _WRAP_SIGNAL(void apply_attributes(const Glib::RefPtr<TreeModel>& tree_model, const TreeModel::iterator& iter, bool is_expander, bool is_expanded), "apply-attributes", no_default_handler)
 
-  //TODO: convert the TreeModel. _WRAP_SIGNAL(void apply_attributes(const Glib::RefPtr<TreeModel>& tree_model, const TreeModel::iterator& iter, bool is_expander, bool is_expanded), "apply-attributes", no_default_handler)
-
+  // The add-editable, remove-editable and focus-changed signals can't have default handlers because the wrapped C signals have no default handlers.
 #m4 _CONVERSION(`GdkRectangle*',`const Gdk::Rectangle&',`Glib::wrap($3)')
   _WRAP_SIGNAL(void add_editable(CellRenderer* renderer, CellEditable* editable, const Gdk::Rectangle& cell_area, const Glib::ustring& path), "add-editable", no_default_handler)
 

@@ -1,5 +1,3 @@
-/* $Id$ */
-
 /* textwidget.cc
  *
  * Copyright (C) 2001-2002 The gtkmm Development Team
@@ -21,8 +19,8 @@
 
 #include <cstring>
 #include "textwidget.h"
-#include "pangomm/fontdescription.h"
-  
+#include <pangomm/fontdescription.h>
+
 using std::strstr;
 using std::strncmp;
 using std::strlen;
@@ -41,13 +39,12 @@ TextWidget::TextWidget(bool is_source)
 
   if (is_source)
   {
-#ifndef G_OS_WIN32
-    Pango::FontDescription fontDesc("Courier 12");
-    m_TextView.override_font(fontDesc);
-#endif /* G_OS_WIN32 */
     m_TextView.set_wrap_mode (Gtk::WRAP_NONE);
 
-    Glib::RefPtr<Gtk::TextBuffer::Tag> refTag  =  m_refTextBuffer->create_tag("comment");
+    Glib::RefPtr<Gtk::TextBuffer::Tag> refTag = m_refTextBuffer->create_tag("source");
+    refTag->property_font() = "Courier 12";
+
+    refTag = m_refTextBuffer->create_tag("comment");
     refTag->property_foreground() = "red";
 
     refTag = m_refTextBuffer->create_tag("type");
@@ -79,7 +76,6 @@ TextWidget::TextWidget(bool is_source)
 
     Glib::RefPtr<Gtk::TextBuffer::Tag> refTag = m_refTextBuffer->create_tag("title");
     refTag->property_font() = "Sans 18";
-
   }
 }
 
@@ -120,7 +116,7 @@ static const char* tokens[] =
 {
   "/*",
   "\"",
-  NULL
+  nullptr
 };
 
 static const char* types[] =
@@ -168,7 +164,7 @@ static const char* types[] =
   "GdkPixbuf ",
   "GError",
   "size_t",
-  0
+  nullptr
 };
 
 static const char* control[] =
@@ -182,7 +178,7 @@ static const char* control[] =
   ":",
   "return ",
   "goto ",
-  0
+  nullptr
 };
 
 typedef const char* constpch;
@@ -195,7 +191,7 @@ parse_chars (constpch text,
        bool   start)
 {
   int i = 0;
-  const char* next_token = 0;
+  const char* next_token = nullptr;
 
   /* Handle comments first */
   if(*state == STATE_IN_COMMENT)
@@ -207,12 +203,12 @@ parse_chars (constpch text,
       *state = STATE_NORMAL;
       *tag = "comment";
     }
-    
+
     return;
   }
 
-  *tag = 0;
-  *end_ptr = 0;
+  *tag = nullptr;
+  *end_ptr = nullptr;
 
   /* check for comment */
   if (!strncmp (text, "/*", 2))
@@ -231,7 +227,7 @@ parse_chars (constpch text,
   /* check for preprocessor defines */
   if (*text == '#' && start)
   {
-    *end_ptr = 0;
+    *end_ptr = nullptr;
     *tag = "preprocessor";
     return;
   }
@@ -246,9 +242,9 @@ parse_chars (constpch text,
       return;
     }
   }
-  
+
   /* check for types */
-  for (i = 0; types[i] != 0; i++)
+  for (i = 0; types[i] != nullptr; i++)
     if (!strncmp (text, types[i], strlen (types[i])))
     {
       *end_ptr = text + strlen (types[i]);
@@ -257,7 +253,7 @@ parse_chars (constpch text,
     }
 
   /* check for control */
-  for (i = 0; control[i] != 0; i++)
+  for (i = 0; control[i] != nullptr; i++)
     if (!strncmp (text, control[i], strlen (control[i])))
     {
       *end_ptr = text + strlen (control[i]);
@@ -272,7 +268,7 @@ parse_chars (constpch text,
 
     *end_ptr = text + 1;
     *tag = "string";
-      
+
     while (**end_ptr != '\000')
     {
       if (**end_ptr == '\"' && !maybe_escape)
@@ -280,7 +276,7 @@ parse_chars (constpch text,
         *end_ptr += 1;
         return;
       }
-      
+
       if (**end_ptr == '\\')
         maybe_escape = true;
       else
@@ -291,7 +287,7 @@ parse_chars (constpch text,
   }
 
   /* not at the start of a tag.  Find the next one. */
-  for (i = 0; tokens[i] != 0; i++)
+  for (i = 0; tokens[i] != nullptr; i++)
   {
     next_token = strstr (text, tokens[i]);
     if (next_token)
@@ -303,7 +299,7 @@ parse_chars (constpch text,
     }
   }
 
-  for (i = 0; types[i] != 0; i++)
+  for (i = 0; types[i] != nullptr; i++)
   {
     next_token = strstr (text, types[i]);
     if (next_token)
@@ -315,7 +311,7 @@ parse_chars (constpch text,
     }
   }
 
-  for (i = 0; control[i] != 0; i++)
+  for (i = 0; control[i] != nullptr; i++)
   {
     next_token = strstr (text, control[i]);
     if (next_token)
@@ -335,7 +331,12 @@ void TextWidget::fontify()
 {
   enumStates state = STATE_NORMAL;
 
-  Gtk::TextBuffer::iterator iterStart = m_refTextBuffer->get_iter_at_offset(0);
+  Gtk::TextBuffer::iterator iterStart;
+  Gtk::TextBuffer::iterator iterEnd;
+  m_refTextBuffer->get_bounds(iterStart, iterEnd);
+  m_refTextBuffer->apply_tag_by_name("source", iterStart, iterEnd);
+
+  iterStart = m_refTextBuffer->get_iter_at_offset(0);
 
   Gtk::TextBuffer::iterator iterNext = iterStart;
   while(iterNext.forward_line())
@@ -344,8 +345,8 @@ void TextWidget::fontify()
     const Glib::ustring& str = iterStart.get_text(iterNext);
     const gchar* start_ptr = str.c_str();
 
-    const gchar* end_ptr = 0;
-    const gchar* tag = 0;
+    const gchar* end_ptr = nullptr;
+    const gchar* tag = nullptr;
 
     do
     {
@@ -374,7 +375,3 @@ void TextWidget::fontify()
     iterStart = iterNext;
   }
 }
-
-
-
-

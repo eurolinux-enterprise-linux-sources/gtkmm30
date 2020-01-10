@@ -21,15 +21,10 @@
 #include <glibmm/object.h>
 #include <gtkmm/bin.h>
 #include <gtkmm/application.h>
+#include <gtkmm/windowgroup.h>
 
 _DEFS(gtkmm,gtk)
 _PINCLUDE(gtkmm/private/bin_p.h)
-
-#m4 _PUSH(SECTION_CC_PRE_INCLUDES)
-//So we can use deprecated GTK+ API in our deprecated C++ API:
-#undef GDK_DISABLE_DEPRECATED
-#define GDK_DISABLE_DEPRECATION_WARNINGS 1
-#m4 _POP()
 
 namespace Gtk
 {
@@ -37,36 +32,7 @@ namespace Gtk
 class AccelGroup;
 class WindowGroup;
 
-/** Limit the effect of grabs
- */
-class WindowGroup : public Glib::Object
-{
-  _CLASS_GOBJECT(WindowGroup, GtkWindowGroup, GTK_WINDOW_GROUP, Glib::Object, GObject)
-
-protected:
-  _CTOR_DEFAULT()
-
-public:
-  _WRAP_CREATE()
-
-  _WRAP_METHOD(void add_window(Window& window), gtk_window_group_add_window)
-  _WRAP_METHOD(void remove_window(Window& window), gtk_window_group_remove_window)
-
-
-#m4 _CONVERSION(`GList*',`std::vector<Window*>',`Glib::ListHandler<Window*>::list_to_vector($3, Glib::OWNERSHIP_SHALLOW)')
-  _WRAP_METHOD(std::vector<Window*> list_windows(), gtk_window_group_list_windows)
-
-#m4 _CONVERSION(`GList*',`std::vector<const Window*>',`Glib::ListHandler<const Window*>::list_to_vector($3, Glib::OWNERSHIP_SHALLOW)')
-  _WRAP_METHOD(std::vector<const Window*> list_windows() const, gtk_window_group_list_windows)
-
-  _WRAP_METHOD(Widget* get_current_grab(), gtk_window_group_get_current_grab)
-  _WRAP_METHOD(const Widget* get_current_grab() const, gtk_window_group_get_current_grab, constversion)
-
-  _WRAP_METHOD(Widget* get_current_grab(const Glib::RefPtr<const Gdk::Device>& device), gtk_window_group_get_current_device_grab)
-  _WRAP_METHOD(const Widget* get_current_grab(const Glib::RefPtr<const Gdk::Device>& device) const, gtk_window_group_get_current_device_grab, constversion)
-};
-
-/** Toplevel Window
+/** Toplevel Window.
  * This represents all widgets which are physical windows controlled
  * by the window manager.
  *
@@ -79,8 +45,10 @@ class Window : public Bin
 {
   _CLASS_GTKOBJECT(Window,GtkWindow,GTK_WINDOW,Gtk::Bin,GtkBin)
   _UNMANAGEABLE
-  _IGNORE(_gtk_window_internal_set_focus, _gtk_window_reposition, _gtk_window_constrain_size, gtk_window_remove_embedded_xid,
-                _gtk_window_get_group, _gtk_window_activate_key, gtk_window_add_embedded_xid, _gtk_window_keys_foreach)
+  _IGNORE(gtk_window_set_has_user_ref_count, gtk_window_set_destroy_with_parent)
+
+  //TODO: Use gtk_window_set_destroy_with_parent() to allow use of Gtk::manage() with top-level windows, using the transient-parent?
+
 public:
   _WRAP_CTOR(Window(WindowType type = WINDOW_TOPLEVEL), gtk_window_new)
 
@@ -109,7 +77,6 @@ public:
   _WRAP_PROPERTY("transient_for", Window*)
 
 #ifndef GTKMM_DISABLE_DEPRECATED
-#ifdef GLIBMM_PROPERTIES_ENABLED
 // _WRAP_PROPERTY("opacity", double, deprecated "Use the opacity property in the Widget base class instead.")
 // The GtkWindow::opacity property does not exist in gtk+ 3.7.10 and later. Must hand-code to avoid an ABI break.
 /** The opacity of the window, from 0 to 1.
@@ -129,11 +96,10 @@ public:
    * or receive notification when the value of the property changes.
    */
   Glib::PropertyProxy_ReadOnly< double > property_opacity() const;
-#endif //#GLIBMM_PROPERTIES_ENABLED
 #endif // GTKMM_DISABLE_DEPRECATED
 
-  _WRAP_PROPERTY("has-resize-grip", bool)
-  _WRAP_PROPERTY("resize-grip-visible", bool)
+  _WRAP_PROPERTY("has-resize-grip", bool, deprecated "Resize grips have been removed.")
+  _WRAP_PROPERTY("resize-grip-visible", bool, deprecated "Resize grips have been removed.")
   _WRAP_PROPERTY("urgency_hint", bool)
   _WRAP_PROPERTY("accept-focus", bool)
   _WRAP_PROPERTY("focus-on-map", bool)
@@ -141,13 +107,17 @@ public:
   _WRAP_PROPERTY("application", Glib::RefPtr<Application>)
   _WRAP_PROPERTY("focus-visible", bool)
   _WRAP_PROPERTY("attached-to", Widget*)
+  _WRAP_PROPERTY("is-maximized", bool)
 
   _WRAP_SIGNAL(void set_focus(Widget* focus), "set_focus")
+
+  //TODO: Remove no_default_handler when we can break ABI:
+  _WRAP_SIGNAL(void keys_changed(), "keys_changed", no_default_handler)
 
   //Keybinding signals:
   _IGNORE_SIGNAL("activate_focus")
   _IGNORE_SIGNAL("activate_default")
-  _IGNORE_SIGNAL("move_focus")
+  _IGNORE_SIGNAL("enable-debugging")
 
 #m4begin
 dnl// Hook in special code to catch explicit uses of gtk_object_destroy() by
@@ -169,7 +139,7 @@ dnl
 
   _WRAP_METHOD(void set_wmclass(const Glib::ustring& wmclass_name,
                                 const Glib::ustring& wmclass_class),
-               gtk_window_set_wmclass)
+               gtk_window_set_wmclass, deprecated "Don’t use this function.")
 
   _WRAP_METHOD(void set_role(const Glib::ustring& role), gtk_window_set_role)
 
@@ -356,6 +326,8 @@ dnl
 
   _WRAP_METHOD(void fullscreen(), gtk_window_fullscreen)
   _WRAP_METHOD(void unfullscreen(), gtk_window_unfullscreen)
+  _WRAP_METHOD(void fullscreen_on_monitor(const Glib::RefPtr<Gdk::Screen>& screen, int monitor), gtk_window_fullscreen_on_monitor)
+  _WRAP_METHOD(void close(), gtk_window_close)
 
   _WRAP_METHOD(void begin_resize_drag(Gdk::WindowEdge edge,
                    int button, int root_x, int root_y, guint32 timestamp),
@@ -382,11 +354,12 @@ dnl
   _WRAP_METHOD(void get_position(int& root_x, int& root_y) const,
                gtk_window_get_position)
 
-  _WRAP_METHOD(bool parse_geometry(const Glib::ustring& geometry),
-               gtk_window_parse_geometry)
-
-  _WRAP_METHOD(void set_default_geometry(int width, int height), gtk_window_set_default_geometry)
-  _WRAP_METHOD(void resize_to_geometry(int width, int height), gtk_window_resize_to_geometry)
+  _WRAP_METHOD(bool parse_geometry(const Glib::ustring& geometry), gtk_window_parse_geometry,
+    deprecated "Geometry handling in GTK is deprecated.")
+  _WRAP_METHOD(void set_default_geometry(int width, int height), gtk_window_set_default_geometry,
+    deprecated "This function does nothing. If you want to set a default size, use set_default_size() instead.")
+  _WRAP_METHOD(void resize_to_geometry(int width, int height), gtk_window_resize_to_geometry,
+    deprecated "This function does nothing. Use resize() and compute the geometry yourself.")
 
   _WRAP_METHOD(Glib::RefPtr<WindowGroup> get_group(), gtk_window_get_group, refreturn)
   _WRAP_METHOD(Glib::RefPtr<const WindowGroup> get_group() const, gtk_window_get_group, refreturn, constversion)
@@ -395,8 +368,8 @@ dnl
 
   _WRAP_METHOD(WindowType get_window_type() const, gtk_window_get_window_type)
 
-  _WRAP_METHOD(void reshow_with_initial_size(),
-               gtk_window_reshow_with_initial_size)
+  _WRAP_METHOD(void reshow_with_initial_size(), gtk_window_reshow_with_initial_size,
+    deprecated "GUI builders can call Widget::hide(), Widget::unrealize() and then Widget::show() themselves, if they still need this functionality.")
 
   _WRAP_METHOD(Glib::RefPtr<Application> get_application(), gtk_window_get_application, refreturn)
   _WRAP_METHOD(Glib::RefPtr<const Application> get_application() const, gtk_window_get_application, refreturn)
@@ -408,16 +381,21 @@ dnl
    */
   void unset_application();
 
-  _WRAP_METHOD(void set_has_resize_grip(bool value = true), gtk_window_set_has_resize_grip)
-  _WRAP_METHOD(bool get_has_resize_grip() const, gtk_window_get_has_resize_grip)
+  _WRAP_METHOD(void set_has_resize_grip(bool value = true), gtk_window_set_has_resize_grip, deprecated "Resize grips have been removed.")
+  _WRAP_METHOD(bool get_has_resize_grip() const, gtk_window_get_has_resize_grip, deprecated "Resize grips have been removed.")
 
-  _WRAP_METHOD(bool get_resize_grip_is_visible() const, gtk_window_resize_grip_is_visible)
-  _WRAP_METHOD(bool get_resize_grip_area(Gdk::Rectangle& rect) const, gtk_window_get_resize_grip_area)
+  _WRAP_METHOD(bool get_resize_grip_is_visible() const, gtk_window_resize_grip_is_visible, deprecated "Resize grips have been removed.")
+  _WRAP_METHOD(bool get_resize_grip_area(Gdk::Rectangle& rect) const, gtk_window_get_resize_grip_area, deprecated "Resize grips have been removed.")
 
   _WRAP_METHOD(void set_keep_above(bool setting = true), gtk_window_set_keep_above)
   _WRAP_METHOD(void set_keep_below(bool setting = true), gtk_window_set_keep_below)
 
   _WRAP_METHOD(void set_titlebar(Widget& titlebar), gtk_window_set_titlebar)
+
+  _WRAP_METHOD(Widget* get_titlebar(), gtk_window_get_titlebar)
+  _WRAP_METHOD(const Widget* get_titlebar() const, gtk_window_get_titlebar, constversion)
+
+  _WRAP_METHOD(bool is_maximized() const, gtk_window_is_maximized)
 
   /** Returns a default accel group for this window
    * This is a gtkmm-specific function.  This accel group can not
@@ -425,13 +403,14 @@ dnl
    */
   Glib::RefPtr<AccelGroup> get_accel_group();
 
+  //TODO: Remove the virtual from this when we can break ABI.
   /** Brings the window to the front.
    * This is just a more obvious convenience wrapper for get_window()->raise().
    */
   virtual void raise();
 
   ///Overriden to warn that it doesn't make sense to use Gtk::manage() on this class because it has no parent container.
-  virtual void set_manage();
+  void set_manage() override;
 
 protected:
 

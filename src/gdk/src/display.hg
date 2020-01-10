@@ -24,13 +24,16 @@
 _DEFS(gdkmm,gdk)
 _PINCLUDE(glibmm/private/object_p.h)
 
-
 namespace Gdk
 {
 
 _CC_INCLUDE(gdk/gdk.h)
 
+class Device;
 class DeviceManager;
+class Seat;
+class Monitor;
+class Window;
 
  /** Gdk::Display object's purpose is two fold:
  *   To grab/ungrab keyboard focus and mouse pointer
@@ -52,16 +55,19 @@ public:
 
   _WRAP_METHOD(Glib::ustring get_name() const, gdk_display_get_name)
 
-  _WRAP_METHOD(int get_n_screens() const, gdk_display_get_n_screens)
-  _WRAP_METHOD(Glib::RefPtr<Screen> get_screen(int screen_num), gdk_display_get_screen, refreturn)
-  _WRAP_METHOD(Glib::RefPtr<const Screen> get_screen(int screen_num) const, gdk_display_get_screen, refreturn, constversion)
+  _WRAP_METHOD(int get_n_screens() const, gdk_display_get_n_screens, deprecated "The number of screens is always 1.")
+  _WRAP_METHOD(Glib::RefPtr<Screen> get_screen(int screen_num = 0), gdk_display_get_screen, refreturn,
+    deprecated "There is only one screen; use get_default_screen() to get it.")
+  _WRAP_METHOD(Glib::RefPtr<const Screen> get_screen(int screen_num = 0) const, gdk_display_get_screen, refreturn, constversion,
+    deprecated "There is only one screen; use get_default_screen() to get it.")
 
   _WRAP_METHOD(Glib::RefPtr<Screen> get_default_screen(), gdk_display_get_default_screen, refreturn)
   _WRAP_METHOD(Glib::RefPtr<const Screen> get_default_screen() const, gdk_display_get_default_screen, refreturn, constversion)
 
   _IGNORE(gdk_display_pointer_ungrab, gdk_display_keyboard_ungrab,
-    gdk_display_pointer_is_grabbed, gdk_display_device_is_grabbed) //deprecated
+    gdk_display_pointer_is_grabbed) //deprecated
 
+  _WRAP_METHOD(bool device_is_grabbed(const Glib::RefPtr<const Gdk::Device>& device) const, gdk_display_device_is_grabbed)
   _WRAP_METHOD(void beep(), gdk_display_beep)
   _WRAP_METHOD(void sync(), gdk_display_sync)
   _WRAP_METHOD(void	close(), gdk_display_close)
@@ -71,7 +77,7 @@ public:
   _IGNORE(gdk_display_list_devices) //deprecated
 
   //TODO: Use C++ Gdk::Event:
-  //TODO: get_event() might remove the event - if so, then there should not be a const version:
+  //TODO: get_event() removes the next event, if there is one - then there should not be a const version:
   _WRAP_METHOD(GdkEvent* get_event(), gdk_display_get_event)
   _WRAP_METHOD(const GdkEvent* get_event() const, gdk_display_get_event, constversion)
 
@@ -86,10 +92,10 @@ public:
   _WRAP_METHOD(static Glib::RefPtr<Display> get_default(), gdk_display_get_default, refreturn)
 
 
-  _IGNORE(gdk_display_get_pointer, gdk_display_get_core_pointer,
-    gdk_display_get_window_at_pointer, gdk_display_warp_pointer) //deprecated
+  _IGNORE(gdk_display_get_pointer, gdk_display_get_window_at_pointer, gdk_display_warp_pointer) //deprecated
 
-  _WRAP_METHOD(static Glib::RefPtr<Display> open_default_libgtk_only(), gdk_display_open_default_libgtk_only, refreturn)
+  _WRAP_METHOD(static Glib::RefPtr<Display> open_default_libgtk_only(), gdk_display_open_default_libgtk_only, refreturn,
+               deprecated "This method was never meant to be used outside of GTK+.")
 
   _WRAP_METHOD(GdkKeymap* get_keymap(), gdk_keymap_get_for_display)
   _WRAP_METHOD(const GdkKeymap* get_keymap() const, gdk_keymap_get_for_display, constversion)
@@ -100,6 +106,7 @@ public:
   /** Send a response to SelectionRequest event.
    *
    * @newin{2,2}
+   *
    * @param requestor Window to which to deliver response.
    * @param selection Selection that was requested.
    * @param target Target that was selected.
@@ -110,7 +117,6 @@ public:
   void selection_send_notify(const Glib::RefPtr<Window>& requestor, Glib::ustring& selection, Glib::ustring& target, Glib::ustring& property, guint32 time_);
 
   _WRAP_METHOD(void flush(), gdk_display_flush)
-  //TODO: Read the docs to know what the types are really: _WRAP_METHOD(GdkDisplayDeviceHooks* set_device_hooks(const GdkDisplayDeviceHooks *new_hooks), gdk_display_set_device_hooks)
   _WRAP_METHOD(bool supports_cursor_alpha() const, gdk_display_supports_cursor_alpha)
   _WRAP_METHOD(bool supports_cursor_color() const, gdk_display_supports_cursor_color)
   _WRAP_METHOD(guint get_default_cursor_size() const, gdk_display_get_default_cursor_size)
@@ -118,9 +124,6 @@ public:
 
   _WRAP_METHOD(Glib::RefPtr<Window> get_default_group(), gdk_display_get_default_group, refreturn)
   _WRAP_METHOD(Glib::RefPtr<const Window> get_default_group() const, gdk_display_get_default_group, refreturn, constversion)
-
-  //TODO: wrap the vfuncs, though they are not very useful because people will not derive from this class? murrayc.
-
 
   _WRAP_METHOD(bool supports_selection_notification() const, gdk_display_supports_selection_notification)
   _WRAP_METHOD(bool request_selection_notification(const Glib::ustring& selection), gdk_display_request_selection_notification)
@@ -143,22 +146,53 @@ public:
 
   _WRAP_METHOD(bool supports_shapes() const, gdk_display_supports_shapes)
   _WRAP_METHOD(bool supports_input_shapes() const, gdk_display_supports_input_shapes)
-  _WRAP_METHOD(bool supports_composite() const, gdk_display_supports_composite)
+  _WRAP_METHOD(bool supports_composite() const, gdk_display_supports_composite,
+               deprecated "Compositing is an outdated technology that only ever worked on X11.")
   _WRAP_METHOD(void notify_startup_complete(const Glib::ustring& startup_id), gdk_display_notify_startup_complete)
 
-  _WRAP_METHOD(Glib::RefPtr<DeviceManager> get_device_manager(), gdk_display_get_device_manager, refreturn)
-  _WRAP_METHOD(Glib::RefPtr<const DeviceManager> get_device_manager() const, gdk_display_get_device_manager, refreturn, constversion)
+  _WRAP_METHOD(Glib::RefPtr<DeviceManager> get_device_manager(), gdk_display_get_device_manager, refreturn,
+    deprecated "Use get_default_seat() and Gdk::Seat operations.")
+  _WRAP_METHOD(Glib::RefPtr<const DeviceManager> get_device_manager() const, gdk_display_get_device_manager, refreturn, constversion,
+    deprecated "Use get_default_seat() and Gdk::Seat operations.")
 
 #m4 _CONVERSION(`GdkAppLaunchContext*',`Glib::RefPtr<AppLaunchContext>', `Glib::wrap($3)')
 #m4 _CONVERSION(`GdkAppLaunchContext*',`Glib::RefPtr<const AppLaunchContext>', `Glib::wrap($3)')
   _WRAP_METHOD(Glib::RefPtr<AppLaunchContext> get_app_launch_context(), gdk_display_get_app_launch_context, refreturn)
   _WRAP_METHOD(Glib::RefPtr<const AppLaunchContext> get_app_launch_context() const, gdk_display_get_app_launch_context, refreturn, constversion)
 
+  _WRAP_METHOD(Glib::RefPtr<Seat> get_default_seat(), gdk_display_get_default_seat, refreturn)
+  _WRAP_METHOD(Glib::RefPtr<const Seat> get_default_seat() const, gdk_display_get_default_seat, refreturn, constversion)
+
+#m4 _CONVERSION(`GList*',`std::vector<Glib::RefPtr<Seat>>',`Glib::ListHandler<Glib::RefPtr<Seat>>::list_to_vector($3, Glib::OWNERSHIP_SHALLOW)')
+  _WRAP_METHOD(std::vector<Glib::RefPtr<Seat>> list_seats(), gdk_display_list_seats)
+#m4 _CONVERSION(`GList*',`std::vector<Glib::RefPtr<const Seat>>',`Glib::ListHandler<Glib::RefPtr<const Seat>>::list_to_vector($3, Glib::OWNERSHIP_SHALLOW)')
+  _WRAP_METHOD(std::vector<Glib::RefPtr<const Seat>> list_seats() const, gdk_display_list_seats)
+
+  _WRAP_METHOD(int get_n_monitors() const, gdk_display_get_n_monitors)
+  _WRAP_METHOD(Glib::RefPtr<Monitor> get_monitor(int monitor_num), gdk_display_get_monitor, refreturn)
+  _WRAP_METHOD(Glib::RefPtr<const Monitor> get_monitor(int monitor_num) const, gdk_display_get_monitor, refreturn, constversion)
+  _WRAP_METHOD(Glib::RefPtr<Monitor> get_primary_monitor(), gdk_display_get_primary_monitor, refreturn)
+  _WRAP_METHOD(Glib::RefPtr<const Monitor> get_primary_monitor() const, gdk_display_get_primary_monitor, refreturn, constversion)
+  _WRAP_METHOD(Glib::RefPtr<Monitor> get_monitor_at_point(int x, int y), gdk_display_get_monitor_at_point, refreturn)
+  _WRAP_METHOD(Glib::RefPtr<const Monitor> get_monitor_at_point(int x, int y) const, gdk_display_get_monitor_at_point, refreturn, constversion)
+  _WRAP_METHOD(Glib::RefPtr<Monitor> get_monitor_at_window(const Glib::RefPtr<Window>& window), gdk_display_get_monitor_at_window, refreturn)
+  _WRAP_METHOD(Glib::RefPtr<const Monitor> get_monitor_at_window(const Glib::RefPtr<Window>& window) const, gdk_display_get_monitor_at_window, refreturn, constversion)
 
   //We use no_default_handler because GdkDisplayClass is private.
 
   _WRAP_SIGNAL(void closed(bool is_error), closed, no_default_handler)
   _WRAP_SIGNAL(void opened(), opened, no_default_handler)
+
+#m4 _CONVERSION(`GdkSeat*',`const Glib::RefPtr<Seat>&', Glib::wrap($3, true))
+  _WRAP_SIGNAL(void seat_added(const Glib::RefPtr<Seat>& seat), "seat-added", no_default_handler)
+  _WRAP_SIGNAL(void seat_removed(const Glib::RefPtr<Seat>& seat), "seat-removed", no_default_handler)
+
+#m4 _CONVERSION(`GdkMonitor*',`const Glib::RefPtr<Monitor>&', Glib::wrap($3, true))
+  _WRAP_SIGNAL(void monitor_added(const Glib::RefPtr<Monitor>& monitor), "monitor-added", no_default_handler)
+  _WRAP_SIGNAL(void monitor_removed(const Glib::RefPtr<Monitor>& monitor), "monitor-removed", no_default_handler)
+
+  // There are no properties.
+  // We don't wrap the vfuncs because GdkDisplayClass is private.
 };
 
 } // namespace Gdk

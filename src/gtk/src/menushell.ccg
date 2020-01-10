@@ -26,24 +26,24 @@ namespace Gtk
 MenuShell::MenuShell()
 :
   _CONSTRUCT_SPECIFIC(Gtk::Container, MenuShell),
-  accel_window_ (0)
+  accel_window_ (nullptr)
 {}
 
 MenuShell::MenuShell(const Glib::ConstructParams& construct_params)
 :
-  Glib::ObjectBase(0),
+  Glib::ObjectBase(nullptr),
   Gtk::Container  (construct_params),
-  accel_window_   (0)
+  accel_window_   (nullptr)
 {}
 
 MenuShell::MenuShell(GtkMenuShell* castitem)
 :
   Gtk::Container((GtkContainer*) castitem),
-  accel_window_ (0)
+  accel_window_ (nullptr)
 {}
 
 // TODO: Why do we need a custom dtor?
-MenuShell::~MenuShell()
+MenuShell::~MenuShell() noexcept
 {}
 
 void MenuShell::accelerate(Window& window)
@@ -52,12 +52,9 @@ void MenuShell::accelerate(Window& window)
   // after it has been accelerated.
   accel_window_ = &window;
 
-  std::vector<Gtk::Widget*> items = get_children();
-
-  for(std::vector<Gtk::Widget*>::iterator iter (items.begin ()), items_end (items.end ()); iter != items_end; ++iter)
+  for(auto widget : get_children())
   {
-    Gtk::MenuItem* menuitem = dynamic_cast<MenuItem*>(*iter);
-
+    auto menuitem = dynamic_cast<MenuItem*>(widget);
     if (menuitem)
     {
       menuitem->accelerate(window);
@@ -77,7 +74,7 @@ void MenuShell_Class::insert_vfunc_callback(GtkMenuShell* self, GtkWidget* child
 {
   try
   {
-    MenuShell *const obj = dynamic_cast<MenuShell*>(
+    const auto obj = dynamic_cast<MenuShell*>(
         Glib::ObjectBase::_get_current_wrapper((GObject*) self));
 
     // If MenuShell is accelerated initialize accelerators of new MenuItem.
@@ -91,7 +88,7 @@ void MenuShell_Class::insert_vfunc_callback(GtkMenuShell* self, GtkWidget* child
     Glib::exception_handlers_invoke();
   }
 
-  GtkMenuShellClass *const base = static_cast<GtkMenuShellClass*>(
+  const auto base = static_cast<GtkMenuShellClass*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)));
 
   if(base && base->insert)
