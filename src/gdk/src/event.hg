@@ -47,7 +47,6 @@ _WRAP_ENUM(EventType, GdkEventType,
 )
 
 _WRAP_ENUM(AxisUse, GdkAxisUse)
-_WRAP_ENUM(AxisFlags, GdkAxisFlags)
 
 //TODO: Actually use this class instead of GdkEvent?
 class Event
@@ -59,6 +58,7 @@ public:
 
   _WRAP_METHOD(static Event get(), gdk_event_get)
   _WRAP_METHOD(static Event peek(), gdk_event_peek)
+  _IGNORE(gdk_event_get_graphics_expose) //deprecated
   _WRAP_METHOD(void put(), gdk_event_put)
 
   _WRAP_METHOD(static bool events_pending(), gdk_events_pending)
@@ -79,3 +79,5 @@ public:
 };
 
 } // namespace Gdk
+
+

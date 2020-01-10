@@ -37,23 +37,17 @@ int main(int argc, char** argv)
 
   std::cout << get_defs( GDK_TYPE_APP_LAUNCH_CONTEXT )
             << get_defs( GDK_TYPE_DRAG_CONTEXT )
-            << get_defs( GDK_TYPE_DEVICE )
-            << get_defs( GDK_TYPE_DEVICE_MANAGER )
             << get_defs( GDK_TYPE_DISPLAY )
 #if !defined(G_OS_WIN32)
             << get_defs( GDK_TYPE_DISPLAY_MANAGER )
 #endif /* G_OS_WIN32 */
-            << get_defs( GDK_TYPE_DRAWING_CONTEXT )
-            << get_defs( GDK_TYPE_MONITOR )
             << get_defs( GDK_TYPE_PIXBUF )
             << get_defs( GDK_TYPE_PIXBUF_ANIMATION )
             << get_defs( GDK_TYPE_PIXBUF_LOADER )
             << get_defs( GDK_TYPE_RGBA )
             << get_defs( GDK_TYPE_SCREEN )
-            << get_defs( GDK_TYPE_SEAT )
             << get_defs( GDK_TYPE_VISUAL )
             << get_defs( GDK_TYPE_WINDOW )
-            << get_defs( GDK_TYPE_GL_CONTEXT )
             ;
   return 0;
 }

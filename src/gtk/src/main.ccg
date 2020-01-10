@@ -38,11 +38,6 @@ namespace
  * the gtk_*_remove() functions have the same signature, all main signals can
  * be handled by a single class.  Special handling is needed for signals that
  * don't support destroy notification; see the comment on connection_list_.
- *
- * This class is now used only by the deprecated key snooper API. The class
- * contains some code and data which is now unnecessary, after other code has
- * been removed. Both the key snooper API and the GtkMainConnectionNode class
- * can be removed in gtk+-4/gtkmm-4.
  */
 class GtkMainConnectionNode
 {
@@ -53,6 +48,7 @@ public:
   explicit GtkMainConnectionNode(const sigc::slot_base& slot);
 
   static void* notify(void* data);
+  static void destroy_notify_handler(void* data);
 
   // Call this after installing the GTK+ callback.
   void install(guint conn_id, RemoveFunc remove_func, bool has_destroy_notify);
@@ -83,14 +79,14 @@ private:
  * for instance.
  */
 // static
-GSList* GtkMainConnectionNode::connection_list_ = nullptr;
+GSList* GtkMainConnectionNode::connection_list_ = 0;
 
 GtkMainConnectionNode::GtkMainConnectionNode(const sigc::slot_base& slot)
 :
   slot_(slot),
   conn_id_             (0),
-  remove_func_         (nullptr),
-  has_destroy_notify_  (false),
+  remove_func_         (0),
+  has_destroy_notify_          (false),
   destroyed_           (false)
 {
   slot_.set_parent(this, &GtkMainConnectionNode::notify);
@@ -101,7 +97,7 @@ void* GtkMainConnectionNode::notify(void* data)
 {
   // notification from the sigc++ side ...
 
-  const auto self = static_cast<GtkMainConnectionNode*>(data);
+  GtkMainConnectionNode *const self = static_cast<GtkMainConnectionNode*>(data);
 
   // this call might be triggered from destroy_notify_handler().
   if(!self->destroyed_)
@@ -121,7 +117,31 @@ void* GtkMainConnectionNode::notify(void* data)
     delete self;
   }
 
-  return nullptr;
+  return 0;
+}
+
+// static
+void GtkMainConnectionNode::destroy_notify_handler(void* data)
+{
+  // notification from the gtk+ side ...
+
+  GtkMainConnectionNode *const self = static_cast<GtkMainConnectionNode*>(data);
+
+  // this call might be triggered from notify().
+  if(!self->destroyed_)
+  {
+    self->destroyed_ = true;
+
+    // The GTK+ side is disconnected now, thus the ID is no longer valid.
+    self->conn_id_ = 0;
+
+    // remove self from global list.
+    if (!self->has_destroy_notify_)
+      list_remove(self);
+
+    // destruction of slot_ notifies all objects referring to it.
+    delete self;
+  }
 }
 
 void GtkMainConnectionNode::install(
@@ -163,7 +183,7 @@ bool GtkMainConnectionNode::list_remove(GtkMainConnectionNode* conn_node)
 // static
 void GtkMainConnectionNode::list_notify_all()
 {
-  while(connection_list_ != nullptr)
+  while(connection_list_ != 0)
   {
     GtkMainConnectionNode *const conn_node =
         static_cast<GtkMainConnectionNode*>(connection_list_->data);
@@ -192,7 +212,7 @@ _DEPRECATE_IFDEF_START
 
 sigc::connection KeySnooperSig::connect(const KeySnooperSig::SlotType& slot)
 {
-  const auto conn_node = new GtkMainConnectionNode(slot);
+  GtkMainConnectionNode *const conn_node = new GtkMainConnectionNode(slot);
   const sigc::connection connection(*conn_node->get_slot());
 
   const guint conn_id = gtk_key_snooper_install(&KeySnooperSig::gtk_callback, conn_node);
@@ -207,8 +227,8 @@ gint KeySnooperSig::gtk_callback(GtkWidget* widget, GdkEventKey* event, gpointer
   try
   {
     // Recreate the specific SlotType from the generic slot node.
-    auto conn_node = static_cast<GtkMainConnectionNode*>(data);
-    auto pSlot = static_cast<SlotType*>(conn_node->get_slot());
+    GtkMainConnectionNode* conn_node = static_cast<GtkMainConnectionNode*>(data);
+    SlotType* pSlot = static_cast<SlotType*>(conn_node->get_slot());
     return (*pSlot)(Glib::wrap(widget), event);
   }
   catch(...)
@@ -223,7 +243,7 @@ gint KeySnooperSig::gtk_callback(GtkWidget* widget, GdkEventKey* event, gpointer
 
 KeySnooperSig Main::signal_key_snooper_;
 
-Main*         Main::instance_ = nullptr;
+Main*         Main::instance_ = 0;
 
 /**** Gtk::Main -- construction/destruction ********************************/
 
@@ -244,7 +264,7 @@ Main::Main(int* argc, char*** argv, bool set_locale)
 
 Main::Main(bool set_locale)
 {
-  init(nullptr, nullptr, set_locale);
+  init(0, 0, set_locale);
 }
 
 Main::~Main()
@@ -253,7 +273,7 @@ Main::~Main()
   // Main::~Main would still run. So this prevents the crash.
   if(instance_ == this)
   {
-    instance_ = nullptr;
+    instance_ = 0;
     GtkMainConnectionNode::list_notify_all();
 
     // Release the gtkmm type registration tables,
@@ -332,6 +352,8 @@ void Main::init_gtkmm_internals()
   }
 }
 
+_DEPRECATE_IFDEF_START
+
 void Main::add_gtk_option_group(Glib::OptionContext& option_context, bool open_default_display)
 {
   //Get the option group:
@@ -341,7 +363,6 @@ void Main::add_gtk_option_group(Glib::OptionContext& option_context, bool open_d
   option_context.add_group(gtkgroup);
 }
 
-_DEPRECATE_IFDEF_START
 
 /**** Gtk::Main -- static forwarder methods ********************************/
 

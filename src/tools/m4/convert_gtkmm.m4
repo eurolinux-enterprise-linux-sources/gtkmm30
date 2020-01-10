@@ -17,7 +17,6 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 include(class_gtkobject.m4)
-include(child_property.m4)
 include(convert_base.m4)
 include(convert_gtk.m4)
 include(convert_gdk.m4)

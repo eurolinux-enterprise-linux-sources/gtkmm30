@@ -22,7 +22,7 @@
 
 #include <gtkmm/textbuffer.h>
 #include <gtkmm/selectiondata_private.h>
-#include <glibmm/utility.h> //For make_unique_ptr_gfree<>.
+#include <glibmm/utility.h> //For ScopedPtr<>.
 #include <gtk/gtk.h>
 
 namespace
@@ -54,7 +54,7 @@ SignalProxy_GetClear::SignalProxy_GetClear(const Gtk::Clipboard::SlotGet& slot_g
 static void SignalProxy_GetClear_gtk_callback_get(GtkClipboard*, GtkSelectionData* selection_data,
                                             unsigned int info, void* data)
 {
-  const auto self = static_cast<SignalProxy_GetClear*>(data);
+  SignalProxy_GetClear *const self = static_cast<SignalProxy_GetClear*>(data);
 
   try
   {
@@ -69,7 +69,7 @@ static void SignalProxy_GetClear_gtk_callback_get(GtkClipboard*, GtkSelectionDat
 
 static void SignalProxy_GetClear_gtk_callback_clear(GtkClipboard*, void* data)
 {
-  const auto self = static_cast<SignalProxy_GetClear*>(data);
+  SignalProxy_GetClear *const self = static_cast<SignalProxy_GetClear*>(data);
 
   try
   {
@@ -91,7 +91,7 @@ static void SignalProxy_GetClear_gtk_callback_clear(GtkClipboard*, void* data)
 
 static void SignalProxy_Received_gtk_callback(GtkClipboard*, GtkSelectionData* selection_data, void* data)
 {
-  auto the_slot = static_cast<Gtk::Clipboard::SlotReceived*>(data);
+  Gtk::Clipboard::SlotReceived* the_slot = static_cast<Gtk::Clipboard::SlotReceived*>(data);
 
   try
   {
@@ -127,7 +127,7 @@ static void SignalProxy_TargetsReceived_gtk_callback(GtkClipboard*, GdkAtom* ato
 
 static void SignalProxy_TextReceived_gtk_callback(GtkClipboard*, const char* text, void* data)
 {
-  auto the_slot = static_cast<Gtk::Clipboard::SlotTextReceived*>(data);
+  Gtk::Clipboard::SlotTextReceived* the_slot = static_cast<Gtk::Clipboard::SlotTextReceived*>(data);
 
   try
   {
@@ -161,7 +161,7 @@ static void SignalProxy_RichTextReceived_gtk_callback(GtkClipboard*, GdkAtom for
 
 static void SignalProxy_UrisReceived_gtk_callback(GtkClipboard*, gchar** uris, void* data)
 {
-  auto the_slot = static_cast<Gtk::Clipboard::SlotUrisReceived*>(data);
+  Gtk::Clipboard::SlotUrisReceived* the_slot = static_cast<Gtk::Clipboard::SlotUrisReceived*>(data);
 
   try
   {
@@ -179,7 +179,7 @@ static void SignalProxy_UrisReceived_gtk_callback(GtkClipboard*, gchar** uris, v
 
 static void SignalProxy_ImageReceived_gtk_callback(GtkClipboard*, GdkPixbuf* image, void* data)
 {
-  auto the_slot = static_cast<Gtk::Clipboard::SlotImageReceived*>(data);
+  Gtk::Clipboard::SlotImageReceived* the_slot = static_cast<Gtk::Clipboard::SlotImageReceived*>(data);
 
   try
   {
@@ -201,7 +201,7 @@ bool Clipboard::set(const std::vector<TargetEntry>& targets,
                     const SlotGet& slot_get, const SlotClear& slot_clear)
 {
   // Create a signal proxy. A pointer to this will be passed through the callback's data parameter.
-  const auto pSignalProxy = new SignalProxy_GetClear(slot_get, slot_clear);
+  SignalProxy_GetClear *const pSignalProxy = new SignalProxy_GetClear(slot_get, slot_clear);
 
   return gtk_clipboard_set_with_data(
       gobj(),
@@ -221,7 +221,7 @@ void Clipboard::set_text(const Glib::ustring& text)
 void Clipboard::request_contents(const Glib::ustring& target, const SlotReceived& slot)
 {
   // Create a copy of the slot. A pointer to this will be passed through the callback's data parameter.
-  auto slot_copy = new SlotReceived(slot);
+  SlotReceived* slot_copy = new SlotReceived(slot);
 
   gtk_clipboard_request_contents(gobj(), gdk_atom_intern(target.c_str(), FALSE),
       &SignalProxy_Received_gtk_callback, slot_copy);
@@ -230,7 +230,7 @@ void Clipboard::request_contents(const Glib::ustring& target, const SlotReceived
 void Clipboard::request_text(const SlotTextReceived& slot)
 {
   // Create a copy of the slot. A pointer to this will be passed through the callback's data parameter.
-  auto slot_copy = new SlotTextReceived(slot);
+  SlotTextReceived* slot_copy = new SlotTextReceived(slot);
 
   gtk_clipboard_request_text(gobj(),
       &SignalProxy_TextReceived_gtk_callback, slot_copy);
@@ -239,7 +239,7 @@ void Clipboard::request_text(const SlotTextReceived& slot)
 void Clipboard::request_rich_text(const Glib::RefPtr<TextBuffer>& buffer, const SlotRichTextReceived& slot)
 {
   // Create a copy of the slot. A pointer to this will be passed through the callback's data parameter.
-  auto slot_copy = new SlotRichTextReceived(slot);
+  SlotRichTextReceived* slot_copy = new SlotRichTextReceived(slot);
 
   gtk_clipboard_request_rich_text(gobj(), buffer->gobj(),
       &SignalProxy_RichTextReceived_gtk_callback, slot_copy);
@@ -248,7 +248,7 @@ void Clipboard::request_rich_text(const Glib::RefPtr<TextBuffer>& buffer, const 
 void Clipboard::request_uris(const SlotUrisReceived& slot)
 {
   // Create a copy of the slot. A pointer to this will be passed through the callback's data parameter.
-  auto slot_copy = new SlotUrisReceived(slot);
+  SlotUrisReceived* slot_copy = new SlotUrisReceived(slot);
 
   gtk_clipboard_request_uris(gobj(), &SignalProxy_UrisReceived_gtk_callback, slot_copy);
 }
@@ -256,7 +256,7 @@ void Clipboard::request_uris(const SlotUrisReceived& slot)
 void Clipboard::request_image(const SlotImageReceived& slot)
 {
   // Create a copy of the slot. A pointer to this will be passed through the callback's data parameter.
-  auto slot_copy = new SlotImageReceived(slot);
+  SlotImageReceived* slot_copy = new SlotImageReceived(slot);
 
   gtk_clipboard_request_image(gobj(),
       &SignalProxy_ImageReceived_gtk_callback, slot_copy);
@@ -265,7 +265,7 @@ void Clipboard::request_image(const SlotImageReceived& slot)
 void Clipboard::request_targets(const SlotTargetsReceived& slot)
 {
   // Create a copy of the slot. A pointer to this will be passed through the callback's data parameter.
-  auto slot_copy = new SlotTargetsReceived(slot);
+  SlotTargetsReceived* slot_copy = new SlotTargetsReceived(slot);
 
   gtk_clipboard_request_targets(gobj(), &SignalProxy_TargetsReceived_gtk_callback, slot_copy);
 }
@@ -273,13 +273,13 @@ void Clipboard::request_targets(const SlotTargetsReceived& slot)
 SelectionData Clipboard::wait_for_contents(const Glib::ustring& target) const
 {
   //gtk_clipboard_wait_for_contents returns a newly-allocated GtkSelectionData, or NULL.
-  auto cData = gtk_clipboard_wait_for_contents( const_cast<GtkClipboard*>(gobj()), gdk_atom_intern(target.c_str(), FALSE) );
+  GtkSelectionData* cData = gtk_clipboard_wait_for_contents( const_cast<GtkClipboard*>(gobj()), gdk_atom_intern(target.c_str(), FALSE) );
   return SelectionData(cData, false /* take_copy */);
 }
 
 std::vector<Glib::ustring> Clipboard::wait_for_targets() const
 {
-  GdkAtom* atoms (nullptr);
+  GdkAtom* atoms (0);
   int n_targets (0);
 
   if (!gtk_clipboard_wait_for_targets(const_cast<GtkClipboard*>(gobj()), &atoms, &n_targets))
@@ -297,21 +297,21 @@ void Clipboard::set_can_store(const std::vector<TargetEntry>& targets)
 
 void Clipboard::set_can_store()
 {
-  gtk_clipboard_set_can_store( gobj(), nullptr, 0 /* See C docs */ );
+  gtk_clipboard_set_can_store( gobj(), 0, 0 /* See C docs */ );
 }
 
 std::string Clipboard::wait_for_rich_text(const Glib::RefPtr<TextBuffer>& buffer, std::string& format)
 {
   std::string result;
 
-  GdkAtom format_atom = GDK_NONE;
+  GdkAtom format_atom = 0;
   gsize length = 0;
   guint8* text = gtk_clipboard_wait_for_rich_text(const_cast<GtkClipboard*>(gobj()), buffer->gobj(), &format_atom, &length);
   if(text && length)
   {
     gchar* format_atom_name = gdk_atom_name(format_atom);
     if(format_atom_name)
-      format = Glib::make_unique_ptr_gfree(format_atom_name).get(); //This frees the buffer.
+      format = Glib::ScopedPtr<char>(format_atom_name).get(); //This frees the buffer.
 
     result = std::string((char*)text, length);
     g_free(text);

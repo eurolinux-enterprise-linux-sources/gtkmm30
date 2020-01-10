@@ -20,19 +20,12 @@ _CONFIGINCLUDE(gtkmmconfig.h)
 _DEFS(gtkmm,gtk)
 _PINCLUDE(glibmm/private/object_p.h)
 
-#m4 _PUSH(SECTION_CC_PRE_INCLUDES)
-#undef GTK_DISABLE_DEPRECATED
-#define GDK_DISABLE_DEPRECATION_WARNINGS 1
-#m4 _POP()
-
 #include <gtkmm/image.h>
-//Deprecated: #include <gtkmm/stockid.h>
+#include <gtkmm/stockid.h>
 #include <gtkmm/menu.h>
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/types.h>
 #include <gtkmm/tooltip.h>
-
-_IS_DEPRECATED // This whole file is deprecated.
 
 namespace Gtk
 {
@@ -52,13 +45,7 @@ namespace Gtk
  * Implementations of the "tray" side of this specification can be found e.g. in the GNOME and KDE
  * panel applications.
  *
- * Note that a StatusIcon is not a widget, but just a Glib::Object.
- * Making it a widget would be impractical, since the system tray
- * on Win32 doesn’t allow to embed arbitrary widgets.
- *
  * @newin{2,10}
- *
- * @deprecated You should consider using notifications or more modern platform-specific APIs instead.
  */
 class StatusIcon : public Glib::Object
 {
@@ -67,15 +54,7 @@ protected:
   _CTOR_DEFAULT
   _IGNORE(gtk_status_icon_new)
   _WRAP_CTOR(StatusIcon(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf), gtk_status_icon_new_from_pixbuf)
-
-  // _WRAP_CTOR does not take a 'deprecated' parameter.
-  // _WRAP_CTOR(StatusIcon(const StockID& stock), gtk_status_icon_new_from_stock)
-#ifndef GTKMM_DISABLE_DEPRECATED
-  /** @deprecated Use the constructor with the @a icon_name parameter instead.
-   */
-  explicit StatusIcon(const StockID& stock);
-#endif // GTKMM_DISABLE_DEPRECATED
-
+  _WRAP_CTOR(StatusIcon(const StockID& stock), gtk_status_icon_new_from_stock)
   _WRAP_CTOR(StatusIcon(const Glib::ustring& icon_name), gtk_status_icon_new_from_icon_name)
   _WRAP_CTOR(StatusIcon(const Glib::RefPtr<const Gio::Icon>& icon), gtk_status_icon_new_from_gicon)
 
@@ -84,15 +63,7 @@ public:
    * @return A Glib::RefPtr<> to a newly created Gtk::StatusIcon object.
    */
   _WRAP_CREATE(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf)
-
-  // _WRAP_CREATE does not take a 'deprecated' parameter.
-  // _WRAP_CREATE(const StockID& stock_id)
-#ifndef GTKMM_DISABLE_DEPRECATED
-  /** @deprecated Use create() with the @a icon_name parameter instead.
-   */
-  static Glib::RefPtr<StatusIcon> create(const StockID& stock_id);
-#endif // GTKMM_DISABLE_DEPRECATED
-
+  _WRAP_CREATE(const StockID& stock_id)
   _WRAP_CREATE(const Glib::ustring& icon_name)
 
  /** Creates a status icon displaying the file @a filename.
@@ -109,7 +80,7 @@ public:
 
   _WRAP_METHOD(void set(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf), gtk_status_icon_set_from_pixbuf)
   _WRAP_METHOD(void set_from_file(const Glib::ustring& filename), gtk_status_icon_set_from_file)
-  _WRAP_METHOD(void set(const StockID& stock_id), gtk_status_icon_set_from_stock, deprecated "Use the set() with the @a icon_name parameter instead.")
+  _WRAP_METHOD(void set(const StockID& stock_id), gtk_status_icon_set_from_stock)
   _WRAP_METHOD(void set(const Glib::ustring& icon_name), gtk_status_icon_set_from_icon_name)
   _WRAP_METHOD(void set(const Glib::RefPtr<const Gio::Icon>& icon), gtk_status_icon_set_from_gicon)
 
@@ -118,7 +89,7 @@ public:
   _WRAP_METHOD(Glib::RefPtr<Gdk::Pixbuf> get_pixbuf(), gtk_status_icon_get_pixbuf)
   _WRAP_METHOD(Glib::RefPtr<const Gdk::Pixbuf> get_pixbuf() const, gtk_status_icon_get_pixbuf, constversion)
 
-  _WRAP_METHOD(StockID get_stock() const, gtk_status_icon_get_stock, deprecated "Use the get_icon_name() instead.")
+  _WRAP_METHOD(StockID get_stock() const, gtk_status_icon_get_stock)
   _WRAP_METHOD(Glib::ustring get_icon_name() const, gtk_status_icon_get_icon_name)
 
   _WRAP_METHOD(Glib::RefPtr<Gio::Icon> get_icon(), gtk_status_icon_get_gicon, refreturn)
@@ -129,6 +100,8 @@ public:
   _WRAP_METHOD(void set_screen(const Glib::RefPtr<Gdk::Screen>& screen), gtk_status_icon_set_screen)
   _WRAP_METHOD(Glib::RefPtr<Gdk::Screen> get_screen(), gtk_status_icon_get_screen, refreturn)
   _WRAP_METHOD(Glib::RefPtr<const Gdk::Screen> get_screen() const, gtk_status_icon_get_screen, refreturn, constversion)
+
+  _IGNORE(gtk_status_icon_set_tooltip) //deprecated
 
   _WRAP_METHOD(void set_visible(bool visible = true), gtk_status_icon_set_visible)
   _WRAP_METHOD(bool get_visible() const, gtk_status_icon_get_visible)
@@ -192,7 +165,7 @@ public:
 
   _WRAP_PROPERTY("pixbuf", Glib::RefPtr<Gdk::Pixbuf>)
   _WRAP_PROPERTY("file", std::string)
-  _WRAP_PROPERTY("stock", StockID, deprecated "Use property_icon_name() instead.")
+  _WRAP_PROPERTY("stock", StockID)
   _WRAP_PROPERTY("icon-name", Glib::ustring)
   _WRAP_PROPERTY("gicon", Glib::RefPtr<Gio::Icon>)
   _WRAP_PROPERTY("storage-type", ImageType)
@@ -213,8 +186,6 @@ public:
   _WRAP_SIGNAL(bool button_press_event(GdkEventButton* event), button_press_event)
   _WRAP_SIGNAL(bool button_release_event(GdkEventButton* event), button_release_event)
   _WRAP_SIGNAL(bool scroll_event(GdkEventScroll* event), scroll_event)
-
-#m4 _CONVERSION(`GtkTooltip*',`const Glib::RefPtr<Tooltip>&',`Glib::wrap($3, true)')
   _WRAP_SIGNAL(bool query_tooltip(int x, int y, bool keyboard_mode, const Glib::RefPtr<Tooltip>& tooltip), query_tooltip)
 };
 

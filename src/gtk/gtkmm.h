@@ -91,17 +91,11 @@ extern const int gtkmm_micro_version;
 
 #include <gdkmm.h>
 
-//Include these first so they can do some undef/re-def magic for StockID.
-#include <gtkmm/toggleaction.h>
-#include <gtkmm/radioaction.h>
 
 #include <gtkmm/object.h>
 #include <gtkmm/aboutdialog.h>
 #include <gtkmm/accelkey.h>
-#include <gtkmm/accelmap.h>
 #include <gtkmm/accelgroup.h>
-#include <gtkmm/actionable.h>
-#include <gtkmm/actionbar.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/alignment.h>
 #include <gtkmm/appchooserbutton.h>
@@ -142,7 +136,6 @@ extern const int gtkmm_micro_version;
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/container.h>
 #include <gtkmm/cssprovider.h>
-#include <gtkmm/csssection.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/editable.h>
@@ -150,34 +143,19 @@ extern const int gtkmm_micro_version;
 #include <gtkmm/expander.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/eventbox.h>
-#include <gtkmm/eventcontroller.h>
 #include <gtkmm/filechooser.h>
 #include <gtkmm/filechooserbutton.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/filechooserwidget.h>
 #include <gtkmm/filefilter.h>
 #include <gtkmm/fixed.h>
-#include <gtkmm/flowbox.h>
-#include <gtkmm/flowboxchild.h>
 #include <gtkmm/fontbutton.h>
 #include <gtkmm/fontchooser.h>
 #include <gtkmm/fontchooserdialog.h>
-#include <gtkmm/fontchooserwidget.h>
 #include <gtkmm/fontselection.h>
 #include <gtkmm/frame.h>
-#include <gtkmm/gesture.h>
-#include <gtkmm/gesturedrag.h>
-#include <gtkmm/gesturelongpress.h>
-#include <gtkmm/gesturemultipress.h>
-#include <gtkmm/gesturepan.h>
-#include <gtkmm/gesturerotate.h>
-#include <gtkmm/gesturesingle.h>
-#include <gtkmm/gestureswipe.h>
-#include <gtkmm/gesturezoom.h>
-#include <gtkmm/glarea.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/handlebox.h>
-#include <gtkmm/headerbar.h>
 #include <gtkmm/hvbox.h>
 #include <gtkmm/hvbuttonbox.h>
 #include <gtkmm/hvpaned.h>
@@ -197,8 +175,6 @@ extern const int gtkmm_micro_version;
 #include <gtkmm/label.h>
 #include <gtkmm/layout.h>
 #include <gtkmm/levelbar.h>
-#include <gtkmm/listbox.h>
-#include <gtkmm/listboxrow.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/listviewtext.h>
 #include <gtkmm/linkbutton.h>
@@ -210,21 +186,16 @@ extern const int gtkmm_micro_version;
 #include <gtkmm/menushell.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/misc.h>
-#include <gtkmm/modelbutton.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/numerableicon.h>
 #include <gtkmm/object.h>
 #include <gtkmm/offscreenwindow.h>
-#include <gtkmm/overlay.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/pagesetup.h>
 #ifndef G_OS_WIN32
 # include <gtkmm/pagesetupunixdialog.h>
 #endif
 #include <gtkmm/papersize.h>
-#include <gtkmm/placessidebar.h>
-#include <gtkmm/popover.h>
-#include <gtkmm/popovermenu.h>
 #include <gtkmm/printcontext.h>
 #ifndef G_OS_WIN32
 # include <gtkmm/printer.h>
@@ -237,6 +208,7 @@ extern const int gtkmm_micro_version;
 # include <gtkmm/printunixdialog.h>
 #endif
 #include <gtkmm/progressbar.h>
+#include <gtkmm/radioaction.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/radiomenuitem.h>
 #include <gtkmm/radiotoolbutton.h>
@@ -249,34 +221,23 @@ extern const int gtkmm_micro_version;
 #include <gtkmm/recentfilter.h>
 #include <gtkmm/recentinfo.h>
 #include <gtkmm/recentmanager.h>
-#include <gtkmm/revealer.h>
 #include <gtkmm/scale.h>
-#include <gtkmm/scalebutton.h>
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/scrolledwindow.h>
-#include <gtkmm/searchbar.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/separator.h>
 #include <gtkmm/separatormenuitem.h>
 #include <gtkmm/separatortoolitem.h>
 #include <gtkmm/settings.h>
-#include <gtkmm/shortcutlabel.h>
-#include <gtkmm/shortcutsgroup.h>
-#include <gtkmm/shortcutssection.h>
-#include <gtkmm/shortcutsshortcut.h>
-#include <gtkmm/shortcutswindow.h>
 #include <gtkmm/sizegroup.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/spinner.h>
-#include <gtkmm/stack.h>
-#include <gtkmm/stacksidebar.h>
-#include <gtkmm/stackswitcher.h>
 #include <gtkmm/statusbar.h>
 #include <gtkmm/statusicon.h>
 #include <gtkmm/stock.h>
+#include <gtkmm/stockid.h>
 #include <gtkmm/stockitem.h>
 #include <gtkmm/stylecontext.h>
-#include <gtkmm/styleproperty.h>
 #include <gtkmm/switch.h>
 #include <gtkmm/table.h>
 #include <gtkmm/tearoffmenuitem.h>
@@ -287,6 +248,7 @@ extern const int gtkmm_micro_version;
 #include <gtkmm/texttag.h>
 #include <gtkmm/texttagtable.h>
 #include <gtkmm/textview.h>
+#include <gtkmm/toggleaction.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/toolbar.h>
 #include <gtkmm/toolitem.h>
@@ -306,10 +268,8 @@ extern const int gtkmm_micro_version;
 #include <gtkmm/treeviewcolumn.h>
 #include <gtkmm/uimanager.h>
 #include <gtkmm/viewport.h>
-#include <gtkmm/volumebutton.h>
 #include <gtkmm/widget.h>
 #include <gtkmm/widgetpath.h>
 #include <gtkmm/window.h>
-#include <gtkmm/stockid.h>
 
 #endif /* #ifndef GTKMM_H */

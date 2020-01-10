@@ -58,7 +58,7 @@ dnl // not.
   _WRAP_PROPERTY("text_column", int)
   _WRAP_PROPERTY("has_entry", bool)
 
-  Glib::PropertyProxy_Base _property_renderable() override;
+  virtual Glib::PropertyProxy_Base _property_renderable();
 };
 
 } //namespace Gtk

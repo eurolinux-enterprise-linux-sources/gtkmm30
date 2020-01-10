@@ -71,7 +71,7 @@ class TreeModelColumnRecord
 {
 public:
   TreeModelColumnRecord();
-  virtual ~TreeModelColumnRecord() noexcept;
+  virtual ~TreeModelColumnRecord();
 
   /** Adds a TreeModelColumn to this record.
    * add() not only registers the @a column, but also assigns a column
@@ -79,7 +79,7 @@ public:
    * you're free to pass it around by value.
    */
   void add(TreeModelColumnBase& column);
-
+  
   unsigned int size()  const;
   const GType* types() const;
 
@@ -102,7 +102,7 @@ public:
   int index() const { return index_; }
 
 protected:
-  explicit TreeModelColumnBase(GType g_type);
+  explicit TreeModelColumnBase(GType type);
 
 private:
   GType type_;

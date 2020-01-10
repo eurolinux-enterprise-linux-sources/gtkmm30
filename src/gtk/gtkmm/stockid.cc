@@ -1,4 +1,5 @@
-#ifndef GTKMM_DISABLE_DEPRECATED // This whole file is deprecated.
+// -*- c++ -*-
+/* $Id$ */
 
 /* stockid.cc
  *
@@ -44,7 +45,7 @@ StockID::StockID(const char* id)
   id_ ((id) ? id : "")
 {}
 
-StockID::~StockID() noexcept
+StockID::~StockID()
 {}
 
 StockID::StockID(const StockID& other)
@@ -60,7 +61,7 @@ StockID& StockID::operator=(const StockID& other)
 
 StockID::operator const void*() const
 {
-  return !(id_.empty()) ? GINT_TO_POINTER(1) : nullptr ;
+  return !(id_.empty()) ? GINT_TO_POINTER(1) : 0 ;
 }
 
 bool StockID::equal(const StockID& rhs) const
@@ -81,5 +82,3 @@ const char* StockID::get_c_str() const
 }
 
 } // namespace Gtk
-
-#endif // GTKMM_DISABLE_DEPRECATED

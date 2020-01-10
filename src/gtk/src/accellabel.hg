@@ -33,7 +33,7 @@ namespace Gtk
 class AccelLabel : public Label
 {
   _CLASS_GTKOBJECT(AccelLabel,GtkAccelLabel,GTK_ACCEL_LABEL,Gtk::Label,GtkLabel)
-  _IGNORE(gtk_accel_label_set_accel_closure)
+  _IGNORE(gtk_accel_label_accelerator_width, gtk_accel_label_set_accel_closure)
 public:
 
   //The default ctor doesn't correspond to any _new function, but gtkmenuitem.cc does a simple g_object_new() with no properties.
@@ -58,8 +58,6 @@ public:
   _WRAP_METHOD(bool refetch(), gtk_accel_label_refetch)
 
   _WRAP_METHOD(void set_accel(guint accelerator_key, Gdk::ModifierType accelerator_mods), gtk_accel_label_set_accel)
-#m4 _INITIALIZATION(`Gdk::ModifierType&', `GdkModifierType', `$3 = ($1)$4')
-  _WRAP_METHOD(void get_accel(guint& accelerator_key, Gdk::ModifierType& accelerator_mods{>>}), gtk_accel_label_get_accel)
 
   //_WRAP_PROPERTY("accel-closure", Glib::Object) //GClosure
   _WRAP_PROPERTY("accel-widget", Gtk::Widget*)

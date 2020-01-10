@@ -26,6 +26,12 @@
 #include <glibmm/utility.h>
 #include <glibmm/ustring.h>
 
+namespace Gtk
+{
+  using Glib::unconst;
+
+}
+
 /* This aint pretty, but I don't know a better way to make
    sure things work when the stl classes are defined in a namespace */
 

@@ -26,7 +26,7 @@ namespace //anonymous namespace
 static void proxy_foreach_callback(GtkIconView* /* icon_view */, GtkTreePath* path, void* data)
 {
   typedef Gtk::IconView::SlotForeach SlotType;
-  auto& slot = *static_cast<SlotType*>(data);
+  SlotType& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -46,7 +46,7 @@ namespace Gtk
 
 void IconView::unset_model()
 {
-  gtk_icon_view_set_model(gobj(), nullptr);
+  gtk_icon_view_set_model(gobj(), 0);
 }
 
 void IconView::selected_foreach(const SlotForeach& slot)
@@ -57,8 +57,8 @@ void IconView::selected_foreach(const SlotForeach& slot)
 
 bool IconView::get_item_at_pos(int x, int y, TreeModel::Path& path, CellRenderer*& cell) const
 {
-  GtkTreePath* cpath = nullptr;
-  GtkCellRenderer* ccell = nullptr;
+  GtkTreePath* cpath = 0;
+  GtkCellRenderer* ccell = 0;
   bool result = gtk_icon_view_get_item_at_pos(const_cast<GtkIconView*>(gobj()), x, y, &cpath, &ccell);
 
   path = Glib::wrap(cpath); //Don't take copy because the gtk_icon_view_get_item_at_pos documentation says we should free this.
@@ -68,8 +68,8 @@ bool IconView::get_item_at_pos(int x, int y, TreeModel::Path& path, CellRenderer
 
 bool IconView::get_item_at_pos(int x, int y, TreeModel::Path& path) const
 {
-  GtkTreePath* cpath = nullptr;
-  bool result = gtk_icon_view_get_item_at_pos(const_cast<GtkIconView*>(gobj()), x, y, &cpath, nullptr);
+  GtkTreePath* cpath = 0;
+  bool result = gtk_icon_view_get_item_at_pos(const_cast<GtkIconView*>(gobj()), x, y, &cpath, 0);
 
   path = Glib::wrap(cpath); //Don't take copy because the gtk_icon_view_get_item_at_pos documentation says we should free this.
   return result;
@@ -77,8 +77,8 @@ bool IconView::get_item_at_pos(int x, int y, TreeModel::Path& path) const
 
 bool IconView::get_item_at_pos(int x, int y, CellRenderer*& cell) const
 {
-  GtkCellRenderer* ccell = nullptr;
-  bool result = gtk_icon_view_get_item_at_pos(const_cast<GtkIconView*>(gobj()), x, y, nullptr, &ccell);
+  GtkCellRenderer* ccell = 0;
+  bool result = gtk_icon_view_get_item_at_pos(const_cast<GtkIconView*>(gobj()), x, y, 0, &ccell);
 
   cell = Glib::wrap(ccell);
   return result;
@@ -86,8 +86,8 @@ bool IconView::get_item_at_pos(int x, int y, CellRenderer*& cell) const
 
 bool IconView::get_visible_range(TreeModel::Path& start_path, TreeModel::Path& end_path) const
 {
-  GtkTreePath* cstart_path = nullptr;
-  GtkTreePath* cend_path = nullptr;
+  GtkTreePath* cstart_path = 0;
+  GtkTreePath* cend_path = 0;
   bool result = gtk_icon_view_get_visible_range(const_cast<GtkIconView*>(gobj()), &cstart_path, &cend_path);
 
   start_path = Glib::wrap(cstart_path); //Don't take copy because the gtk_icon_view_get_visible_range documentation says we should free this.
@@ -99,8 +99,8 @@ bool IconView::get_visible_range(TreeModel::Path& start_path, TreeModel::Path& e
 
 bool IconView::get_cursor(TreeModel::Path& path, CellRenderer*& cell) const
 {
-  GtkTreePath* cpath = nullptr;
-  GtkCellRenderer* ccell = nullptr;
+  GtkTreePath* cpath = 0;
+  GtkCellRenderer* ccell = 0;
   bool result = gtk_icon_view_get_cursor(const_cast<GtkIconView*>(gobj()), &cpath, &ccell);
 
   path = Glib::wrap(cpath); //Don't take copy because the gtk_icon_view_get_cursor documentation says we should free this.
@@ -110,8 +110,8 @@ bool IconView::get_cursor(TreeModel::Path& path, CellRenderer*& cell) const
 
 bool IconView::get_cursor(TreeModel::Path& path) const
 {
-  GtkTreePath* cpath = nullptr;
-  bool result = gtk_icon_view_get_cursor(const_cast<GtkIconView*>(gobj()), &cpath, nullptr);
+  GtkTreePath* cpath = 0;
+  bool result = gtk_icon_view_get_cursor(const_cast<GtkIconView*>(gobj()), &cpath, 0);
 
   path = Glib::wrap(cpath); //Don't take copy because the gtk_icon_view_get_cursor documentation says we should free this.
   return result;
@@ -119,8 +119,8 @@ bool IconView::get_cursor(TreeModel::Path& path) const
 
 bool IconView::get_cursor(CellRenderer*& cell) const
 {
-  GtkCellRenderer* ccell = nullptr;
-  bool result = gtk_icon_view_get_cursor(const_cast<GtkIconView*>(gobj()), nullptr, &ccell);
+  GtkCellRenderer* ccell = 0;
+  bool result = gtk_icon_view_get_cursor(const_cast<GtkIconView*>(gobj()), 0, &ccell);
 
   cell = Glib::wrap(ccell);
   return result;
@@ -128,7 +128,7 @@ bool IconView::get_cursor(CellRenderer*& cell) const
 
 void IconView::get_drag_dest_item(TreeModel::Path& path, IconViewDropPosition& pos) const
 {
-  GtkTreePath* cpath = nullptr;
+  GtkTreePath* cpath = 0;
   gtk_icon_view_get_drag_dest_item(const_cast<GtkIconView*>(gobj()), &cpath, (GtkIconViewDropPosition*)(&pos));
   if(cpath)
     path = Gtk::TreeModel::Path(cpath, true /* make_a_copy */);
@@ -136,21 +136,21 @@ void IconView::get_drag_dest_item(TreeModel::Path& path, IconViewDropPosition& p
 
 void IconView::get_drag_dest_item(TreeModel::Path& path) const
 {
-  GtkTreePath* cpath = nullptr;
-  gtk_icon_view_get_drag_dest_item(const_cast<GtkIconView*>(gobj()), &cpath, nullptr);
+  GtkTreePath* cpath = 0;
+  gtk_icon_view_get_drag_dest_item(const_cast<GtkIconView*>(gobj()), &cpath, NULL);
   if(cpath)
     path = Gtk::TreeModel::Path(cpath, true /* make_a_copy */);
 }
 
 void IconView::get_drag_dest_item(IconViewDropPosition& pos) const
 {
-   gtk_icon_view_get_drag_dest_item(const_cast<GtkIconView*>(gobj()), nullptr, (GtkIconViewDropPosition*)(&pos));
+   gtk_icon_view_get_drag_dest_item(const_cast<GtkIconView*>(gobj()), NULL, (GtkIconViewDropPosition*)(&pos));
 }
 
 
 bool IconView::get_dest_item_at_pos(int drag_x, int drag_y, TreeModel::Path& path, IconViewDropPosition& pos) const
 {
-  GtkTreePath* cpath = nullptr;
+  GtkTreePath* cpath = 0;
   const bool result = gtk_icon_view_get_dest_item_at_pos(const_cast<GtkIconView*>(gobj()), drag_x, drag_y, &cpath, (GtkIconViewDropPosition*)(&pos));
   if(cpath)
     path = Gtk::TreeModel::Path(cpath, true /* make_a_copy */);
@@ -160,8 +160,8 @@ bool IconView::get_dest_item_at_pos(int drag_x, int drag_y, TreeModel::Path& pat
 
 bool IconView::get_dest_item_at_pos(int drag_x, int drag_y, TreeModel::Path& path) const
 {
-  GtkTreePath* cpath = nullptr;
-  const bool result = gtk_icon_view_get_dest_item_at_pos(const_cast<GtkIconView*>(gobj()), drag_x, drag_y, &cpath, nullptr);
+  GtkTreePath* cpath = 0;
+  const bool result = gtk_icon_view_get_dest_item_at_pos(const_cast<GtkIconView*>(gobj()), drag_x, drag_y, &cpath, NULL);
   if(cpath)
     path = Gtk::TreeModel::Path(cpath, true /* make_a_copy */);
 
@@ -170,7 +170,7 @@ bool IconView::get_dest_item_at_pos(int drag_x, int drag_y, TreeModel::Path& pat
 
 bool IconView::get_dest_item_at_pos(int drag_x, int drag_y, IconViewDropPosition& pos) const
 {
-  return gtk_icon_view_get_dest_item_at_pos(const_cast<GtkIconView*>(gobj()), drag_x, drag_y, nullptr, (GtkIconViewDropPosition*)(&pos));
+  return gtk_icon_view_get_dest_item_at_pos(const_cast<GtkIconView*>(gobj()), drag_x, drag_y, NULL, (GtkIconViewDropPosition*)(&pos));
 }
 
 
@@ -190,19 +190,21 @@ IconView::get_tooltip_context_path(int& x, int& y,
                                    bool keyboard_tip,
                                    TreeModel::Path& path)
 {
-  GtkTreePath* cpath = nullptr;
+  //It's cleaner to use a temporary C++ object and get a C pointer to it,
+  //because GtkTreePath is a simple struct, not a GtkObject, so
+  //gtk_tree_path_new() would be necessary. markoa.
+  TreeModel::Path tmp_path;
+  GtkTreePath* cpath = tmp_path.gobj();
 
   gboolean result =
     gtk_icon_view_get_tooltip_context(gobj(),
                                       &x, &y,
                                       keyboard_tip,
-                                      nullptr,
+                                      0,
                                       &cpath,
-                                      nullptr);
+                                      0);
 
-  // If result is false, cpath is not modified, it's still 0.
-  // wrap() can handle that situation.
-  path = Glib::wrap(cpath, /* take_copy= */ false);
+  path = Glib::wrap(cpath, false /* take_copy=false */);
 
   return result;
 }
@@ -218,8 +220,8 @@ IconView::get_tooltip_context_iter(int& x, int& y,
     gtk_icon_view_get_tooltip_context(gobj(),
                                       &x, &y,
                                       keyboard_tip,
-                                      nullptr,
-                                      nullptr,
+                                      0,
+                                      0,
                                       &src_iter);
 
   iter = TreeIter(gtk_icon_view_get_model(this->gobj()), &src_iter);

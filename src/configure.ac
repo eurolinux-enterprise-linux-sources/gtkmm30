@@ -1,4 +1,4 @@
-## Copyright (c) 2009-2014  Openismus GmbH  <http://www.openismus.com/>
+## Copyright (c) 2009-2013  Openismus GmbH  <http://www.openismus.com/>
 ##
 ## This file is part of gtkmm.
 ##
@@ -15,7 +15,7 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
-AC_INIT([gtkmm], [3.22.2],
+AC_INIT([gtkmm], [3.8.1],
         [http://bugzilla.gnome.org/enter_bug.cgi?product=gtkmm],
         [gtkmm], [http://www.gtkmm.org/])
 AC_PREREQ([2.59])
@@ -25,14 +25,12 @@ AC_CONFIG_AUX_DIR([build])
 AC_CONFIG_MACRO_DIR([build])
 AC_CONFIG_HEADERS([config.h gdk/gdkmmconfig.h gtk/gtkmmconfig.h])
 
-AM_INIT_AUTOMAKE([1.9 -Wno-portability check-news no-dist-gzip dist-xz tar-ustar no-define nostdinc])
-# Support silent build rules.
-# Disable by either passing --disable-silent-rules to configure or passing V=1 to make.
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+AM_INIT_AUTOMAKE([1.9 -Wno-portability no-dist-gzip dist-xz tar-ustar no-define nostdinc])
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 AM_MAINTAINER_MODE
 AC_ARG_VAR([ACLOCAL_FLAGS], [aclocal flags, e.g. -I <macro dir>])
 
-MM_PREREQ([0.9.10])
+MM_PREREQ([0.9.6])
 MM_INIT_MODULE([gdkmm-3.0])
 MM_INIT_MODULE([gtkmm-3.0])
 
@@ -45,8 +43,6 @@ MM_CONFIG_DOCTOOL_DIR([docs])
 AC_SUBST([LIBGTKMM_SO_VERSION], [2:0:1])
 
 AC_PROG_CXX
-MM_AX_CXX_COMPILE_STDCXX([11], [noext],[mandatory])
-
 AC_DISABLE_STATIC
 LT_INIT([win32-dll])
 
@@ -95,7 +91,7 @@ AS_IF([test "x$enable_static" = xyes],
 # gdkmm really does need GTK+, because part of Gdk::DragContext is in GTK+.
 # The extra cairomm-1.0 check is because gdkmm requires a newer cairomm than pangomm requires.
 # The extra gdk-pixbuf-2.0 check is because gdkmm requires a newer gdk-pixbuf than gtk+-3.0 requires.
-AC_SUBST([GDKMM_MODULES], ['giomm-2.4 >= 2.49.1 pangomm-1.4 >= 2.38.2 gtk+-3.0 >= 3.22.0 cairomm-1.0 >= 1.12.0 gdk-pixbuf-2.0 >= 2.35.5'])
+AC_SUBST([GDKMM_MODULES], ['giomm-2.4 >= 2.36.2 pangomm-1.4 >= 2.27.1 gtk+-3.0 >= 3.8.0 cairomm-1.0 >= 1.9.2 gdk-pixbuf-2.0 >= 2.22.1'])
 
 AS_IF([test "x$gtkmm_host_windows" = xyes],
       [GTKMM_MODULES=$GDKMM_MODULES],
@@ -106,14 +102,11 @@ AS_IF([test "x$gtkmm_host_windows" = xyes],
 GTKMM_ARG_ENABLE_API_ATKMM
 
 AS_IF([test "x$gtkmm_enable_api_atkmm" != xno],
-      [GTKMM_MODULES="atkmm-1.6 >= 2.24.2 $GTKMM_MODULES"])
+      [GTKMM_MODULES="atkmm-1.6 >= 2.22.2 $GTKMM_MODULES"])
 AC_SUBST([GTKMM_MODULES])
-
-AC_SUBST([GTKMM_DEMOS_EXTRA_MODULES], ['epoxy >= 1.2'])
 
 PKG_CHECK_MODULES([GDKMM], [$GDKMM_MODULES])
 PKG_CHECK_MODULES([GTKMM], [$GTKMM_MODULES])
-PKG_CHECK_MODULES([GTKMM_DEMOS_EXTRA], [$GTKMM_DEMOS_EXTRA_MODULES])
 
 MM_PKG_CONFIG_SUBST([GTHREAD_CFLAGS], [--cflags-only-other gthread-2.0])
 MM_PKG_CONFIG_SUBST([GTHREAD_LIBS], [--libs gthread-2.0])
@@ -130,19 +123,14 @@ MM_ARG_WITH_TAGFILE_DOC([cairomm-1.0.tag], [cairomm-1.0])
 MM_ARG_WITH_TAGFILE_DOC([pangomm-1.4.tag], [pangomm-1.4])
 MM_ARG_WITH_TAGFILE_DOC([atkmm-1.6.tag], [atkmm-1.6])
 
-# glib-compile-resources and C compiler are needed to generate and compile
-# resource files in demo programs.
-AC_SUBST(GLIB_COMPILE_RESOURCES, [`$PKG_CONFIG --variable=glib_compile_resources gio-2.0`])
-AC_PROG_CC
-
 AC_LANG([C++])
-AC_CHECK_FUNCS([mkfifo])
+AC_CHECK_FUNCS([flockfile funlockfile getc_unlocked mkfifo])
 
 # Evaluate the --enable-warnings=level option.
 MM_ARG_ENABLE_WARNINGS([GTKMM_WXXFLAGS],
                        [-Wall],
-                       [-pedantic -Wall -Wextra -Wformat-security -Wshadow -Wsuggest-override -Wno-long-long -DGSEAL_ENABLE],
-                       [G PANGO ATK GDK GDK_PIXBUF GTK GLIBMM ATKMM PANGOMM CAIROMM SIGCXX])
+                       [-pedantic -Wall -Wextra -Wformat-security -Wno-long-long -DGSEAL_ENABLE],
+                       [G PANGO ATK GDK GDK_PIXBUF GTK GLIBMM ATKMM PANGOMM CAIROMM])
 
 AC_CONFIG_FILES([Makefile
                  tools/Makefile
@@ -158,15 +146,27 @@ AC_CONFIG_FILES([Makefile
                  demos/Makefile
                  docs/Makefile
                  docs/reference/Doxyfile
-                 MSVC_Net2013/gdkmm/gdkmm.rc
-                 MSVC_Net2013/gtkmm/gtkmm.rc
+                 MSVC_Net2005/gdkmm/gdkmm.rc
+                 MSVC_Net2005/gtkmm/gtkmm.rc
+                 MSVC_Net2008/gdkmm/gdkmm.rc
+                 MSVC_Net2008/gtkmm/gtkmm.rc
+                 MSVC_Net2010/gdkmm/gdkmm.rc
+                 MSVC_Net2010/gtkmm/gtkmm.rc
                  win32_installer/gtkmm-installer.nsi])
 
 # Copy the generated configuration headers into the MSVC project directories.
-AC_CONFIG_COMMANDS([MSVC_Net2013/gdkmm/gdkmmconfig.h],
-                   [cp -f gdk/gdkmmconfig.h MSVC_Net2013/gdkmm/gdkmmconfig.h])
-AC_CONFIG_COMMANDS([MSVC_Net2013/gtkmm/gtkmmconfig.h],
-                   [cp -f gtk/gtkmmconfig.h MSVC_Net2013/gtkmm/gtkmmconfig.h])
+AC_CONFIG_COMMANDS([MSVC_Net2005/gdkmm/gdkmmconfig.h],
+                   [cp -f gdk/gdkmmconfig.h MSVC_Net2005/gdkmm/gdkmmconfig.h])
+AC_CONFIG_COMMANDS([MSVC_Net2005/gtkmm/gtkmmconfig.h],
+                   [cp -f gtk/gtkmmconfig.h MSVC_Net2005/gtkmm/gtkmmconfig.h])
+AC_CONFIG_COMMANDS([MSVC_Net2008/gdkmm/gdkmmconfig.h],
+                   [cp -f gdk/gdkmmconfig.h MSVC_Net2008/gdkmm/gdkmmconfig.h])
+AC_CONFIG_COMMANDS([MSVC_Net2008/gtkmm/gtkmmconfig.h],
+                   [cp -f gtk/gtkmmconfig.h MSVC_Net2008/gtkmm/gtkmmconfig.h])
+AC_CONFIG_COMMANDS([MSVC_Net2010/gdkmm/gdkmmconfig.h],
+                   [cp -f gdk/gdkmmconfig.h MSVC_Net2010/gdkmm/gdkmmconfig.h])
+AC_CONFIG_COMMANDS([MSVC_Net2010/gtkmm/gtkmmconfig.h],
+                   [cp -f gtk/gtkmmconfig.h MSVC_Net2010/gtkmm/gtkmmconfig.h])
 AC_CONFIG_COMMANDS([win32_installer/lgpl.txt],
                    [cp -f COPYING win32_installer/lgpl.txt])
 AC_OUTPUT

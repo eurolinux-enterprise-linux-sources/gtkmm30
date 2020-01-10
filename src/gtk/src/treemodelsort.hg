@@ -91,7 +91,7 @@ public:
   _WRAP_PROPERTY("model", Glib::RefPtr<TreeModel>)
 
 protected:
-  void set_value_impl(const iterator& row, int column, const Glib::ValueBase& value) override;
+  virtual void set_value_impl(const iterator& row, int column, const Glib::ValueBase& value);
 };
 
 } // namespace Gtk

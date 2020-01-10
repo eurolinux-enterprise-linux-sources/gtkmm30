@@ -11,229 +11,6 @@
 
 ;; From GdkDragContext
 
-(define-signal cancel
-  (of-object "GdkDragContext")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDragCancelReason" "p0")
-  )
-)
-
-(define-signal drop-performed
-  (of-object "GdkDragContext")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("gint" "p0")
-  )
-)
-
-(define-signal dnd-finished
-  (of-object "GdkDragContext")
-  (return-type "void")
-  (when "last")
-)
-
-(define-signal action-changed
-  (of-object "GdkDragContext")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDragAction" "p0")
-  )
-)
-
-;; From GdkDevice
-
-(define-signal changed
-  (of-object "GdkDevice")
-  (return-type "void")
-  (when "last")
-)
-
-(define-signal tool-changed
-  (of-object "GdkDevice")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDeviceTool*" "p0")
-  )
-)
-
-(define-property display
-  (of-object "GdkDevice")
-  (prop-type "GParamObject")
-  (docs "Display which the device belongs to")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property device-manager
-  (of-object "GdkDevice")
-  (prop-type "GParamObject")
-  (docs "Device manager which the device belongs to")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property name
-  (of-object "GdkDevice")
-  (prop-type "GParamString")
-  (docs "Device name")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property associated-device
-  (of-object "GdkDevice")
-  (prop-type "GParamObject")
-  (docs "Associated pointer or keyboard with this device")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property type
-  (of-object "GdkDevice")
-  (prop-type "GParamEnum")
-  (docs "Device role in the device manager")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property input-source
-  (of-object "GdkDevice")
-  (prop-type "GParamEnum")
-  (docs "Source type for the device")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property input-mode
-  (of-object "GdkDevice")
-  (prop-type "GParamEnum")
-  (docs "Input mode for the device")
-  (readable #t)
-  (writable #t)
-  (construct-only #f)
-)
-
-(define-property has-cursor
-  (of-object "GdkDevice")
-  (prop-type "GParamBoolean")
-  (docs "Whether there is a visible cursor following device motion")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property n-axes
-  (of-object "GdkDevice")
-  (prop-type "GParamUInt")
-  (docs "Number of axes in the device")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property vendor-id
-  (of-object "GdkDevice")
-  (prop-type "GParamString")
-  (docs "Vendor ID")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property product-id
-  (of-object "GdkDevice")
-  (prop-type "GParamString")
-  (docs "Product ID")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property seat
-  (of-object "GdkDevice")
-  (prop-type "GParamObject")
-  (docs "Seat")
-  (readable #t)
-  (writable #t)
-  (construct-only #f)
-)
-
-(define-property num-touches
-  (of-object "GdkDevice")
-  (prop-type "GParamUInt")
-  (docs "Number of concurrent touches")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property axes
-  (of-object "GdkDevice")
-  (prop-type "GParamFlags")
-  (docs "Axes")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property tool
-  (of-object "GdkDevice")
-  (prop-type "GParamObject")
-  (docs "The tool that is currently used with this device")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-;; From GdkDeviceManager
-
-(define-signal device-added
-  (of-object "GdkDeviceManager")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDevice*" "p0")
-  )
-)
-
-(define-signal device-removed
-  (of-object "GdkDeviceManager")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDevice*" "p0")
-  )
-)
-
-(define-signal device-changed
-  (of-object "GdkDeviceManager")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDevice*" "p0")
-  )
-)
-
-(define-property display
-  (of-object "GdkDeviceManager")
-  (prop-type "GParamObject")
-  (docs "Display for the device manager")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
 ;; From GdkDisplay
 
 (define-signal opened
@@ -248,42 +25,6 @@
   (when "last")
   (parameters
     '("gboolean" "p0")
-  )
-)
-
-(define-signal seat-added
-  (of-object "GdkDisplay")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkSeat*" "p0")
-  )
-)
-
-(define-signal seat-removed
-  (of-object "GdkDisplay")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkSeat*" "p0")
-  )
-)
-
-(define-signal monitor-added
-  (of-object "GdkDisplay")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkMonitor*" "p0")
-  )
-)
-
-(define-signal monitor-removed
-  (of-object "GdkDisplay")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkMonitor*" "p0")
   )
 )
 
@@ -304,124 +45,6 @@
   (docs "The default display for GDK")
   (readable #t)
   (writable #t)
-  (construct-only #f)
-)
-
-;; From GdkDrawingContext
-
-(define-property window
-  (of-object "GdkDrawingContext")
-  (prop-type "GParamObject")
-  (docs "The window that created the context")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property clip
-  (of-object "GdkDrawingContext")
-  (prop-type "GParamBoxed")
-  (docs "The clip region of the context")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-;; From GdkMonitor
-
-(define-signal invalidate
-  (of-object "GdkMonitor")
-  (return-type "void")
-  (when "first")
-)
-
-(define-property display
-  (of-object "GdkMonitor")
-  (prop-type "GParamObject")
-  (docs "The display of the monitor")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property manufacturer
-  (of-object "GdkMonitor")
-  (prop-type "GParamString")
-  (docs "The manufacturer name")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property model
-  (of-object "GdkMonitor")
-  (prop-type "GParamString")
-  (docs "The model name")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property scale-factor
-  (of-object "GdkMonitor")
-  (prop-type "GParamInt")
-  (docs "The scale factor")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property geometry
-  (of-object "GdkMonitor")
-  (prop-type "GParamBoxed")
-  (docs "The geometry of the monitor")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property workarea
-  (of-object "GdkMonitor")
-  (prop-type "GParamBoxed")
-  (docs "The workarea of the monitor")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property width-mm
-  (of-object "GdkMonitor")
-  (prop-type "GParamInt")
-  (docs "The width of the monitor, in millimeters")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property height-mm
-  (of-object "GdkMonitor")
-  (prop-type "GParamInt")
-  (docs "The height of the monitor, in millimeters")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property refresh-rate
-  (of-object "GdkMonitor")
-  (prop-type "GParamInt")
-  (docs "The refresh rate, in millihertz")
-  (readable #t)
-  (writable #f)
-  (construct-only #f)
-)
-
-(define-property subpixel-layout
-  (of-object "GdkMonitor")
-  (prop-type "GParamEnum")
-  (docs "The subpixel layout")
-  (readable #t)
-  (writable #f)
   (construct-only #f)
 )
 
@@ -499,15 +122,6 @@
   (construct-only #t)
 )
 
-(define-property pixel-bytes
-  (of-object "GdkPixbuf")
-  (prop-type "GParamBoxed")
-  (docs "Readonly pixel data")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
 ;; From GdkPixbufAnimation
 
 ;; From GdkPixbufLoader
@@ -546,17 +160,17 @@
   )
 )
 
-;; GdkRGBA is neither a GObject nor a GInterface. Not checked for signals and properties.
+;; From GdkRGBA
 
 ;; From GdkScreen
 
-(define-signal size-changed
+(define-signal composited-changed
   (of-object "GdkScreen")
   (return-type "void")
   (when "last")
 )
 
-(define-signal composited-changed
+(define-signal size-changed
   (of-object "GdkScreen")
   (return-type "void")
   (when "last")
@@ -584,53 +198,6 @@
   (readable #t)
   (writable #t)
   (construct-only #f)
-)
-
-;; From GdkSeat
-
-(define-signal device-added
-  (of-object "GdkSeat")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDevice*" "p0")
-  )
-)
-
-(define-signal device-removed
-  (of-object "GdkSeat")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDevice*" "p0")
-  )
-)
-
-(define-signal tool-added
-  (of-object "GdkSeat")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDeviceTool*" "p0")
-  )
-)
-
-(define-signal tool-removed
-  (of-object "GdkSeat")
-  (return-type "void")
-  (when "last")
-  (parameters
-    '("GdkDeviceTool*" "p0")
-  )
-)
-
-(define-property display
-  (of-object "GdkSeat")
-  (prop-type "GParamObject")
-  (docs "Display")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
 )
 
 ;; From GdkVisual
@@ -681,18 +248,6 @@
   )
 )
 
-(define-signal moved-to-rect
-  (of-object "GdkWindow")
-  (return-type "void")
-  (when "first")
-  (parameters
-    '("gpointer" "p0")
-    '("gpointer" "p1")
-    '("gboolean" "p2")
-    '("gboolean" "p3")
-  )
-)
-
 (define-property cursor
   (of-object "GdkWindow")
   (prop-type "GParamObject")
@@ -700,34 +255,5 @@
   (readable #t)
   (writable #t)
   (construct-only #f)
-)
-
-;; From GdkGLContext
-
-(define-property display
-  (of-object "GdkGLContext")
-  (prop-type "GParamObject")
-  (docs "The GDK display used to create the GL context")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property window
-  (of-object "GdkGLContext")
-  (prop-type "GParamObject")
-  (docs "The GDK window bound to the GL context")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
-)
-
-(define-property shared-context
-  (of-object "GdkGLContext")
-  (prop-type "GParamObject")
-  (docs "The GL context this context shares data with")
-  (readable #t)
-  (writable #t)
-  (construct-only #t)
 )
 

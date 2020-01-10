@@ -22,7 +22,7 @@ namespace Gtk
 
 Glib::RefPtr<PageSetup> PageSetup::create_from_key_file(const Glib::KeyFile& key_file)
 {
-  auto result = PageSetup::create();
+  Glib::RefPtr<PageSetup> result = PageSetup::create();
 
   result->load_from_key_file(key_file);
 
@@ -31,7 +31,7 @@ Glib::RefPtr<PageSetup> PageSetup::create_from_key_file(const Glib::KeyFile& key
 
 Glib::RefPtr<PageSetup> PageSetup::create_from_key_file(const Glib::KeyFile& key_file, const Glib::ustring& group_name)
 {
-  auto result = PageSetup::create();
+  Glib::RefPtr<PageSetup> result = PageSetup::create();
 
   result->load_from_key_file(key_file, group_name);
 
@@ -40,7 +40,7 @@ Glib::RefPtr<PageSetup> PageSetup::create_from_key_file(const Glib::KeyFile& key
 
 Glib::RefPtr<PageSetup> PageSetup::create_from_file(const std::string& file_name)
 {
-  auto result = PageSetup::create();
+  Glib::RefPtr<PageSetup> result = PageSetup::create();
 
   result->load_from_file(file_name);
 
@@ -49,13 +49,13 @@ Glib::RefPtr<PageSetup> PageSetup::create_from_file(const std::string& file_name
 
 void PageSetup::save_to_key_file(Glib::KeyFile& key_file) const
 {
-  gtk_page_setup_to_key_file(const_cast<GtkPageSetup*>(gobj()), (key_file).gobj(), nullptr);
+  gtk_page_setup_to_key_file(const_cast<GtkPageSetup*>(gobj()), (key_file).gobj(), 0);
 }
 
 bool PageSetup::load_from_key_file(const Glib::KeyFile& key_file)
 {
-  GError* gerror = nullptr;
-  bool retvalue = gtk_page_setup_load_key_file(gobj(), const_cast<GKeyFile*>((key_file).gobj()), nullptr, &(gerror));
+  GError* gerror = 0;
+  bool retvalue = gtk_page_setup_load_key_file(gobj(), const_cast<GKeyFile*>((key_file).gobj()), NULL, &(gerror));
   if(gerror)
     ::Glib::Error::throw_exception(gerror);
 

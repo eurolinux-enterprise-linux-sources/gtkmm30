@@ -28,12 +28,12 @@ namespace Gtk
 
 class Entry;
 
+//TODO: we should add "It derives from the Gtk::CellLayout, to allow the user to add extra cells to the Gtk::TreeView with completion matches".
+
 /** Completion functionality for Gtk::Entry.
  *
  * Gtk::EntryCompletion is an auxiliary object to be used in conjunction with
  * Gtk::Entry to provide the completion functionality.
- *
- * It derives from Gtk::CellLayout, to allow the user to add extra cells to the Gtk::TreeView with completion matches.
  *
  * "Completion functionality" means that when the user modifies the text in the
  * entry, Gtk::EntryCompletion checks which rows in the model match the current
@@ -197,13 +197,9 @@ dnl
 
   _WRAP_SIGNAL(bool insert_prefix(const Glib::ustring& prefix), insert_prefix)
 
-  //TODO: Remove no_default_handler when we can break ABI.
-  _WRAP_SIGNAL(void no_matches(), no_matches, no_default_handler)
-
-
   _WRAP_PROPERTY("model", Glib::RefPtr<Gtk::TreeModel>)
   _WRAP_PROPERTY("minimum_key_length", int)
-  _WRAP_PROPERTY("text_column", int)
+  _WRAP_PROPERTY("text_column, int)
   _WRAP_PROPERTY("inline_completion", bool)
   _WRAP_PROPERTY("popup_completion", bool)
   _WRAP_PROPERTY("popup_set_width", bool)
@@ -215,7 +211,7 @@ protected:
 
   //Default Signal Handler:
   virtual bool on_match_selected(const TreeModel::iterator& iter);
-  //No default handler for on_cursor_on_match(), to preserve ABI. TODO: Add this when we can break ABI.
+  //No default handler for on_cursor_on_match(), to preserver ABI. TODO: Add this when we can break ABI.
 };
 
 } // namespace Gtk

@@ -38,6 +38,7 @@ _WRAP_ENUM(DragProtocol, GdkDragProtocol)
 class DragContext : public Glib::Object
 {
   _CLASS_GOBJECT(DragContext, GdkDragContext, GDK_DRAG_CONTEXT, Glib::Object,GObject)
+  _IGNORE(gdk_drag_context_ref, gdk_drag_context_unref)
 protected:
 
 public:
@@ -69,7 +70,7 @@ public:
 
   // void set_icon(Gtk::Widget* widget, int hot_x, int hot_y) - see Gtk::Widget::set_as_icon().
 
-  #m4 _CONVERSION(`const ::Cairo::RefPtr< ::Cairo::Surface>&',`cairo_surface_t*',`($3) ? const_cast<cairo_surface_t*>(($3)->cobj()) : nullptr')
+  #m4 _CONVERSION(`const ::Cairo::RefPtr< ::Cairo::Surface>&',`cairo_surface_t*',`($3) ? const_cast<cairo_surface_t*>(($3)->cobj()) : 0')
   _WRAP_METHOD(void set_icon(const ::Cairo::RefPtr< ::Cairo::Surface>& surface), gtk_drag_set_icon_surface)
 
   _WRAP_METHOD(void set_icon(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf, int hot_x, int hot_y), gtk_drag_set_icon_pixbuf)
@@ -77,7 +78,7 @@ public:
   // The first argument was changed from StockID to ustring to avoid
   // cross-dependence between gdkmm and gtkmm.
   // See http://bugzilla.gnome.org/show_bug.cgi?id=79124 for details
-  _WRAP_METHOD(void set_icon(const Glib::ustring& stock_id, int hot_x, int hot_y), gtk_drag_set_icon_stock, deprecated "Use set_icon_name() instead.")
+  _WRAP_METHOD(void set_icon(const Glib::ustring& stock_id, int hot_x, int hot_y), gtk_drag_set_icon_stock)
 
   _WRAP_METHOD(void set_icon_name(const Glib::ustring& name, int hot_x, int hot_y), gtk_drag_set_icon_name)
   _WRAP_METHOD(void set_icon(), gtk_drag_set_icon_default)

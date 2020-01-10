@@ -30,19 +30,16 @@ typedef Gtk::Action Action;
 namespace Gtk
 {
 
-_DEPRECATE_IFDEF_START
 Action::Action(const Glib::ustring& name, const Gtk::StockID& stock_id, const Glib::ustring& label, const Glib::ustring& tooltip)
 :
-  _CONSTRUCT("name", name.c_str(), "stock_id", stock_id.get_c_str(), "label", (label.empty() ? nullptr : label.c_str()),  "tooltip", (tooltip.empty() ? nullptr : tooltip.c_str()))
+  _CONSTRUCT("name", name.c_str(), "stock_id", stock_id.get_c_str(), "label", (label.empty() ? 0 : label.c_str()),  "tooltip", (tooltip.empty() ? 0 : tooltip.c_str()))
 {}
 
 Action::Action(const Glib::ustring& name, const Glib::ustring& icon_name, const Glib::ustring& label, const Glib::ustring& tooltip)
 :
-  _CONSTRUCT("name", name.c_str(), "icon_name", icon_name.c_str(), "label", (label.empty() ? nullptr : label.c_str()),  "tooltip", (tooltip.empty() ? nullptr : tooltip.c_str()))
+  _CONSTRUCT("name", name.c_str(), "icon_name", icon_name.c_str(), "label", (label.empty() ? 0 : label.c_str()),  "tooltip", (tooltip.empty() ? 0 : tooltip.c_str()))
 {}
-_DEPRECATE_IFDEF_END
 
-_DEPRECATE_IFDEF_START
 Glib::RefPtr<Action> Action::create(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip)
 {
   return Glib::RefPtr<Action>( new Action(name, Gtk::StockID(), label, tooltip) );
@@ -57,7 +54,6 @@ Glib::RefPtr<Action> Action::create_with_icon_name(const Glib::ustring& name, co
 {
   return Glib::RefPtr<Action>( new Action(name, icon_name, label, tooltip) );
 }
-_DEPRECATE_IFDEF_END
 
 } // namespace Gtk
 

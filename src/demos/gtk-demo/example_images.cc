@@ -13,12 +13,13 @@
  */
 
 #include <gtkmm.h>
+#include "demo-common.h"
 
 class Example_Images : public Gtk::Window
 {
 public:
   Example_Images();
-  ~Example_Images() override;
+  virtual ~Example_Images();
 
 protected:
   virtual void start_progressive_loading();
@@ -32,10 +33,11 @@ protected:
   Gtk::Box m_VBox;
   Gtk::Label m_Label_Image, m_Label_Animation, m_Label_Progressive;
   Gtk::Frame m_Frame_Image, m_Frame_Animation, m_Frame_Progressive;
+  Gtk::Alignment m_Alignment_Image, m_Alignment_Animation, m_Alignment_Progressive;
   Gtk::Image m_Image_Progressive;
   Glib::RefPtr<Gdk::PixbufLoader> m_refPixbufLoader;
 
-  Glib::RefPtr<Gio::InputStream> m_image_stream;
+  Glib::RefPtr<Glib::IOChannel> m_image_stream;
 };
 
 //Called by DemoWindow;
@@ -47,7 +49,9 @@ Gtk::Window* do_images()
 Example_Images::Example_Images()
 :
   m_VBox                (Gtk::ORIENTATION_VERTICAL, 8),
-  m_image_stream        ()
+  m_Alignment_Image     (0.5, 0.5, 0, 0),
+  m_Alignment_Animation (0.5, 0.5, 0, 0),
+  m_image_stream        (0)
 {
   set_title("Images");
   set_border_width(8);
@@ -62,12 +66,13 @@ Example_Images::Example_Images()
 
   m_Frame_Image.set_shadow_type(Gtk::SHADOW_IN);
 
-  m_Frame_Image.set_halign(Gtk::ALIGN_CENTER);
-  m_Frame_Image.set_valign(Gtk::ALIGN_CENTER);
-  m_VBox.pack_start(m_Frame_Image, Gtk::PACK_SHRINK);
+  /* The alignment keeps the frame from growing when users resize
+   * the window
+   */
+  m_Alignment_Image.add(m_Frame_Image);
+  m_VBox.pack_start(m_Alignment_Image, Gtk::PACK_SHRINK);
 
-  Gtk::Image* pImage = Gtk::manage(new Gtk::Image());
-  pImage->set_from_resource("/images/gtk-logo-rgb.gif");
+  Gtk::Image* pImage = Gtk::manage(new Gtk::Image(demo_find_file("gtk-logo-rgb.gif")));
   m_Frame_Image.add(*pImage);
 
   /* Animation */
@@ -77,12 +82,13 @@ Example_Images::Example_Images()
 
   m_Frame_Animation.set_shadow_type(Gtk::SHADOW_IN);
 
-  m_Frame_Animation.set_halign(Gtk::ALIGN_CENTER);
-  m_Frame_Animation.set_valign(Gtk::ALIGN_CENTER);
-  m_VBox.pack_start(m_Frame_Animation, Gtk::PACK_SHRINK);
+  /* The alignment keeps the frame from growing when users resize
+   * the window
+   */
+  m_Alignment_Animation.add(m_Frame_Animation);
+  m_VBox.pack_start(m_Alignment_Animation, Gtk::PACK_SHRINK);
 
-  pImage = Gtk::manage(new Gtk::Image());
-  pImage->set_from_resource("/images/floppybuddy.gif");
+  pImage = Gtk::manage(new Gtk::Image(demo_find_file("floppybuddy.gif")));
   m_Frame_Animation.add(*pImage);
 
   /* Progressive */
@@ -92,7 +98,11 @@ Example_Images::Example_Images()
 
   m_Frame_Progressive.set_shadow_type(Gtk::SHADOW_IN);
 
-  m_VBox.pack_start(m_Frame_Progressive, Gtk::PACK_SHRINK);
+  /* The alignment keeps the frame from growing when users resize
+  * the window
+  */
+  m_Alignment_Progressive.add(m_Frame_Progressive);
+  m_VBox.pack_start(m_Alignment_Progressive, Gtk::PACK_SHRINK);
 
   /* Create an empty image for now; the progressive loader
    * will create the pixbuf and fill it in.
@@ -133,15 +143,16 @@ bool Example_Images::on_timeout()
   {
     guint8 buf[256];
     gsize bytes_read = 0;
+    Glib::IOStatus status = Glib::IO_STATUS_NORMAL;
 
     try
     {
-      bytes_read = m_image_stream->read(buf, sizeof(buf));
+      status = m_image_stream->read(reinterpret_cast<char*>(&buf[0]), sizeof(buf), bytes_read);
     }
     catch(const Glib::Error& error)
     {
-
-      Glib::ustring strMsg = "Failure reading image 'alphatest.png': ";
+     
+      Glib::ustring strMsg = "Failure reading image file 'alphatest.png': ";
       strMsg += error.what();
 
       Gtk::MessageDialog dialog(strMsg, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_CLOSE);
@@ -159,6 +170,7 @@ bool Example_Images::on_timeout()
     catch(const Glib::Error& error)
     {
       Glib::ustring strMsg = "Failed to load image: ";
+
       strMsg += error.what();
 
       Gtk::MessageDialog dialog(strMsg, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_CLOSE);
@@ -169,7 +181,7 @@ bool Example_Images::on_timeout()
       return false; // uninstall the timeout
     }
 
-    if(bytes_read == 0)
+    if(status == Glib::IO_STATUS_EOF)
     {
       m_image_stream.reset();
 
@@ -184,7 +196,8 @@ bool Example_Images::on_timeout()
       }
       catch(const Glib::Error& error)
       {
-        Glib::ustring strMsg = "Failed to close image: ";
+        Glib::ustring strMsg = "Failed to load image: ";
+
         strMsg += error.what();
 
         Gtk::MessageDialog dialog(strMsg, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_CLOSE);
@@ -202,11 +215,12 @@ bool Example_Images::on_timeout()
   {
     try
     {
-      m_image_stream = Gio::Resource::open_stream_global("/images/alphatest.png");
+      m_image_stream = Glib::IOChannel::create_from_file(demo_find_file("alphatest.png"), "r");
     }
     catch(const Glib::Error& error)
     {
-      Glib::ustring strMsg = "Unable to open image 'alphatest.png': ";
+
+      Glib::ustring strMsg = "Unable to open image file 'alphatest.png': ";
       strMsg += error.what();
 
       Gtk::MessageDialog dialog(strMsg, false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_CLOSE);
@@ -214,6 +228,8 @@ bool Example_Images::on_timeout()
 
       return false; // uninstall the timeout
     }
+
+    m_image_stream->set_encoding(); // no encoding == binary
 
     if(m_refPixbufLoader)
     {
@@ -248,16 +264,12 @@ void Example_Images::on_loader_area_prepared()
 void Example_Images::on_loader_area_updated(int/*x*/, int/*y*/, int/*width*/, int/*height*/)
 {
   /* We know the pixbuf inside the Gtk::Image has changed, but the image
-   * itself doesn't know this; so give it a hint by setting the pixbuf
-   * again. Queuing a redraw used to be sufficient, but nowadays Gtk::Image
-   * uses GtkIconHelper which caches the pixbuf state and will just redraw
-   * from the cache.
-   * If we wanted to be really efficient, we could use a drawing area or
-   * something instead of a Gtk::Image, so we could control the exact
-   * position of the pixbuf on the display, then we could queue a draw
-   * for only the updated area of the image.
+   * itself doesn't know this; so queue a redraw.  If we wanted to be
+   * really efficient, we could use a drawing area or something
+   * instead of a GtkImage, so we could control the exact position of
+   * the pixbuf on the display, then we could queue a draw for only
+   * the updated area of the image.
    */
-  Glib::RefPtr<Gdk::Pixbuf> refPixbuf = m_Image_Progressive.get_pixbuf();
-  m_Image_Progressive.set(refPixbuf);
+  m_Image_Progressive.queue_draw();
 }
 

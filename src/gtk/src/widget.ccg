@@ -36,7 +36,7 @@ namespace //anonymous
 // https://bugzilla.gnome.org/show_bug.cgi?id=605728#c5
 void Widget_signal_hide_callback(GObject* self, void* data)
 {
-  const auto obj = Glib::ObjectBase::_get_current_wrapper(self);
+  const Glib::ObjectBase* const obj = Glib::ObjectBase::_get_current_wrapper(self);
 
   // Do not try to call a signal on a disassociated wrapper.
   // This function might be invoked recursively if the signal_hide() handler
@@ -114,7 +114,7 @@ namespace Gtk
 // from calling an on_hide() override, if the C++ wrapper is being deleted.
 void Widget_Class::hide_callback(GtkWidget* self)
 {
-  const auto obj_base = static_cast<Glib::ObjectBase*>(
+  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -129,23 +129,27 @@ void Widget_Class::hide_callback(GtkWidget* self)
   // dynamic_cast catches all dangerous cases. /Kjell Ahlstedt)
   if(obj_base && obj_base->is_derived_() && !obj_base->_cpp_destruction_is_in_progress())
   {
-    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
+    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         obj->on_hide();
         return;
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
     );
 
@@ -158,7 +162,7 @@ void Widget_Class::hide_callback(GtkWidget* self)
 //To do this, we used the optional custom_c_callback paramater to _WRAP_SIGNAL() in the .hg file.
 void Widget_Class::selection_get_callback(GtkWidget* self, GtkSelectionData* p0, guint p1, guint p2)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -181,7 +185,7 @@ void Widget_Class::selection_get_callback(GtkWidget* self, GtkSelectionData* p0,
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
     );
 
@@ -193,7 +197,7 @@ void Widget_Class::selection_get_callback(GtkWidget* self, GtkSelectionData* p0,
 
 void Widget_Class::drag_data_get_callback(GtkWidget* self, GdkDragContext* p0, GtkSelectionData* p1, guint p2, guint p3)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -216,7 +220,7 @@ void Widget_Class::drag_data_get_callback(GtkWidget* self, GdkDragContext* p0, G
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
     );
 
@@ -231,7 +235,7 @@ void Widget_Class::drag_data_get_callback(GtkWidget* self, GdkDragContext* p0, G
 //functions may be called from gtk+ with a NULL pointer.
 void Widget_Class::get_preferred_width_vfunc_callback(GtkWidget* self, gint* minimum_width, gint* natural_width)
 {
-  const auto obj_base = static_cast<Glib::ObjectBase*>(
+  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -241,11 +245,13 @@ void Widget_Class::get_preferred_width_vfunc_callback(GtkWidget* self, gint* min
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
+    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_width = 0;
         int nat_width = 0;
@@ -253,15 +259,17 @@ void Widget_Class::get_preferred_width_vfunc_callback(GtkWidget* self, gint* min
              (minimum_width ? *minimum_width : min_width),
              (natural_width ? *natural_width : nat_width));
         return;
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 
@@ -272,7 +280,7 @@ void Widget_Class::get_preferred_width_vfunc_callback(GtkWidget* self, gint* min
 
 void Widget_Class::get_preferred_height_for_width_vfunc_callback(GtkWidget* self, gint width, gint* minimum_height, gint* natural_height)
 {
-  const auto obj_base = static_cast<Glib::ObjectBase*>(
+  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -282,11 +290,13 @@ void Widget_Class::get_preferred_height_for_width_vfunc_callback(GtkWidget* self
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
+    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_height = 0;
         int nat_height = 0;
@@ -294,15 +304,17 @@ void Widget_Class::get_preferred_height_for_width_vfunc_callback(GtkWidget* self
              (minimum_height ? *minimum_height : min_height),
              (natural_height ? *natural_height : nat_height));
         return;
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 
@@ -313,7 +325,7 @@ void Widget_Class::get_preferred_height_for_width_vfunc_callback(GtkWidget* self
 
 void Widget_Class::get_preferred_height_vfunc_callback(GtkWidget* self, gint* minimum_height, gint* natural_height)
 {
-  const auto obj_base = static_cast<Glib::ObjectBase*>(
+  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -323,11 +335,13 @@ void Widget_Class::get_preferred_height_vfunc_callback(GtkWidget* self, gint* mi
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
+    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_height = 0;
         int nat_height = 0;
@@ -335,15 +349,17 @@ void Widget_Class::get_preferred_height_vfunc_callback(GtkWidget* self, gint* mi
              (minimum_height ? *minimum_height : min_height),
              (natural_height ? *natural_height : nat_height));
         return;
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 
@@ -354,7 +370,7 @@ void Widget_Class::get_preferred_height_vfunc_callback(GtkWidget* self, gint* mi
 
 void Widget_Class::get_preferred_width_for_height_vfunc_callback(GtkWidget* self, gint height, gint* minimum_width, gint* natural_width)
 {
-  const auto obj_base = static_cast<Glib::ObjectBase*>(
+  Glib::ObjectBase *const obj_base = static_cast<Glib::ObjectBase*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -364,11 +380,13 @@ void Widget_Class::get_preferred_width_for_height_vfunc_callback(GtkWidget* self
   // being overridden:
   if(obj_base && obj_base->is_derived_())
   {
-    const auto obj = dynamic_cast<CppObjectType* const>(obj_base);
+    CppObjectType *const obj = dynamic_cast<CppObjectType* const>(obj_base);
     if(obj) // This can be NULL during destruction.
     {
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       try // Trap C++ exceptions which would normally be lost because this is a C callback.
       {
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
         // Call the virtual member method, which derived classes might override.
         int min_width = 0;
         int nat_width = 0;
@@ -376,15 +394,17 @@ void Widget_Class::get_preferred_width_for_height_vfunc_callback(GtkWidget* self
              (minimum_width ? *minimum_width : min_width),
              (natural_width ? *natural_width : nat_width));
         return;
+      #ifdef GLIBMM_EXCEPTIONS_ENABLED
       }
       catch(...)
       {
         Glib::exception_handlers_invoke();
       }
+      #endif //GLIBMM_EXCEPTIONS_ENABLED
     }
   }
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
   );
 
@@ -393,46 +413,24 @@ void Widget_Class::get_preferred_width_for_height_vfunc_callback(GtkWidget* self
     (*base->get_preferred_width_for_height)(self, height, minimum_width, natural_width);
 }
 
-Widget::~Widget() noexcept
+Widget::~Widget()
 {}
-
-void Widget::reparent(Widget& new_parent)
-{
-  //TODO: When 'Widget& new_parent' is changed to 'Container& new_parent',
-  // remove the next two statements.
-  auto new_container = dynamic_cast<Container*>(&new_parent);
-  g_return_if_fail(new_container != nullptr); // if new_parent is not a Container
-  auto old_container = get_parent();
-  g_return_if_fail(old_container != nullptr); // if the widget is not in a Container
-
-  if (old_container != new_container)
-  {
-    reference();
-    old_container->remove(*this);
-    new_container->add(*this);
-    unreference();
-  }
-}
 
 bool Widget::intersect(const Gdk::Rectangle& area) const
 {
   return gtk_widget_intersect(
-      const_cast<GtkWidget*>(gobj()), const_cast<GdkRectangle*>(area.gobj()), nullptr);
+      const_cast<GtkWidget*>(gobj()), const_cast<GdkRectangle*>(area.gobj()), 0);
 }
 
 void Widget::unset_name()
 {
-  gtk_widget_set_name(gobj(), nullptr);
+  gtk_widget_set_name(gobj(), 0);
 }
 
-#ifndef GTKMM_DISABLE_DEPRECATED
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void Widget::unset_composite_name()
 {
-  gtk_widget_set_composite_name(gobj(), nullptr);
+  gtk_widget_set_composite_name(gobj(), 0);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
-#endif // GTKMM_DISABLE_DEPRECATED
 
 void Widget::realize_if_needed()
 {
@@ -462,14 +460,6 @@ void Widget::set_window(const Glib::RefPtr<Gdk::Window>& window)
     window->reference(); // gtk_widget_set_window does not add a ref.
 }
 
-Allocation Widget::get_clip() const
-{
-  Allocation allocation;
-  gtk_widget_get_clip(const_cast<GtkWidget*>(gobj()), allocation.gobj());
-  return allocation;
-}
-
-
 Allocation Widget::get_allocation() const
 {
   Allocation allocation;
@@ -486,7 +476,7 @@ int Widget::get_height() const
 
 void Widget::drag_dest_set(DestDefaults flags, Gdk::DragAction actions)
 {
-  gtk_drag_dest_set(gobj(), (GtkDestDefaults)flags, nullptr, 0, (GdkDragAction)actions);
+  gtk_drag_dest_set(gobj(), (GtkDestDefaults)flags, 0, 0, (GdkDragAction)actions);
 }
 
 void Widget::drag_dest_set(const std::vector<TargetEntry>& targets,
@@ -534,7 +524,7 @@ void Widget_Class::hierarchy_changed_callback_custom(GtkWidget* self, GtkWidget*
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
     );
 
@@ -557,7 +547,7 @@ void Widget_Class::parent_set_callback_custom(GtkWidget* self, GtkWidget* p0)
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)) // Get the parent class of the object class (The original underlying C class).
     );
 
@@ -577,7 +567,7 @@ void Widget_Class::dispose_vfunc_callback(GObject* self)
    //g_warning("  gtypename: %s\n", G_OBJECT_TYPE_NAME(self));
   #endif
 
-  const auto obj = dynamic_cast<Widget*>(
+  Widget *const obj = dynamic_cast<Widget*>(
       Glib::ObjectBase::_get_current_wrapper(self));
 
   // This function might be invoked recursively because we're triggering
@@ -586,7 +576,7 @@ void Widget_Class::dispose_vfunc_callback(GObject* self)
 
   if(obj && !obj->_cpp_destruction_is_in_progress()) //When it should really be destroyed, we zero gobj_.
   {
-    const auto pWidget = obj->gobj();
+    GtkWidget *const pWidget = obj->gobj();
     g_return_if_fail(pWidget == GTK_WIDGET(self));
 
     // Abort dispose if the widget isn't managed, in order to prevent
@@ -657,7 +647,7 @@ void Widget_Class::dispose_vfunc_callback(GObject* self)
     #endif
   }
 
-  const auto base = static_cast<GObjectClass*>(
+  GObjectClass *const base = static_cast<GObjectClass*>(
       g_type_class_peek_parent(G_OBJECT_GET_CLASS(self)));
 
   #ifdef GLIBMM_DEBUG_REFCOUNTING
@@ -674,71 +664,64 @@ void Widget_Class::dispose_vfunc_callback(GObject* self)
 
 Glib::ustring Widget::drag_dest_find_target(const Glib::RefPtr<Gdk::DragContext>& context) const
 {
-  return Gdk::AtomString::to_cpp_type(gtk_drag_dest_find_target(const_cast<GtkWidget*>(gobj()), Glib::unwrap(context), nullptr /* See GTK+ docs */));
+  return Gdk::AtomString::to_cpp_type(gtk_drag_dest_find_target(const_cast<GtkWidget*>(gobj()), Glib::unwrap(context), 0 /* See GTK+ docs */));
 }
 
 #ifndef GTKMM_DISABLE_DEPRECATED
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 void Widget::draw_insertion_cursor(const Cairo::RefPtr<Cairo::Context>& cr, const Gdk::Rectangle& location, bool is_primary, TextDirection direction, bool draw_arrow)
 {
   gtk_draw_insertion_cursor(gobj(), cr->cobj(), const_cast<GdkRectangle*>(location.gobj()), is_primary, (GtkTextDirection)direction, draw_arrow);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
 #endif // GTKMM_DISABLE_DEPRECATED
 
-#ifndef GTKMM_DISABLE_DEPRECATED
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 Requisition Widget::get_requisition() const
 {
   Requisition result = {0, 0};
   gtk_widget_get_requisition(const_cast<GtkWidget*>(gobj()), &result);
   return result;
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
-#endif // GTKMM_DISABLE_DEPRECATED
 
-_DEPRECATE_IFDEF_START
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+
+//Implemented manually so we can reorder the parameters, to have a default value:
+void Widget::override_color(const Gdk::RGBA& color, StateFlags state)
+{
+  gtk_widget_override_color(gobj(), ((GtkStateFlags)(state)), (color).gobj());
+}
+
+void Widget::override_background_color(const Gdk::RGBA& color, StateFlags state)
+{
+  gtk_widget_override_background_color(gobj(), ((GtkStateFlags)(state)), (color).gobj());
+}
+
 void Widget::unset_color(StateFlags state)
 {
-   gtk_widget_override_color(gobj(), ((GtkStateFlags)(state)), nullptr);
+   gtk_widget_override_color(gobj(), ((GtkStateFlags)(state)), 0);
 }
 
 void Widget::unset_background_color(StateFlags state)
 {
-  gtk_widget_override_background_color(gobj(), ((GtkStateFlags)(state)), nullptr);
+  gtk_widget_override_background_color(gobj(), ((GtkStateFlags)(state)), 0);
 }
 
 void Widget::unset_font()
 {
-  gtk_widget_override_font(gobj(), nullptr);
+  gtk_widget_override_font(gobj(), 0);
 }
 
 void Widget::unset_symbolic_color(const Glib::ustring& name)
 {
-  gtk_widget_override_symbolic_color(gobj(), name.c_str(), nullptr);
+  gtk_widget_override_symbolic_color(gobj(), name.c_str(), 0);
 }
 
 void Widget::unset_cursor()
 {
-  gtk_widget_override_cursor(gobj(), nullptr, nullptr);
+  gtk_widget_override_cursor(gobj(), 0, 0);
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
-_DEPRECATE_IFDEF_END
 
-void Widget::unset_font_options()
-{
-  gtk_widget_set_font_options(gobj(), nullptr);
-}
 
 void Widget::transform_cairo_context_to_window(const Cairo::RefPtr<Cairo::Context>& cr, const Glib::RefPtr<const Gdk::Window>& window)
 {
   gtk_cairo_transform_to_window((cr)->cobj(), gobj(), const_cast<GdkWindow*>(Glib::unwrap<Gdk::Window>(window)));
-}
-
-void Widget::remove_action_group(const Glib::ustring& name)
-{
-  gtk_widget_insert_action_group(gobj(), name.c_str(), nullptr /* see C docs */);
 }
 
 } // namespace Gtk

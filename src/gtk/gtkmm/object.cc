@@ -155,22 +155,7 @@ void Object::_release_c_instance()
   }
 }
 
-Object::Object(Object&& src) noexcept
-: Glib::Object(std::move(src)),
-  referenced_(std::move(src.referenced_)),
-  gobject_disposed_(std::move(src.gobject_disposed_))
-{}
-
-Object& Object::operator=(Object&& src) noexcept
-{
-  Glib::Object::operator=(std::move(src));
-  referenced_ = std::move(src.referenced_);
-  gobject_disposed_ = std::move(src.gobject_disposed_);
-  return *this;
-}
-
-
-Object::~Object() noexcept
+Object::~Object()
 {
   #ifdef GLIBMM_DEBUG_REFCOUNTING
   g_warning("Gtk::Object::~Object() gobject_=%p\n", (void*)gobject_);
@@ -199,7 +184,7 @@ void Object::disconnect_cpp_wrapper()
     g_object_set_qdata((GObject*)gobj(), Glib::quark_cpp_wrapper_deleted_, (gpointer)true);
 
     //Prevent C++ instance from using GTK+ object:
-    gobject_ = nullptr;
+    gobject_ = 0;
 
     //TODO: Disconnect any signals, using gtk methods.
     //We'll have to keep a record of all the connections.
@@ -226,7 +211,7 @@ void Object::destroy_notify_()
   //Actually this function is called when the GObject is finalized, not when it's
   //disposed. Clear the pointer to the GObject, because otherwise it would
   //become a dangling pointer, pointing to a non-existant object.
-  gobject_ = nullptr;
+  gobject_ = 0;
 
   if(!cpp_destruction_in_progress_) //This function might have been called as a side-effect of destroy_() when it called g_object_run_dispose().
   {

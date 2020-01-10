@@ -1,3 +1,5 @@
+/* $Id$ */
+
 /* Copyright(C) 2001-2002 The gtkmm Development Team
  *
  * This library is free software; you can redistribute it and/or
@@ -31,7 +33,7 @@ void SignalProxy_CellData_gtk_callback(GtkTreeViewColumn*, GtkCellRenderer* cell
   if(!model)
     g_warning("SignalProxy_CellData_gtk_callback(): model is NULL, which is unusual.\n");
 
-  TreeViewColumn::SlotTreeCellData* the_slot = static_cast<TreeViewColumn::SlotTreeCellData*>(data);
+  TreeViewColumn::SlotCellData* the_slot = static_cast<TreeViewColumn::SlotCellData*>(data);
 
   try
   {
@@ -40,7 +42,7 @@ void SignalProxy_CellData_gtk_callback(GtkTreeViewColumn*, GtkCellRenderer* cell
     if(!cppiter->get_model_gobject())
     {
       g_warning("SignalProxy_CellData_gtk_callback() The cppiter has no model\n");
-      return;
+      return; 
     }
 
     (*the_slot)(Glib::wrap(cell, false), cppiter);
@@ -53,7 +55,7 @@ void SignalProxy_CellData_gtk_callback(GtkTreeViewColumn*, GtkCellRenderer* cell
 
 void SignalProxy_CellData_gtk_callback_destroy(void* data)
 {
-  delete static_cast<TreeViewColumn::SlotTreeCellData*>(data);
+  delete static_cast<TreeViewColumn::SlotCellData*>(data);
 }
 
 
@@ -78,6 +80,8 @@ void SignalProxy_RowSeparator_gtk_callback_destroy(void* data)
   delete static_cast<TreeView::SlotRowSeparator*>(data);
 }
 
+
 } // namespace TreeView_Private
 
 } // namespace Gtk
+

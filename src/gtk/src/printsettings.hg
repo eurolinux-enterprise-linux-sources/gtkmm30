@@ -52,9 +52,6 @@ class PrintSettings : public Glib::Object
 protected:
   _CTOR_DEFAULT
 
-public:
-  _WRAP_CREATE()
-
  /** Reads the print settings from the @a key_file.
   * Returns a new PrintSettings object with the restored settings,
   * or an empty RefPtr if an error occurred.
@@ -98,6 +95,9 @@ public:
   */
   static Glib::RefPtr<PrintSettings> create_from_file(const std::string& file_name);
   _IGNORE(gtk_print_settings_new_from_file)
+
+public:
+  _WRAP_CREATE()
 
   /** Print settings keys.
    */
@@ -166,7 +166,6 @@ public:
    * in the "Print Settings" group.
    *
    * @newin{2,12}
-   *
    * @param key_file The Glib::KeyFile to save the print settings to.
    */
   void save_to_key_file(Glib::KeyFile& key_file) const;

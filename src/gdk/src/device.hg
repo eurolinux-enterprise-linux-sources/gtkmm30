@@ -39,7 +39,6 @@ _WRAP_ENUM(GrabOwnership, GdkGrabOwnership)
 _WRAP_ENUM(GrabStatus, GdkGrabStatus)
 
 class Display;
-class Seat;
 class Window;
 
 /** A Gdk::Device instance contains a detailed description of an extended input device.
@@ -66,17 +65,7 @@ public:
   _WRAP_METHOD(void set_axis_use(guint index_, AxisUse use), gdk_device_set_axis_use)
   _WRAP_METHOD(void get_state(const Glib::RefPtr<Window>& window, double& axes, ModifierType& mask), gdk_device_get_state)
 
-  /** Obtains the motion history for a device.
-   * Given a starting and ending timestamp, this will return all events
-   * in the motion history for the device in the given range of time.
-   * Some windowing systems do not support motion history, in which case, false will be returned.
-   * (This is not distinguishable from the case where motion history is supported and no events were found.)
-   *
-   * @param window The window with respect to which which the event coordinates will be reported.
-   * @param start Starting timestamp for range of events to return.
-   * @param stop Ending timestamp for the range of events to return.
-   * @result A vector of TimeCoord.
-   */
+  // TODO: docs.
   std::vector<TimeCoord> get_history(const Glib::RefPtr<Window>& window, guint32 start, guint32 stop) const;
   _IGNORE(gdk_device_get_history)
 
@@ -105,135 +94,31 @@ public:
 
   _WRAP_METHOD(DeviceType get_device_type() const, gdk_device_get_device_type)
 
-  _WRAP_METHOD(GrabStatus grab(const Glib::RefPtr<Window>& window, GrabOwnership grab_ownership,
-    bool owner_events, EventMask event_mask, const Glib::RefPtr<Cursor>& cursor, guint32 time_),
-    gdk_device_grab, deprecated "Use Gdk::Seat::grab() instead.")
+  _WRAP_METHOD(GrabStatus grab(const Glib::RefPtr<Window>& window, GrabOwnership grab_ownership, bool owner_events, EventMask event_mask, const Glib::RefPtr<Cursor>& cursor, guint32 time_), gdk_device_grab)
 
-_DEPRECATE_IFDEF_START
-  /** See the grab() method which takes more parameters.
-   *
-   * @deprecated Use Gdk::Seat::grab() instead.
-   */
+  // TODO: docs.
   GrabStatus grab(const Glib::RefPtr<Window>& window, GrabOwnership grab_ownership, bool owner_events, EventMask event_mask, guint32 time_);
-_DEPRECATE_IFDEF_END
 
-  _WRAP_METHOD(void ungrab(guint32 time_), gdk_device_ungrab,
-    deprecated "Use Gdk::Seat::ungrab() instead.")
+  _WRAP_METHOD(void ungrab(guint32 time_), gdk_device_ungrab)
   _WRAP_METHOD(void warp(const Glib::RefPtr<Screen>& screen, int x, int y), gdk_device_warp)
 
-  /** Gets the current location of the device.
-   * As a slave device coordinates are those of its master pointer,
-   * this function may not be called on devices of type GDK_DEVICE_TYPE_SLAVE,
-   * unless there is an ongoing grab on them. See grab().
-   *
-   * @param x This will contain the root window X coordinate of the device.
-   * @param y This will contain the root window X coordinate of the device.
-   */
+  // TODO: docs.
   void get_position(int& x, int& y) const;
 
-  /** Gets the current location of device.
-   * As a slave device coordinates are those of its master pointer,
-   * this function may not be called on devices of type GDK_DEVICE_TYPE_SLAVE,
-   * unless there is an ongoing grab on them. See grab().
-   *
-   * @param screen This will contain the screen that the device is on.
-   * @param x This will contain the root window X coordinate of the device.
-   * @param y This will contain the root window X coordinate of the device.
-   */
+  // TODO: docs.
   void get_position(Glib::RefPtr<Screen>& screen, int& x, int& y) const;
   _IGNORE(gdk_device_get_position)
 
-
-  /** Gets the current location of the device in double precision.
-   * As a slave device coordinates are those of its master pointer,
-   * this function may not be called on devices of type GDK_DEVICE_TYPE_SLAVE,
-   * unless there is an ongoing grab on them. See grab().
-   *
-   * @param x This will contain the root window X coordinate of the device.
-   * @param y This will contain the root window X coordinate of the device.
-   *
-   * @newin{3,10}
-   */
-  void get_position(double& x, double& y) const;
-
-   /** Gets the current location of the device in double precision.
-   * As a slave device coordinates are those of its master pointer,
-   * this function may not be called on devices of type GDK_DEVICE_TYPE_SLAVE,
-   * unless there is an ongoing grab on them. See grab().
-   *
-   * @param screen This will contain the screen that the device is on.
-   * @param x This will contain the root window X coordinate of the device.
-   * @param y This will contain the root window X coordinate of the device.
-   *
-   * @newin{3,10}
-   */
-  void get_position(Glib::RefPtr<Screen>& screen, double& x, double& y) const;
-  _IGNORE(gdk_device_get_position_double)
-
   _WRAP_METHOD(Glib::RefPtr<Window> get_window_at_position(int& win_x, int& win_y), gdk_device_get_window_at_position, refreturn)
+
   _WRAP_METHOD(Glib::RefPtr<const Window> get_window_at_position(int& win_x, int& win_y) const, gdk_device_get_window_at_position, refreturn, constversion)
 
-  //TODO: Would this be ambiguous? Test it.
-  //_WRAP_METHOD(Glib::RefPtr<Window> get_window_at_position(double& win_x, double& win_y), gdk_device_get_window_at_position_double, refreturn)
-  //_WRAP_METHOD(Glib::RefPtr<const Window> get_window_at_position(double& win_x, double& win_y) const, gdk_device_get_window_at_position_double, refreturn, constversion)
-
-  /** Obtains the window underneath the device.
-   * Returns an empty RefPtr if the window tree under the device is not known to GDK (for example, belongs to another application).
-   *
-   * As a slave device coordinates are those of its master pointer, This
-   * function may not be called on devices of type Gdk::DEVICE_TYPE_SLAVE,
-   * unless there is an ongoing grab on them. See grab().
-   *
-   * @newin{3,0}
-   *
-   * @return The Gdk::Window under the device position.
-   */
+  //TODO: Documentation
   Glib::RefPtr<Window> get_window_at_position();
 
-  /** Obtains the window underneath the device.
-   * Returns an empty RefPtr if the window tree under the device is not known to GDK (for example, belongs to another application).
-   *
-   * As a slave device coordinates are those of its master pointer, This
-   * function may not be called on devices of type Gdk::DEVICE_TYPE_SLAVE,
-   * unless there is an ongoing grab on them. See grab().
-   *
-   * @newin{3,0}
-   *
-   * @return The Gdk::Window under the device position.
-   */
+  //TODO: Documentation
   Glib::RefPtr<const Window> get_window_at_position() const;
 
-  _WRAP_METHOD(Glib::RefPtr<Window> get_last_event_window(), gdk_device_get_last_event_window, refreturn)
-  _WRAP_METHOD(Glib::RefPtr<const Window> get_last_event_window() const, gdk_device_get_last_event_window, refreturn, constversion)
-
-  _WRAP_METHOD(Glib::ustring get_vendor_id() const, gdk_device_get_vendor_id)
-  _WRAP_METHOD(Glib::ustring get_product_id(), gdk_device_get_product_id)
-
-  _WRAP_METHOD(Glib::RefPtr<Seat> get_seat(), gdk_device_get_seat, refreturn)
-  _WRAP_METHOD(Glib::RefPtr<const Seat> get_seat() const, gdk_device_get_seat, refreturn, constversion)
-
-  _WRAP_METHOD(AxisFlags get_axes() const, gdk_device_get_axes)
-
-  // We use no_default_handler because _GdkDeviceClass is private.
-  _WRAP_SIGNAL(void changed(), "changed", no_default_handler, newin "3,22")
-
-  //TODO: Wrap or ignore the "device-manager" and "tool" properties and the
-  // "tool-changed" signal. GdkDeviceManager is not recommended for use in new code.
-  // GdkDeviceTool is not fully documented. It's not clear if it's meant to
-  // be used outside gtk+.
-  _WRAP_PROPERTY("display", Glib::RefPtr<Display>, newin "3,22")
-  _WRAP_PROPERTY("name", Glib::ustring, newin "3,22")
-  _WRAP_PROPERTY("type", DeviceType, newin "3,22")
-  _WRAP_PROPERTY("associated-device", Glib::RefPtr<Device>, newin "3,22")
-  _WRAP_PROPERTY("input-source", InputSource, newin "3,22")
-  _WRAP_PROPERTY("input-mode", InputMode, newin "3,22")
-  _WRAP_PROPERTY("has-cursor", bool, newin "3,22")
-  _WRAP_PROPERTY("n-axes", guint, newin "3,22")
-  _WRAP_PROPERTY("vendor-id", Glib::ustring, newin "3,22")
-  _WRAP_PROPERTY("product-id", Glib::ustring, newin "3,22")
-  _WRAP_PROPERTY("seat", Glib::RefPtr<Seat>, newin "3,22")
-  _WRAP_PROPERTY("num-touches", guint, newin "3,22")
-  _WRAP_PROPERTY("axes", AxisFlags)
 };
 
 } // namespace Gdk

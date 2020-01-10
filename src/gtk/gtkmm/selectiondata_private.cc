@@ -1,4 +1,7 @@
+// -*- c++ -*-
+
 /*
+ *
  * Copyright 2002 The gtkmm Development Team
  *
  * This library is free software; you can redistribute it and/or
@@ -26,10 +29,10 @@ SelectionData_WithoutOwnership::SelectionData_WithoutOwnership(GtkSelectionData*
 {
 }
 
-SelectionData_WithoutOwnership::~SelectionData_WithoutOwnership() noexcept
+SelectionData_WithoutOwnership::~SelectionData_WithoutOwnership()
 {
   //Prevent the base class's destructor from free-ing the underlying gobject:
-  gobject_ = nullptr;
+  gobject_ = 0;
 }
 
 } //namespace Gtk

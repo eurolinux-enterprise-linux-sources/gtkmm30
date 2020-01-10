@@ -43,17 +43,18 @@ nodist_gtkmm_libinclude_HEADERS = gtk/gtkmmconfig.h
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gdk/$(GDKMM_MODULE_NAME).pc gtk/$(GTKMM_MODULE_NAME).pc
 
-include $(srcdir)/MSVC_Net2013/filelist.am
+include $(srcdir)/MSVC_Net2005/filelist.am
+include $(srcdir)/MSVC_Net2008/filelist.am
+include $(srcdir)/MSVC_Net2010/filelist.am
 include $(srcdir)/win32_installer/filelist.am
 
 text_files = COPYING.tools PORTING README.SUN README.win32
-msvc_files = $(addprefix MSVC_Net2013/,$(msvc_net2013_data))
+msvc_files = $(addprefix MSVC_Net2005/,$(msvc_net2005_data)) \
+             $(addprefix MSVC_Net2008/,$(msvc_net2008_data)) \
+             $(addprefix MSVC_Net2010/,$(msvc_net2010_data))
 winstall_files = $(addprefix win32_installer/,$(windows_installer_files))
 
 dist_noinst_DATA = $(text_files) $(msvc_files) $(winstall_files)
 dist_noinst_SCRIPTS = autogen.sh
 
 DISTCLEANFILES = $(filter %mmconfig.h,$(msvc_files)) win32_installer/lgpl.txt
-
-# Optional: auto-generate the ChangeLog file from the git log on make dist
-include $(top_srcdir)/build/dist-changelog.am

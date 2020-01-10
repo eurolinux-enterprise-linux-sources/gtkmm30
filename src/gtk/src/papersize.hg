@@ -28,14 +28,15 @@ struct PaperSizeTraits;
 #endif
 
 /** Common paper names, from PWG 5101.1-2002 PWG: Standard for Media Standardized Names
+ *
  */
-extern const Glib::ustring PAPER_NAME_A3;
-extern const Glib::ustring PAPER_NAME_A4;
-extern const Glib::ustring PAPER_NAME_A5;
-extern const Glib::ustring PAPER_NAME_B5;
-extern const Glib::ustring PAPER_NAME_LETTER;
-extern const Glib::ustring PAPER_NAME_EXECUTIVE;
-extern const Glib::ustring PAPER_NAME_LEGAL;
+const Glib::ustring PAPER_NAME_A3 = "iso_a3";
+const Glib::ustring PAPER_NAME_A4 = "iso_a4";
+const Glib::ustring PAPER_NAME_A5 = "iso_a5";
+const Glib::ustring PAPER_NAME_B5 = "iso_b5";
+const Glib::ustring PAPER_NAME_LETTER = "na_letter";
+const Glib::ustring PAPER_NAME_EXECUTIVE = "na_executive";
+const Glib::ustring PAPER_NAME_LEGAL = "na_legal";
 
 _WRAP_ENUM(Unit, GtkUnit)
 
@@ -68,11 +69,8 @@ public:
   _IGNORE(gtk_paper_size_copy, gtk_paper_size_free, gtk_paper_size_is_equal)
   bool equal(const PaperSize& other) const;
 
-_DEPRECATE_IFDEF_START
   /** This typedef is just to make it more obvious that
    * our operator const void* should be used like operator bool().
-   *
-   * @deprecated Use the explicit operator bool() instead.
    */
   typedef const void* BoolExpr;
 
@@ -83,23 +81,9 @@ _DEPRECATE_IFDEF_START
    *   do_something()
    * @endcode
    *
-   * @deprecated Use the explicit operator bool() instead.
-   *
    * @newin{2,12}
    */
   operator BoolExpr() const;
-_DEPRECATE_IFDEF_END
-
-   /** Returns true if the PaperSize is a valid object.
-    * For instance,
-    * @code
-    * if(papersize)
-    *   do_something()
-    * @endcode
-    *
-    * @newin{3,22}
-    */
-   explicit operator bool() const;
 
   #m4 _CONVERSION(`GList*', `std::vector<PaperSize>',`Glib::ListHandler<PaperSize, PaperSizeTraits>::list_to_vector($3, Glib::OWNERSHIP_DEEP)')
   _WRAP_METHOD(static std::vector<PaperSize> get_paper_sizes(bool include_custom = true), gtk_paper_size_get_paper_sizes)
@@ -111,7 +95,6 @@ _DEPRECATE_IFDEF_END
   _WRAP_METHOD(double get_width(Unit unit) const, gtk_paper_size_get_width)
   _WRAP_METHOD(double get_height(Unit unit) const, gtk_paper_size_get_height)
   _WRAP_METHOD(bool is_custom() const, gtk_paper_size_is_custom)
-  _WRAP_METHOD(bool is_ipp() const, gtk_paper_size_is_ipp)
 
   _WRAP_METHOD(void set_size(double width, double height, Unit unit), gtk_paper_size_set_size)
   _WRAP_METHOD(double get_default_top_margin(Unit unit) const, gtk_paper_size_get_default_top_margin)
@@ -127,7 +110,6 @@ _DEPRECATE_IFDEF_END
   /** This function adds the paper size to @a key_file in the first group.
    *
    * @newin{2,12}
-   *
    * @param key_file The Glib::KeyFile to save the paper size to.
    */
   void save_to_key_file(Glib::KeyFile& key_file);

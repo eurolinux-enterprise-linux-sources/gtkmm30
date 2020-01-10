@@ -18,7 +18,6 @@
 #include <vector>
 
 #include <gtkmm/widget.h>
-#include <gtkmm/childpropertyproxy.h>
 
 _DEFS(gtkmm,gtk)
 _PINCLUDE(gtkmm/private/widget_p.h)
@@ -55,7 +54,8 @@ class Label;
 class Container : public Widget
 {
   _CLASS_GTKOBJECT(Container,GtkContainer,GTK_CONTAINER,Gtk::Widget,GtkWidget)
-  _IGNORE(gtk_container_child_set_valist, gtk_container_get_focus_chain)
+  _IGNORE(gtk_container_child_set_valist, gtk_container_get_focus_chain,
+          gtk_container_foreach_full, gtk_container_children, gtk_container_border_width)
 public:
 
 /* Application-level methods */
@@ -66,34 +66,19 @@ public:
   _WRAP_METHOD(guint get_border_width() const,
                gtk_container_get_border_width)
 
-  //This is virtual so that we can override it in Gtk::ScrolledWindow.
-  //TODO: Remove the virtual keyword when we can break ABI,
-  //because the override in ScrolledWindow is no longer necessary.
-  _WRAP_METHOD_DOCS_ONLY(gtk_container_add)
-  virtual void add(Widget& widget);
+  //This is virtual so that we can override it in Gtk::ScrolledWindow:
+ virtual void add(Widget& widget);
   _IGNORE(gtk_container_add)
 
-  /** Removes @a widget from the container.
-   * @a widget must be inside this container.
-   * If @a widget is managed with Gtk::manage(), and you don't want to use @a widget
-   * again, then you should delete it, because there will no longer be any parent
-   * container to delete it automatically.
-   *
-   * What's said about ScrolledWindow in the documentation of Bin::remove()
-   * applies also to Container::remove().
-   *
-   * @param widget A current child of the container.
-   */
+  _WRAP_METHOD_DOCS_ONLY(gtk_container_remove)
   void remove(Widget& widget);
   _IGNORE(gtk_container_remove)
 
   _WRAP_METHOD(void set_resize_mode(ResizeMode resize_mode),
-               gtk_container_set_resize_mode,
-               deprecated "Resize modes are deprecated. They aren’t necessary anymore since frame clocks and might introduce obscure bugs if used.")
+               gtk_container_set_resize_mode)
 
   _WRAP_METHOD(ResizeMode get_resize_mode() const,
-               gtk_container_get_resize_mode,
-               deprecated "Resize modes are deprecated. They aren’t necessary anymore since frame clocks and might introduce obscure bugs if used.")
+               gtk_container_get_resize_mode)
 
   /// Request that contained widgets check their size
   _WRAP_METHOD(void check_resize(), gtk_container_check_resize)
@@ -116,7 +101,7 @@ public:
 
   /** Operate on contained items, including internal children.
    *
-   * Invokes the @a slot on each child of the container, including children
+   * Invokes the @ slot on each child of the container, including children
    * that are considered "internal" (implementation details of the
    * container). "Internal" children generally weren't added by the user
    * of the container, but were added by the container implementation
@@ -127,6 +112,12 @@ public:
    */
   void forall(const ForeachSlot& slot);
   _IGNORE(gtk_container_forall)
+
+  /// (internal) Operate on contained items (see foreach())
+  //_WRAP_METHOD(void foreach_(GtkCallback callback,gpointer data),gtk_container_foreach)
+
+  /// (internal) Operate on contained items (see foreach())
+  //_WRAP_METHOD(void foreach_full_(GtkCallback callback,GtkCallbackMarshal marshal, gpointer data,GDestroyNotify notify),gtk_container_foreach_full)
 
 #m4 _CONVERSION(`GList*',`std::vector<Widget*>',`Glib::ListHandler<Widget*>::list_to_vector($3, Glib::OWNERSHIP_SHALLOW)')
   _WRAP_METHOD(std::vector<Widget*> get_children(), gtk_container_get_children)
@@ -147,11 +138,13 @@ public:
 
   _WRAP_METHOD(void unset_focus_chain(), gtk_container_unset_focus_chain)
 
+
+
+
 /* Widget-level methods */
 
   _WRAP_METHOD(void set_reallocate_redraws(bool needs_redraws = true),
-               gtk_container_set_reallocate_redraws,
-               deprecated "Call Gtk::Widget::queue_draw() in your Gtk::Widget::signal_size_allocate() handler.")
+               gtk_container_set_reallocate_redraws)
 
   /// Sets the focus on a child
   _WRAP_METHOD(void set_focus_child(Widget& widget),gtk_container_set_focus_child)
@@ -175,9 +168,8 @@ public:
   _WRAP_METHOD(Glib::RefPtr<const Adjustment> get_focus_hadjustment() const,
                gtk_container_get_focus_hadjustment, refreturn, constversion)
 
-   /** @deprecated No replacement available.
-    */
-  _WRAP_METHOD(void resize_children(), gtk_container_resize_children, deprecated "No replacement available.")
+
+  _WRAP_METHOD(void resize_children(), gtk_container_resize_children)
 
   _WRAP_METHOD(GType child_type() const, gtk_container_child_type)
 
@@ -267,9 +259,8 @@ protected:
   _WRAP_VFUNC(void get_child_property(GtkWidget* child, guint property_id, GValue* value, GParamSpec* pspec) const, get_child_property)
 
   _WRAP_PROPERTY("border_width", guint)
-  _WRAP_PROPERTY("resize_mode", ResizeMode,
-    deprecated "Resize modes are deprecated. They aren’t necessary anymore since frame clocks and might introduce obscure bugs if used.")
-  _WRAP_PROPERTY("child", Widget*, deprecated "Use add() instead.")
+  _WRAP_PROPERTY("resize_mode", ResizeMode)
+  _WRAP_PROPERTY("child", Widget*)
 
 #m4begin
 dnl// Hook in special code to catch explicit uses of gtk_object_destroy() by
@@ -281,6 +272,7 @@ dnl
     static void remove_callback_normal(GtkContainer* self, GtkWidget* p0);
   _POP()
 #m4end
+
 };
 
 } // namespace Gtk

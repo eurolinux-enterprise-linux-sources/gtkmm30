@@ -21,14 +21,6 @@
 
 namespace Gtk
 {
-// Initialize external constants.
-const Glib::ustring PAPER_NAME_A3 = GTK_PAPER_NAME_A3;
-const Glib::ustring PAPER_NAME_A4 = GTK_PAPER_NAME_A4;
-const Glib::ustring PAPER_NAME_A5 = GTK_PAPER_NAME_A5;
-const Glib::ustring PAPER_NAME_B5 = GTK_PAPER_NAME_B5;
-const Glib::ustring PAPER_NAME_LETTER = GTK_PAPER_NAME_LETTER;
-const Glib::ustring PAPER_NAME_EXECUTIVE = GTK_PAPER_NAME_EXECUTIVE;
-const Glib::ustring PAPER_NAME_LEGAL = GTK_PAPER_NAME_LEGAL;
 
 //PaperSize::PaperSize()
 //:
@@ -57,11 +49,11 @@ PaperSize::PaperSize(const Glib::ustring& name, const Glib::ustring& display_nam
                                      GtkUnit(unit)))
 {}
 
-//TODO: Add an operator bool() so we can detect if this succeeded:
+//TODO: Add an operator const void*() so we can detect if this succeeded:
 //TODO: No, throw the error/exception instead.
 PaperSize::PaperSize(const Glib::KeyFile& key_file, const Glib::ustring& group_name)
 :
-  gobject_(gtk_paper_size_new_from_key_file(const_cast<GKeyFile*>(key_file.gobj()), (group_name.empty() ? nullptr : group_name.c_str()) , nullptr /* GError */))
+  gobject_(gtk_paper_size_new_from_key_file(const_cast<GKeyFile*>(key_file.gobj()), (group_name.empty() ? NULL : group_name.c_str()) , NULL /* GError */))
 {}
 
 bool PaperSize::equal(const PaperSize& other) const
@@ -70,21 +62,14 @@ bool PaperSize::equal(const PaperSize& other) const
                                                     const_cast<GtkPaperSize*>(other.gobj()))));
 }
 
-_DEPRECATE_IFDEF_START
 PaperSize::operator const void*() const
 {
-  return gobj() ? GINT_TO_POINTER(1) : nullptr;
-}
-_DEPRECATE_IFDEF_END
-
-PaperSize::operator bool() const
-{
-  return gobj();
+  return gobj() ? GINT_TO_POINTER(1) : 0;
 }
 
 void PaperSize::save_to_key_file(Glib::KeyFile& key_file)
 {
-  gtk_paper_size_to_key_file( gobj(), (key_file).gobj(), nullptr);
+  gtk_paper_size_to_key_file( gobj(), (key_file).gobj(), 0);
 }
 
 

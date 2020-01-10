@@ -129,7 +129,7 @@ public:
   _WRAP_PROPERTY("virtual-root", TreeModel::Path)
 
 protected:
-  void set_value_impl(const iterator& row, int column, const Glib::ValueBase& value) override;
+  virtual void set_value_impl(const iterator& row, int column, const Glib::ValueBase& value);
 };
 
 } // namespace Gtk

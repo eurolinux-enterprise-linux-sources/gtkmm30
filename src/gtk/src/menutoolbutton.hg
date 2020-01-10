@@ -41,19 +41,13 @@ public:
    */
   _CTOR_DEFAULT()
 
-  // _WRAP_CTOR does not take a 'deprecated' parameter.
-  // _WRAP_CTOR(MenuToolButton(const Gtk::StockID& stock_id), gtk_toggle_tool_button_new_from_stock)
-#ifndef GTKMM_DISABLE_DEPRECATED
   /** Creates a new MenuToolButton from a StockID.
    *
    * The MenuToolButton will be created according to the @a stock_id properties.
    *
    * @param stock_id The StockID which determines the look of the MenuToolButton.
-   * @deprecated Use one of the other constructors instead.
    */
-   explicit MenuToolButton(const Gtk::StockID& stock_id);
-   _IGNORE(gtk_menu_tool_button_new_from_stock)
-#endif // GTKMM_DISABLE_DEPRECATED
+  _WRAP_CTOR(MenuToolButton(const Gtk::StockID& stock_id), gtk_toggle_tool_button_new_from_stock)
 
   /** Creates a new MenuToolButton with a label.
    *
@@ -75,6 +69,8 @@ public:
   _WRAP_METHOD(void set_menu(Menu& menu), gtk_menu_tool_button_set_menu)
   _WRAP_METHOD(Menu* get_menu(), gtk_menu_tool_button_get_menu)
   _WRAP_METHOD(const Menu* get_menu() const, gtk_menu_tool_button_get_menu, constversion)
+
+  _IGNORE(gtk_menu_tool_button_set_arrow_tooltip) //deprecated
 
   _WRAP_METHOD(void set_arrow_tooltip_text(const Glib::ustring& text), gtk_menu_tool_button_set_arrow_tooltip_text)
   _WRAP_METHOD(void set_arrow_tooltip_markup(const Glib::ustring& markup), gtk_menu_tool_button_set_arrow_tooltip_markup)

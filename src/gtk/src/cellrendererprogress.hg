@@ -45,7 +45,7 @@ public:
   _WRAP_PROPERTY("text-yalign", float)
   _WRAP_PROPERTY("inverted", bool)
 
-  Glib::PropertyProxy_Base _property_renderable() override;
+  virtual Glib::PropertyProxy_Base _property_renderable();
 };
 
 } // namespace Gtk

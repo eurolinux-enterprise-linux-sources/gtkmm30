@@ -34,11 +34,11 @@ class Example_TreeView_TreeStore : public Gtk::Window
 {
 public:
   Example_TreeView_TreeStore();
-  ~Example_TreeView_TreeStore() override;
+  virtual ~Example_TreeView_TreeStore();
 
 protected:
   //vfunc overrides:
-  void on_realize() override;
+  virtual void on_realize();
 
   virtual void create_model();
   virtual void add_columns();
@@ -165,6 +165,7 @@ Example_TreeView_TreeStore::Example_TreeView_TreeStore()
 
   /* create tree view */
   m_TreeView.set_model(m_refTreeStore);
+  m_TreeView.set_rules_hint();
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = m_TreeView.get_selection();
   refTreeSelection->set_mode(Gtk::SELECTION_MULTIPLE);
 
@@ -274,11 +275,11 @@ void Example_TreeView_TreeStore::create_model()
 
   Gtk::TreeIterChildren children = m_refTreeStore->children();
 
-  for(auto node : children)
+  for(Gtk::TreeModel::iterarator node = children.begin(); node != children.end(); ++node)
   {
     g_print("outer loop\n");
 
-    for(auto row : node.children())
+    for(Gtk::TreeModel::iterarator row = node.children().begin(); row != node.children().end(); )
     {
       g_print("inner loop\n");
       row = m_refTreeStore->erase(row);
@@ -302,8 +303,12 @@ void Example_TreeView_TreeStore::treestore_add_item(const CellItem_Holiday& foo)
   row[m_columns.world]        = foo.m_world_holiday;
 
   //Add Children:
-  for(const auto& child : foo.m_children)
+  for(std::vector<CellItem_Holiday>::const_iterator iterVec = foo.m_children.begin();
+      iterVec != foo.m_children.end();
+      ++iterVec)
   {
+    const CellItem_Holiday& child = *iterVec;
+
     Gtk::TreeRow child_row = *(m_refTreeStore->append(row.children()));
 
     child_row[m_columns.holiday_name] = child.m_label;

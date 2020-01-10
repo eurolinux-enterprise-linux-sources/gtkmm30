@@ -27,7 +27,7 @@ CellView::CellView(const Glib::ustring& text, bool use_markup)
 :
   _CONSTRUCT()
 {
-  auto cell = Gtk::manage(new Gtk::CellRendererText());
+  Gtk::CellRendererText* cell = Gtk::manage(new Gtk::CellRendererText());
 
   if(use_markup)
   {
@@ -45,7 +45,7 @@ CellView::CellView(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf)
 :
   _CONSTRUCT()
 {
-  auto cell = Gtk::manage(new Gtk::CellRendererPixbuf());
+  Gtk::CellRendererPixbuf* cell = Gtk::manage(new Gtk::CellRendererPixbuf());
 
   cell->property_pixbuf() = pixbuf;
 
@@ -54,7 +54,7 @@ CellView::CellView(const Glib::RefPtr<Gdk::Pixbuf>& pixbuf)
 
 void CellView::unset_model()
 {
-  gtk_cell_view_set_model(gobj(), nullptr);
+  gtk_cell_view_set_model(gobj(), 0);
 }
 
 

@@ -22,15 +22,15 @@
 #ifndef _TEXTWIDGET_H
 #define _TEXTWIDGET_H
 
-#include <gtkmm/scrolledwindow.h>
-#include <gtkmm/textview.h>
+#include "gtkmm/scrolledwindow.h"
+#include "gtkmm/textview.h"
 
 
 class TextWidget : public Gtk::ScrolledWindow
 {
 public:
   TextWidget(bool is_source);
-  ~TextWidget() override;
+  virtual ~TextWidget();
 
   Glib::RefPtr<Gtk::TextBuffer> get_buffer();
   void wipe();

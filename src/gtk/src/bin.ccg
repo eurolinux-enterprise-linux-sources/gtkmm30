@@ -25,20 +25,34 @@
 namespace Gtk
 {
 
+
 void
 Bin::remove()
 {
-  auto child = get_child();
-  if (child)
-    Container::remove(*child);
+  GtkWidget* child = gtk_bin_get_child(gobj());
+  if(child)
+  {
+    Gtk::Widget* cppChild = Glib::wrap(child);
+
+    //If this is a managed widget, then do an extra ref so that it will not be
+    //destroyed when it is removed, and restore the floating state of the ref.
+    //This should leave it in the same state as when it was instantiated,
+    //before being added to the first container.
+    if(cppChild->is_managed_())
+    {
+      cppChild->reference();
+      g_object_force_floating(static_cast<Glib::Object*>(cppChild)->gobj());
+    }
+
+    gtk_container_remove(Container::gobj(), cppChild->gobj());
+  }
 }
 
-_DEPRECATE_IFDEF_START
 void
 Bin::add_label(const Glib::ustring& str, bool mnemonic /* = false */,
 	             double x_align /* = 0.5 */, double y_align /* = 0.5 */)
 {
-  auto label = manage(new Label(str, x_align, y_align, mnemonic));
+  Label* label = manage(new Label(str, x_align, y_align, mnemonic));
   add(*label);
 
   //This might not always be appropriate:
@@ -48,30 +62,28 @@ Bin::add_label(const Glib::ustring& str, bool mnemonic /* = false */,
 
   label->show();
 }
-_DEPRECATE_IFDEF_END
 
 void
 Bin::add_label(const Glib::ustring& str, bool mnemonic,
 	       Align x_align, Align y_align /* = ALIGN_CENTER */)
 {
-  auto label = manage(new Label(str, x_align, y_align, mnemonic));
-  add(*label);
-  label->show();
+  add_label(str, mnemonic,
+	    _gtkmm_align_float_from_enum(x_align),
+	    _gtkmm_align_float_from_enum(y_align));
 }
 
-_DEPRECATE_IFDEF_START
 void
 Bin::add_pixlabel(const std::string& pixfile,
 		  const Glib::ustring& str,
 		  double x_align /* = 0.5 */, double y_align /* = 0.5 */)
 {
   //Create Image and Label widgets:
-  auto pmap = manage(new Image(pixfile));
-  auto label = manage(new Label(str));
+  Image* pmap = manage(new Image(pixfile));
+  Label* label = manage(new Label(str));
   label->set_alignment (x_align, y_align);
 
   //Put them in a Box:
-  auto hbox = manage(new Box(ORIENTATION_HORIZONTAL, 5));
+  Box* hbox = manage(new Box(ORIENTATION_HORIZONTAL, 5));
   hbox->pack_start(*pmap, PACK_SHRINK);
   hbox->pack_start(*label);
   hbox->show_all();
@@ -79,25 +91,6 @@ Bin::add_pixlabel(const std::string& pixfile,
   //And put that Box in this:
   add(*hbox);
 }
-_DEPRECATE_IFDEF_END
 
-void
-Bin::add_pixlabel(const std::string& pixfile,
-      const Glib::ustring& str,
-      Align x_align, Align y_align /* = ALIGN_CENTER */)
-{
-  //Create Image and Label widgets:
-  auto pmap = manage(new Image(pixfile));
-  auto label = manage(new Label(str, x_align, y_align));
-
-  //Put them in a Box:
-  auto hbox = manage(new Box(ORIENTATION_HORIZONTAL, 5));
-  hbox->pack_start(*pmap, PACK_SHRINK);
-  hbox->pack_start(*label);
-  hbox->show_all();
-
-  //And put that Box in this:
-  add(*hbox);
-}
 
 } //namespace Gtk

@@ -31,7 +31,7 @@ void IconTheme::set_search_path(const std::vector<Glib::ustring>& path)
 std::vector<Glib::ustring> IconTheme::get_search_path() const
 {
   int temp_int = 0;
-  gchar** temp_path = nullptr;
+  gchar** temp_path = 0;
   gtk_icon_theme_get_search_path(const_cast<GtkIconTheme*>(gobj()), &temp_path, &temp_int);
   return Glib::ArrayHandler<Glib::ustring>::array_to_vector(temp_path, temp_int, Glib::OWNERSHIP_DEEP);
 }
@@ -46,7 +46,7 @@ std::vector<int> IconTheme::get_icon_sizes(const Glib::ustring& icon_name) const
 
 std::vector<Glib::ustring> IconTheme::list_icons() const
 {
-  return Glib::ListHandler<Glib::ustring>::list_to_vector(gtk_icon_theme_list_icons(const_cast<GtkIconTheme*>(gobj()), nullptr /* means all icons according to the C documentation. */ ), Glib::OWNERSHIP_SHALLOW);
+  return Glib::ListHandler<Glib::ustring>::list_to_vector(gtk_icon_theme_list_icons(const_cast<GtkIconTheme*>(gobj()), 0 /* means all icons according to the C documentation. */ ), Glib::OWNERSHIP_SHALLOW);
 }
 
 

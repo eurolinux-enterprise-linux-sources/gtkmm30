@@ -31,7 +31,7 @@ namespace Gtk
 
 class TextBuffer;
 
-class TargetList final
+class TargetList
 {
   //GtkTargetList is actually registered as a boxed type, but it has custom
   //reference-counting instead of copy/free functions, so we use it via RefPtr.
@@ -43,7 +43,6 @@ public:
 #m4 _CONVERSION(`TargetFlags', `guint', `($2)($3)')
   _WRAP_METHOD(void add(const Glib::ustring& target, TargetFlags flags = TargetFlags(0), guint info = 0), gtk_target_list_add)
   void add(const std::vector<TargetEntry>& targets);
-  _IGNORE(gtk_target_list_add_table)
 
   _WRAP_METHOD(void add_text_targets(guint info), gtk_target_list_add_text_targets)
   _WRAP_METHOD(void add_rich_text_targets(guint info, bool deserializable, const Glib::RefPtr<TextBuffer>& buffer), gtk_target_list_add_rich_text_targets)
@@ -51,27 +50,15 @@ public:
   _WRAP_METHOD(void add_image_targets(guint info, bool writable), gtk_target_list_add_image_targets)
   _WRAP_METHOD(void add_uri_targets(guint info), gtk_target_list_add_uri_targets)
 
+/** TODO:
+void           gtk_target_list_add_table (GtkTargetList        *list,
+                                          const GtkTargetEntry *targets,
+                                          guint                 ntargets);
+*/
+
   _WRAP_METHOD(void remove(const Glib::ustring& target), gtk_target_list_remove)
   _WRAP_METHOD(bool find(const Glib::ustring& target, guint* info) const, gtk_target_list_find)
 };
 
 } // namespace Gtk
 
-namespace Glib
-{
-// This is needed so Glib::RefPtr<Gtk::TargetList> can be used with
-// Glib::Value and _WRAP_PROPERTY in TextBuffer.
-template <>
-class Value< Glib::RefPtr<Gtk::TargetList> > : public ValueBase_Boxed
-{
-public:
-  typedef Glib::RefPtr<Gtk::TargetList> CppType;
-  typedef GtkTargetList* CType;
-
-  static GType value_type();
-
-  void set(const CppType& data);
-  CppType get() const;
-};
-
-} // namespace Glib

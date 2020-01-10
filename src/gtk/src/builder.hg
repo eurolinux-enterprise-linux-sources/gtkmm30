@@ -18,8 +18,6 @@
 #include <vector>
 
 #include <gtkmm/widget.h>
-#include <giomm/resource.h> //For ResourceError, thrown by create_from_resource().
-#include <utility> //For std::forward()
 
 _DEFS(gtkmm,gtk)
 _PINCLUDE(glibmm/private/object_p.h)
@@ -27,38 +25,17 @@ _PINCLUDE(glibmm/private/object_p.h)
 
 namespace Gtk
 {
-class Application;
 
 /** Exception class for Gdk::Builder errors.
  */
 _WRAP_GERROR(BuilderError,GtkBuilderError,GTK_BUILDER_ERROR)
 
-/** Build an interface from an XML UI definition description.
+/** Build an interface from a UI definition description.
  *
  * This object represents an `instantiation' of an UI definition description.
- * When one of these objects is created, the XML file is read, and the user interface
+ * When one of these objects is created, the XML file is read, and the interface
  * is created. The Gtk::Builder object then provides an interface for accessing the
- * widgets in the user interface by the names assigned to them inside the UI description.
- *
- * A Gtk::Builder holds a reference to all objects that it has constructed
- * and drops these references when it is deleted. This deletion can
- * cause the destruction of non-widget objects or widgets which are not
- * contained in a toplevel window. For toplevel windows constructed by a
- * builder, it is the responsibility of the user to get them with get_widget()
- * or get_widget_derived() and delete them to get rid of them and all
- * the widgets they contain.
- *
- * The methods get_widget() and get_widget_derived()
- * can be used to access the widgets in the interface by the names assigned
- * to them inside the UI description. Toplevel windows returned by these
- * methods will stay around until the user explicitly deletes them.
- * Other widgets will either be part of a
- * larger hierarchy constructed by the builder (in which case you should
- * not have to worry about their lifecycle), or without a parent, in which
- * case they have to be added to some container before the builder is deleted
- * to make use of them.
- * Non-widget objects need to be fetched with get_object() or get_objects()
- * to keep them beyond the lifespan of the builder.
+ * widgets in the interface by the names assigned to them inside the UI description.
  *
  * @newin{2,12}
  */
@@ -99,7 +76,6 @@ public:
    * @newin{2,14}
    */
   static Glib::RefPtr<Builder> create_from_file(const std::string& filename, const Glib::ustring& object_id);
-
   //This is just to avoid the ambiguous call when using a string literal,
   //caused by the overload that takes a std::vector<Glib::ustring>.
   /** Parses a file containing a GtkBuilder UI definition, building only the requested object.
@@ -116,7 +92,6 @@ public:
    * @newin{2,16}
    */
   static Glib::RefPtr<Builder> create_from_file(const std::string& filename, const char* object_id);
-
   /** Parses a file containing a GtkBuilder UI definition, building only the requested objects.
    *
    * If you are adding an object that depends on an object that is not
@@ -200,7 +175,6 @@ public:
    * @newin{2,12}
    */
   static Glib::RefPtr<Builder> create_from_string(const Glib::ustring& buffer);
-
   //This is just to avoid the ambiguous call when using a string literal,
   //caused by the overload that takes a std::vector<Glib::ustring>.
   /** Parses a string containing a GtkBuilder UI definition building only the requested object.
@@ -408,44 +382,28 @@ public:
    */
   _WRAP_METHOD(bool add_from_string(const char* buffer, gsize length), gtk_builder_add_from_string, errthrow)
 
-  _WRAP_METHOD(void expose_object(const Glib::ustring& name, const Glib::RefPtr<Glib::Object>& object), gtk_builder_expose_object)
-#m4 _CONVERSION(`Widget&',`GObject*',`G_OBJECT(($3).gobj())')
-
-  /** Add @a widget to the builder object pool so it can be referenced just like any
-   * other object built by builder.
-   *
-   * @newin{3,12}
-   *
-   * @param name The name of the widget exposed to the builder.
-   * @param widget The widget to expose.
-   */
-  _WRAP_METHOD(void expose_widget(const Glib::ustring& name, Widget& widget{object}), gtk_builder_expose_object)
-
   //TODO: Custom-implement this and prevent it from being used with GTK_WIDGET-derived types?
-  // A Builder can contain objects that don't derive from Buildable,
-  // for instance if objects have been added with expose_object().
+  //TODO: Make this return a Glib::RefPtr<Gtk::Buildable>? Check what the C API really does - and document that if so.
   /** Gets the object named @a name.
-   *
+   * 
    * @newin{2,12}
-   *
    * @param name Name of object to get.
-   * @return The object named @a name or <tt>nullptr</tt> if it could not be found in the object tree.
+   * @return The object named @a name or <tt>0</tt> if it could not be found in the object tree.
    */
   _WRAP_METHOD(Glib::RefPtr<Glib::Object> get_object(const Glib::ustring& name), gtk_builder_get_object, refreturn)
   /** Gets the object named @a name.
-   *
+   * 
    * @newin{3,8}
-   *
    * @param name Name of object to get.
-   * @return The object named @a name or <tt>nullptr</tt> if it could not be found in the object tree.
+   * @return The object named @a name or <tt>0</tt> if it could not be found in the object tree.
    */
   _WRAP_METHOD(Glib::RefPtr<const Glib::Object> get_object(const Glib::ustring& name) const, gtk_builder_get_object, refreturn, constversion)
 
-  /** Gets a widget from the Builder file.
+  /** Get a widget from the Builder file.
    * For instance:
    * @code
-   * Gtk::Grid* pGrid = nullptr;
-   * refXml->get_widget("mygrid", pGrid);
+   * Gtk::Table* pTable = 0;
+   * refXml->get_widget("mytable", pTable);
    * @endcode
    * This method prints a warning message to the console if the widget
    * doesn't exist or has the wrong type, so you don't need to check that
@@ -457,13 +415,13 @@ public:
    * container widget.
    *
    * @param name The name of the widget.
-   * @retval widget A pointer to the widget, or <tt>nullptr</tt> on failure.
+   * @retval widget A pointer to the widget, or <tt>0</tt> on failure.
    */
   template <class T_Widget> inline
   void get_widget(const Glib::ustring& name, T_Widget*& widget)
   {
     // Initialize output parameter:
-    widget = nullptr;
+    widget = 0;
 
     // The dynamic_cast<> should never fail if get_widget_checked() succeeded.
     widget = dynamic_cast<T_Widget*>(this->get_widget_checked(name, T_Widget::get_base_type()));
@@ -481,48 +439,31 @@ public:
     const_cast<Builder*>(this)->get_widget(name, widget);
   }
 
-  /** Gets a widget whose details are specified in the GtkBuilder file,
-   * but which is implemented by your own derived class.
-   *
-   * Your class must have a constructor like so:
+  /** This provides a pointer to a widget whose details are specified in the GtkBuilder file, but which is implemented
+   * by your own derived class. Your class must have a constructor like so:
    * @code
-   * MyDerivedDialog::MyDerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder)
-   * : Gtk::Dialog(cobject) //Calls the base class constructor
-   * @endcode
-   * or, with additional parameters, for example:
-   * @code
-   * MyDerivedDialog::MyDerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder,
-   *   const Glib::ustring& msg, bool warning)
+   * DerivedDialog::DerivedDialog(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refBuilder)
    * : Gtk::Dialog(cobject) //Calls the base class constructor
    * @endcode
    *
    * For instance:
    * @code
-   * MyDerivedDialog* pDialog1 = nullptr;
-   * MyDerivedDialog* pDialog2 = nullptr;
-   * refBuilder->get_widget_derived("mydialog1", pDialog1);
-   * refBuilder->get_widget_derived("mydialog2", pDialog2, "A storm is imminent!", true);
+   * Gtk::DerivedBox* pBox = 0;
+   * refXml->get_widget_derived("mybox", pBox);
    * @endcode
    *
-   * @note
-   * If get_widget_derived() is called more than once for the same widget (the
-   * same @a name), only the first call will call the widget's constructor.
-   * The following calls will return a pointer to the widget instance that
-   * was constructed by the first call.
-   *
    * @param name The name of the widget.
-   * @param args Additional arguments to pass to the constructor of the derived class.
-   * @retval widget A pointer to the widget, or <tt>nullptr</tt> on failure.
+   * @retval widget A pointer to the widget, or <tt>0</tt> on failure.
    */
-  template <typename T_Widget, typename... Args> inline
-  void get_widget_derived(const Glib::ustring& name, T_Widget*& widget, Args&&... args)
+  template <class T_Widget> inline
+  void get_widget_derived(const Glib::ustring& name, T_Widget*& widget)
   {
      // Initialize output parameter:
-     widget = nullptr;
+     widget = 0;
 
      // Get the widget from the GtkBuilder file.
-     using cwidget_type = typename T_Widget::BaseObjectType;
-     auto pCWidget = (cwidget_type*)get_cwidget(name);
+     typedef typename T_Widget::BaseObjectType cwidget_type;
+     cwidget_type* pCWidget = (cwidget_type*)get_cwidget(name);
 
      //The error was already reported by get_cwidget().
      if(!pCWidget)
@@ -550,19 +491,18 @@ public:
        //Set the output variable. We needed to do this because we can not template the return type.
        Glib::RefPtr<Gtk::Builder> refThis(this);
        refThis->reference(); //take a copy.
-       widget = new T_Widget(pCWidget, refThis, std::forward<Args>(args)...);
-       // Don't add reference to widget. That's done only in methods that return
-       // a Glib::RefPtr<Something>.
+       widget = new T_Widget(pCWidget, refThis);
+       widget->reference(); //Because gtk_builder_get_object() does not give us a reference.
      }
   }
 
   /** See the non-const version.
    * @newin{3,8}
    */
-  template <typename T_Widget, typename... Args> inline
-  void get_widget_derived(const Glib::ustring& name, const T_Widget*& widget, Args&&... args) const
+  template <class T_Widget> inline
+  void get_widget_derived(const Glib::ustring& name, const T_Widget*& widget) const
   {
-    const_cast<Builder*>(this)->get_widget_derived(name, widget, std::forward<Args>(args)...);
+    const_cast<Builder*>(this)->get_widget_derived(name, widget);
   }
 
 #m4 _CONVERSION(`GSList*',`std::vector<Glib::RefPtr<Glib::Object> >',`Glib::SListHandler<Glib::RefPtr<Glib::Object> >::slist_to_vector($3, Glib::OWNERSHIP_SHALLOW)')
@@ -576,10 +516,6 @@ public:
   _WRAP_METHOD(void set_translation_domain(const Glib::ustring& domain), gtk_builder_set_translation_domain)
   _WRAP_METHOD(Glib::ustring get_translation_domain() const, gtk_builder_get_translation_domain)
 
-  _WRAP_METHOD(void set_application(const Glib::RefPtr<Application>& application), gtk_builder_set_application)
-  _WRAP_METHOD(Glib::RefPtr<Application> get_application(), gtk_builder_get_application, refreturn)
-  _WRAP_METHOD(Glib::RefPtr<const Application> get_application() const, gtk_builder_get_application, refreturn, constversion)
-
   //We ignore gtk_builder_get_type_from_name() because it only seems useful when implementing GtkBuildable for widgets.
   _IGNORE(gtk_builder_get_type_from_name)
 
@@ -589,10 +525,6 @@ protected:
   Gtk::Widget* get_widget_checked(const Glib::ustring& name, GType type);
   GtkWidget* get_cwidget(const Glib::ustring& name);
 
-private:
-  void set_no_gtkmm_derived_types(bool status);
-  friend class Buildable_Class;
-
 #m4begin
 dnl Custom-coded vfunc:
 dnl
@@ -600,6 +532,9 @@ dnl
   klass->get_type_from_name = &get_type_from_name_vfunc_callback;
   _POP()
 #m4end
+
+  // TODO: Make sure this is actually invoked even with disabled vfuncs so
+  // that GtkBuilder creates gtkmm's GObjects.
 };
 
 } // namespace Gtk

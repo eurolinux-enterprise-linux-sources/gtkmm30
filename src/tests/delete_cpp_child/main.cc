@@ -4,12 +4,12 @@
 #include <gtkmm/window.h>
 #include <gtkmm/main.h>
 
-class AppWindow
+class AppWindow 
     : public Gtk::Window
 {
-public:
+public: 
     AppWindow();
-
+    
 private:
     void on_button_clicked();
 
@@ -17,7 +17,7 @@ private:
 };
 
 AppWindow::AppWindow()
-    : m_label (nullptr)
+    : m_label (0)
 {
     Gtk::Box* vbox = Gtk::manage(new Gtk::Box (Gtk::ORIENTATION_VERTICAL, 5));
     add(*vbox);
@@ -26,7 +26,7 @@ AppWindow::AppWindow()
 
     vbox->pack_start(*button, Gtk::PACK_SHRINK);
 
-
+  
     //m_label = manage (new Gtk::Label ("test"));
     m_label = new Gtk::Label("test");
     g_warning("m_label -> ref_count: %d\n", G_OBJECT(m_label->gobj())->ref_count);
@@ -44,7 +44,7 @@ void AppWindow::on_button_clicked()
   {
     g_warning("AppWindow::on_button_clicked(): label refcount=%d", G_OBJECT(m_label->gobj())->ref_count);
     delete m_label;
-    m_label = nullptr;
+    m_label = 0;
   }
 }
 

@@ -98,20 +98,9 @@ public:
 
   typedef TreeNodeChildren Children;
   typedef Children::iterator iterator;
-  typedef Children::const_iterator const_iterator;
-
-  // Reverse iterator: https://bugzilla.gnome.org/show_bug.cgi?id=554889
-_DEPRECATE_IFDEF_START
-  /** @deprecated This reverse_iterator has never worked,
-   * use the normal (forward) iterator instead.
-   */
   typedef Children::reverse_iterator reverse_iterator;
-
-  /** @deprecated This reverse_iterator has never worked,
-   * use the normal (forward) iterator instead.
-   */
+  typedef Children::const_iterator const_iterator;
   typedef Children::const_reverse_iterator const_reverse_iterator;
-_DEPRECATE_IFDEF_END
 
   typedef TreeRow Row;
   typedef TreePath Path;
@@ -119,7 +108,7 @@ _DEPRECATE_IFDEF_END
 
 
   //These are part of GtkTreeModelFilter or GtkTreeModelSort, not GtkTreeModel:
-  _IGNORE(gtk_tree_model_filter_new, gtk_tree_model_sort_new_with_model)
+  _IGNORE(gtk_tree_model_filter_new, gtk_tree_model_sort_new_with_model, gtk_tree_model_filter_sort_new_with_model)
 
   /** Returns a valid iterator pointing to @a path.
    *
@@ -147,61 +136,43 @@ _DEPRECATE_IFDEF_END
 
   _IGNORE(gtk_tree_model_foreach)
 
-  /** The type of callback slot used by foreach_iter().
+  /** For example,
+   * void on_foreach(const Gtk::TreeModel::iterator& iter);
    *
-   * If the callback function returns true, then the tree ceases to be walked,
-   * and foreach_iter() returns.
-   *
-   * For example: bool on_foreach_iter(const Gtk::TreeModel::iterator& iter);
+   * If the callback function returns true, then the tree ceases to be walked, and foreach() returns.
    */
   typedef sigc::slot<bool, const TreeModel::iterator&> SlotForeachIter;
 
-  /** Calls a callback of type @link Gtk::TreeModel::SlotForeachIter
-   * SlotForeachIter @endlink on each node in the model in a depth-first
-   * fashion.
-   *
-   * If the callback function returns true, then the tree ceases to be walked,
-   * and foreach_iter() returns.
+  /** Calls a callback slot on each node in the model in a depth-first fashion.
+   * If the callback function returns true, then the tree ceases to be walked, and foreach() returns.
    *
    * @param slot The function to call for each selected node.
    */
   void foreach_iter(const SlotForeachIter& slot);
 
-  /** The type of callback slot used by foreach_path().
+  /** For example,
+   * void on_foreach(const Gtk::TreeModel::Path& path);
    *
-   * For example: bool on_foreach_path(const Gtk::TreeModel::Path& path);
-   *
-   * If the callback function returns true, then the tree ceases to be walked,
-   * and foreach_path() returns.
+   * If the callback function returns true, then the tree ceases to be walked, and foreach() returns.
    */
   typedef sigc::slot<bool, const TreeModel::Path&> SlotForeachPath;
 
-  /** Calls a callback of type @link Gtk::TreeModel::SlotForeachPath
-   * SlotForeachPath @endlink on each node in the model in a depth-first
-   * fashion.
-   *
-   * If the callback function returns true, then the tree ceases to be walked,
-   * and foreach_path() returns.
+  /** Calls a callback slot on each node in the model in a depth-first fashion.
+   * If the callback function returns true, then the tree ceases to be walked, and foreach() returns.
    *
    * @param slot The function to call for each selected node.
    */
   void foreach_path(const SlotForeachPath& slot);
 
-  /** The type of callback slot used by foreach().
+  /** For example,
+   * void on_foreach(const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& iter);
    *
-   * For example: bool on_foreach(const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& iter);
-   *
-   * If the callback function returns true, then the tree ceases to be walked,
-   * and foreach() returns.
+   * If the callback function returns true, then the tree ceases to be walked, and foreach() returns.
    */
   typedef sigc::slot<bool, const TreeModel::Path&, const TreeModel::iterator&> SlotForeachPathAndIter;
 
-  /** Calls a callback of type @link Gtk::TreeModel::SlotForeachPathAndIter
-   * SlotForeachPathAndIter @endlink on each node in the model in a depth-first
-   * fashion.
-   *
-   * If the callback function returns true, then the tree ceases to be walked,
-   * and foreach() returns.
+  /** Calls a callback slot on each node in the model in a depth-first fashion.
+   * If the callback function returns true, then the tree ceases to be walked, and foreach() returns.
    *
    * @param slot The function to call for each selected node.
    */
@@ -228,7 +199,6 @@ _DEPRECATE_IFDEF_END
   * to its old position before the re-ordering, i.e. @a new_order<literal>[newpos] = oldpos.
   */
   void rows_reordered(const Path& path, const iterator& iter, const std::vector<int>& new_order);
-  _IGNORE(gtk_tree_model_rows_reordered_with_length)
 
  /** Emits the "rows_reordered" signal on the tree model.  This should be called by
   * custom models when their rows have been reordered. This method overload is for nodes whose

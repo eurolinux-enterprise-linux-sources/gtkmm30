@@ -1,3 +1,6 @@
+// -*- c++ -*-
+/* $Id$ */
+
 /* Copyright 2002      The gtkmm Development Team
  *
  * This library is free software; you can redistribute it and/or
@@ -84,7 +87,7 @@ void add_rectangle_to_path(const ::Cairo::RefPtr< ::Cairo::Context >& context, c
 
 void add_region_to_path(const ::Cairo::RefPtr< ::Cairo::Context >& context, const ::Cairo::RefPtr< ::Cairo::Region>& region)
 {
-  gdk_cairo_region(context->cobj(), (region ? region->cobj() : nullptr));
+  gdk_cairo_region(context->cobj(), (region ? region->cobj() : 0));
 }
 
 } //namespace Cairo

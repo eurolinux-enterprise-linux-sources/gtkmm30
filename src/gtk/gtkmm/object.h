@@ -63,18 +63,7 @@ class GTKMM_API Object : public Glib::Object
   typedef GObjectClass BaseClassType;
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
-#ifdef GTKMM_DISABLE_DEPRECATED
-  /** This prevents use of Gtk::Object-derived classes with RefPtr.
-   * RefPtr should only be used with classes that have create() methods
-   * that return RefPtr.
-   */
-  typedef int dont_allow_use_in_glib_refptr_;
-#endif
-
-  Object(Object&& src) noexcept;
-  Object& operator=(Object&& src) noexcept;
-
-  ~Object() noexcept override;
+  virtual ~Object();
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
@@ -110,7 +99,7 @@ public:
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
   /** Used by Gtk::manage(). You should not need to use this directly.
    */
-  void set_manage() override;
+  virtual void set_manage();
   #endif //DOXYGEN_SHOULD_SKIP_THIS
 
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -129,7 +118,7 @@ protected:
 
   #ifndef DOXYGEN_SHOULD_SKIP_THIS
   void _init_unmanage(bool is_toplevel = false);
-  void destroy_notify_() override;
+  virtual void destroy_notify_(); //override.
   void disconnect_cpp_wrapper();
   void _release_c_instance();
   static void callback_weak_notify_(void* data, GObject* gobject); //only connected for a short time.

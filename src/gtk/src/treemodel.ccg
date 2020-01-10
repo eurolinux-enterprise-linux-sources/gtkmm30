@@ -28,7 +28,7 @@ namespace
 static gboolean proxy_foreach_iter_callback(GtkTreeModel* model, GtkTreePath*, GtkTreeIter* iter, void* data)
 {
   typedef Gtk::TreeModel::SlotForeachIter SlotType;
-  auto& slot = *static_cast<SlotType*>(data);
+  SlotType& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -45,7 +45,7 @@ static gboolean proxy_foreach_iter_callback(GtkTreeModel* model, GtkTreePath*, G
 static gboolean proxy_foreach_path_callback(GtkTreeModel*, GtkTreePath* path, GtkTreeIter*, void* data)
 {
   typedef Gtk::TreeModel::SlotForeachPath SlotType;
-  auto& slot = *static_cast<SlotType*>(data);
+  SlotType& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -63,7 +63,7 @@ static gboolean proxy_foreach_path_and_iter_callback(GtkTreeModel* model, GtkTre
                                               GtkTreeIter* iter, void* data)
 {
   typedef Gtk::TreeModel::SlotForeachPathAndIter SlotType;
-  auto& slot = *static_cast<SlotType*>(data);
+  SlotType& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -146,7 +146,7 @@ void TreeModel::foreach(const SlotForeachPathAndIter& slot)
 // that can not be generated automatically:
 gboolean TreeModel_Class::iter_next_vfunc_callback(GtkTreeModel* self, GtkTreeIter* iter)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -159,7 +159,7 @@ gboolean TreeModel_Class::iter_next_vfunc_callback(GtkTreeModel* self, GtkTreeIt
     try // Trap C++ exceptions which would normally be lost because this is a C callback.
     {
       // Call the virtual member method, which derived classes might override.
-      auto iter_input = TreeModel::iterator(self, iter);
+      TreeModel::iterator iter_input = TreeModel::iterator(self, iter);
       TreeModel::iterator iter_next( self, iter ); //Copies iter by value.
       gboolean test = obj->iter_next_vfunc(iter_input, iter_next);
 
@@ -176,7 +176,7 @@ gboolean TreeModel_Class::iter_next_vfunc_callback(GtkTreeModel* self, GtkTreeIt
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
       g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
         g_type_interface_peek(G_OBJECT_GET_CLASS(self), CppObjectType::get_type()) // Get the interface.
       )
@@ -196,7 +196,7 @@ bool TreeModel::iter_next_vfunc(const iterator& iter, iterator& iter_next) const
 {
   //Call the default C implementation:
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
     g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
       g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
     )
@@ -204,7 +204,7 @@ bool TreeModel::iter_next_vfunc(const iterator& iter, iterator& iter_next) const
 
   if(base && base->iter_next)
   {
-    auto iter_copy = iter;
+    TreeModel::iterator iter_copy = iter;
     gboolean test = (*base->iter_next)(const_cast<GtkTreeModel*>(gobj()), iter_copy.gobj());
     if(test)
       iter_next = iter_copy;
@@ -217,7 +217,7 @@ bool TreeModel::iter_next_vfunc(const iterator& iter, iterator& iter_next) const
 
 gboolean TreeModel_Class::get_iter_vfunc_callback(GtkTreeModel* self, GtkTreeIter* iter, GtkTreePath* path)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -246,7 +246,7 @@ gboolean TreeModel_Class::get_iter_vfunc_callback(GtkTreeModel* self, GtkTreeIte
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
 g_type_interface_peek(G_OBJECT_GET_CLASS(self), CppObjectType::get_type()) // Get the interface.
 )    );
@@ -264,7 +264,7 @@ bool TreeModel::get_iter_vfunc(const Path& path, iterator& iter) const
 {
   //Call the default C implementation:
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
     g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
       g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
     )
@@ -280,7 +280,7 @@ bool TreeModel::get_iter_vfunc(const Path& path, iterator& iter) const
 
 gboolean TreeModel_Class::iter_children_vfunc_callback(GtkTreeModel* self, GtkTreeIter* iter, GtkTreeIter* parent)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -323,7 +323,7 @@ gboolean TreeModel_Class::iter_children_vfunc_callback(GtkTreeModel* self, GtkTr
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
 g_type_interface_peek(G_OBJECT_GET_CLASS(self), CppObjectType::get_type()) // Get the interface.
 )    );
@@ -341,7 +341,7 @@ bool TreeModel::iter_children_vfunc(const iterator& parent, iterator& iter) cons
 {
   //Call the default C implementation:
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
     g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
       g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
     )
@@ -357,7 +357,7 @@ bool TreeModel::iter_children_vfunc(const iterator& parent, iterator& iter) cons
 
 gboolean TreeModel_Class::iter_parent_vfunc_callback(GtkTreeModel* self, GtkTreeIter* iter, GtkTreeIter* child)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -387,7 +387,7 @@ gboolean TreeModel_Class::iter_parent_vfunc_callback(GtkTreeModel* self, GtkTree
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
 g_type_interface_peek(G_OBJECT_GET_CLASS(self), CppObjectType::get_type()) // Get the interface.
 )    );
@@ -405,7 +405,7 @@ bool TreeModel::iter_parent_vfunc(const iterator& child, iterator& iter) const
 {
   //Call the default C implementation:
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
     g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
       g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
     )
@@ -421,7 +421,7 @@ bool TreeModel::iter_parent_vfunc(const iterator& child, iterator& iter) const
 
 gboolean TreeModel_Class::iter_nth_child_vfunc_callback(GtkTreeModel* self, GtkTreeIter* iter, GtkTreeIter* parent, int n)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -463,7 +463,7 @@ gboolean TreeModel_Class::iter_nth_child_vfunc_callback(GtkTreeModel* self, GtkT
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
 g_type_interface_peek(G_OBJECT_GET_CLASS(self), CppObjectType::get_type()) // Get the interface.
 )    );
@@ -481,7 +481,7 @@ bool TreeModel::iter_nth_child_vfunc(const iterator& parent, int n, iterator& it
 {
   //Call the default C implementation:
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
     g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
       g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
     )
@@ -501,7 +501,7 @@ bool TreeModel::iter_nth_root_child_vfunc(int n, iterator& iter) const
 {
   //Call the default C implementation:
 
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
     g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
       g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
     )
@@ -511,7 +511,7 @@ bool TreeModel::iter_nth_root_child_vfunc(int n, iterator& iter) const
   {
     //This means that iter_nth_child(0) might be called by iter_children_vfunc_callback(),
     //but hopefully that's exactly the same thing. TODO: Ask why both vfuncs exist. murrayc.
-    return (*base->iter_nth_child)( const_cast<GtkTreeModel*>(gobj()), iter.gobj(), nullptr /* the null parent */, n );
+    return (*base->iter_nth_child)( const_cast<GtkTreeModel*>(gobj()), iter.gobj(), 0 /* the null parent */, n );
   }
 
   return bool();
@@ -519,7 +519,7 @@ bool TreeModel::iter_nth_root_child_vfunc(int n, iterator& iter) const
 
 gboolean TreeModel_Class::iter_n_children_vfunc_callback(GtkTreeModel* self, GtkTreeIter* iter)
 {
-  const auto obj = dynamic_cast<CppObjectType*>(
+  CppObjectType *const obj = dynamic_cast<CppObjectType*>(
       Glib::ObjectBase::_get_current_wrapper((GObject*)self));
 
   // Non-gtkmmproc-generated custom classes implicitly call the default
@@ -546,7 +546,7 @@ gboolean TreeModel_Class::iter_n_children_vfunc_callback(GtkTreeModel* self, Gtk
   }
   else
   {
-    const auto base = static_cast<BaseClassType*>(
+    BaseClassType *const base = static_cast<BaseClassType*>(
         g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
 g_type_interface_peek(G_OBJECT_GET_CLASS(self), CppObjectType::get_type()) // Get the interface.
 )    );
@@ -562,7 +562,7 @@ g_type_interface_peek(G_OBJECT_GET_CLASS(self), CppObjectType::get_type()) // Ge
 
 int TreeModel::iter_n_children_vfunc(const iterator& iter) const
 {
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
       g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
 g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
 )  );
@@ -576,13 +576,13 @@ g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) /
 
 int TreeModel::iter_n_root_children_vfunc() const
 {
-  const auto base = static_cast<BaseClassType*>(
+  BaseClassType *const base = static_cast<BaseClassType*>(
       g_type_interface_peek_parent( // Get the parent interface of the interface (The original underlying C interface).
 g_type_interface_peek(G_OBJECT_GET_CLASS(gobject_), CppObjectType::get_type()) // Get the interface.
 )  );
 
   if(base && base->iter_n_children)
-    return (*base->iter_n_children)(const_cast<GtkTreeModel*>(gobj()), nullptr /* null iter to mean root node, as described in C docs */);
+    return (*base->iter_n_children)(const_cast<GtkTreeModel*>(gobj()), 0 /* null iter to mean root node, as described in C docs */);
 
   typedef int RType;
   return RType();
@@ -604,7 +604,7 @@ void TreeModel::rows_reordered(const Path& path, const std::vector<int>& new_ord
   //The size of the array seems to be based on the known number of children. murrayc.
   gtk_tree_model_rows_reordered(gobj(),
                                 const_cast<GtkTreePath*>((path).gobj()),
-                                nullptr,
+                                0,
                                 const_cast<int*>(Glib::ArrayHandler<int>::vector_to_array(new_order).data ()));
 }
 

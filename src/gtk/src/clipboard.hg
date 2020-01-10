@@ -159,14 +159,14 @@ public:
   typedef sigc::slot<void, const Glib::ustring&, const std::string&> SlotRichTextReceived;
 
   /** Requests the contents of the clipboard as rich text. When the rich text is later received,
-   * @a slot will be called.
+   * callback will be called.
    *
-   * The text parameter to the slot will contain the resulting rich text if the request succeeded, or
+   * The text parameter to the callback will contain the resulting rich text if the request succeeded, or
    * an empty string if it failed. This function can fail for various reasons, in particular if the
    * clipboard was empty or if the contents of the clipboard could not be converted into rich text form.
    *
-   * @param buffer A Gtk::TextBuffer.
-   * @param slot A function to call when the text is received,
+   *
+   * @param slot:  a function to call when the text is received,
    *             or the retrieval fails. (It will always be called
    *             one way or the other.)
    */
@@ -270,17 +270,6 @@ public:
   _IGNORE(gtk_clipboard_wait_for_targets)
 
 #m4 _CONVERSION(`gchar**',`std::vector<Glib::ustring>',`Glib::ArrayHandler<Glib::ustring>::array_to_vector($3, Glib::OWNERSHIP_DEEP)')
-  /** Requests the contents of the clipboard as URIs. This function waits
-   * for the data to be received using the main loop, so events,
-   * timeouts, etc, may be dispatched during the wait.
-   *
-   * @newin{2,14}
-   *
-   * @return A vector of strings, which is empty if retrieving the
-   * selection data failed. (This could happen for various reasons,
-   * in particular if the clipboard was empty or if the contents of
-   * the clipboard could not be converted into URI form.).
-   */
   _WRAP_METHOD(std::vector<Glib::ustring> wait_for_uris() const, gtk_clipboard_wait_for_uris)
 
   /** Hints that the clipboard data should be stored somewhere when the application exits or when store()
@@ -300,13 +289,13 @@ public:
    * dependent, see Gdk::Display::store_clipboard() for more information.
    */
   void set_can_store();
-  _IGNORE(gtk_clipboard_set_can_store)
+  _IGNORE(void gtk_clipboard_set_can_store)
 
   _WRAP_METHOD(void store(), gtk_clipboard_store)
-  _WRAP_METHOD(GdkAtom get_selection() const, gtk_clipboard_get_selection)
 
   _WRAP_SIGNAL(void owner_change(GdkEventOwnerChange* event), "owner_change", no_default_handler)
 
 };
 
 } //namespace Gtk
+

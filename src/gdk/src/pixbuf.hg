@@ -32,10 +32,6 @@ _CONFIGINCLUDE(gdkmmconfig.h)
 _DEFS(gdkmm,gdk)
 _PINCLUDE(glibmm/private/object_p.h)
 
-#m4 _PUSH(SECTION_CC_PRE_INCLUDES)
-// So we can use deprecated functions in our deprecated methods.
-#undef GDK_PIXBUF_DISABLE_DEPRECATED
-#m4 _POP()
 
 namespace Gdk
 {
@@ -94,26 +90,14 @@ protected:
    *
    * @newin{2,12}
    */
-  Pixbuf(const Glib::RefPtr<Window>& src,
+   Pixbuf(const Glib::RefPtr<Window>& src,
          int src_x, int src_y, int width, int height);
-  _IGNORE(gdk_pixbuf_get_from_window)
+   _IGNORE(gdk_pixbuf_get_from_window)
 
-  /** Transfers image data from a Cairo::Surface and converts it to an RGB(A)
-   * representation inside a Gdk::Pixbuf. This allows you to efficiently read
-   * individual pixels from cairo surfaces. For Gdk::Windows, use the
-   * constructor that takes a Gdk::Window instead.
-   *
-   * This will create an RGB pixbuf with 8 bits per channel. The pixbuf will contain an alpha channel if the surface contains one.
-   *
-   * @param src Surface to copy from.
-   * @param src_x Source X coordinate within the surface.
-   * @param src_y Source Y coordinate within the surface.
-   * @param width Width in pixels of region to get.
-   * @param height Height in pixels of region to get.
-   *
-   * @newin{2,30}
-   */
-  Pixbuf(const ::Cairo::RefPtr< ::Cairo::Surface>& src,
+   //TODO: Documentation:
+   /** @newin{2,30}
+    */
+   Pixbuf(const Cairo::RefPtr<Cairo::Surface>& src,
          int src_x, int src_y, int width, int height);
    _IGNORE(gdk_pixbuf_get_from_surface)
 
@@ -155,23 +139,11 @@ public:
   _WRAP_CREATE(const Glib::RefPtr<Window>& src,
                int src_x, int src_y, int width, int height)
 
-
-  /** Transfers image data from a Cairo::Surface and converts it to an RGB(A)
-   * representation inside a Gdk::Pixbuf. This allows you to efficiently read
-   * individual pixels from cairo surfaces. For Gdk::Windows, use the
-   * create() method that takes a Gdk::Window instead.
-   *
-   * This will create an RGB pixbuf with 8 bits per channel. The pixbuf will contain an alpha channel if the surface contains one.
-   *
-   * @param src Surface to copy from.
-   * @param src_x Source X coordinate within the surface.
-   * @param src_y Source Y coordinate within the surface.
-   * @param width Width in pixels of region to get.
-   * @param height Height in pixels of region to get.
-   *
-   * @newin{2,30}
-   */
-  _WRAP_CREATE(const ::Cairo::RefPtr< ::Cairo::Surface>& src,
+   //TODO: Documentation
+   /**
+    * @newin{2,30}
+    */
+  _WRAP_CREATE(const Cairo::RefPtr<Cairo::Surface>& src,
                int src_x, int src_y, int width, int height)
 
   _WRAP_METHOD(Glib::RefPtr<Pixbuf> copy() const, gdk_pixbuf_copy)
@@ -199,44 +171,13 @@ public:
    * @param filename The path to the pixbuf file.
    * @param width The desired width
    * @param height The desired height
-   * @param preserve_aspect_ratio Whether the image's aspect ratio will be preserved when scaling.
+   * @param preserve_aspect_ratio: Whether the image's aspect ratio will be preserved when scaling.
    *
    * @throw Glib::FileError
    * @throw Gdk::PixbufError
    */
   _WRAP_METHOD(static Glib::RefPtr<Pixbuf> create_from_file(const std::string& filename, int width, int height, bool preserve_aspect_ratio = true), gdk_pixbuf_new_from_file_at_scale, errthrow)
-  _IGNORE(gdk_pixbuf_new_from_file_at_size) //gdk_pixbuf_new_from_file_at_size() just calls gdk_pixbuf_new_from_file_at_scale().
-
-
-  /** Creates a new pixbuf by loading an image from a resource. The file format is detected automatically.
-   * @param resource_path The path of the resource file.
-   *
-   * @throw Gio::ResourceError
-   * @throw Gdk::PixbufError
-   *
-   * @newin{3,12}
-   */
-  _WRAP_METHOD(static Glib::RefPtr<Pixbuf> create_from_resource(const std::string& resource_path), gdk_pixbuf_new_from_resource, errthrow)
-
-  /** Creates a new pixbuf by loading an image from a resource. The file format is detected automatically.
-   * The image will be scaled to fit in the requested size, optionally
-   * preserving the image's aspect ratio. When preserving the aspect ratio,
-   * a @a width of -1 will cause the image to be scaled to the exact given
-   * height, and a @a height of -1 will cause the image to be scaled to the
-   * exact given width. When not preserving aspect ratio, a @a width or
-   * @a height of -1 means to not scale the image at all in that dimension.
-   * @param resource_path The path of the resource file.
-   * @param width The desired width
-   * @param height The desired height
-   * @param preserve_aspect_ratio Whether the image's aspect ratio will be preserved when scaling.
-   *
-   * @throw Gio::ResourceError
-   * @throw Gdk::PixbufError
-   *
-   * @newin{3,12}
-   */
-  _WRAP_METHOD(static Glib::RefPtr<Pixbuf> create_from_resource(const std::string& resource_path, int width, int height, bool preserve_aspect_ratio = true), gdk_pixbuf_new_from_resource_at_scale, errthrow)
-
+  _IGNORE(gdk_pixbuf_new_from_file_at_scale, gdk_pixbuf_new_from_file_at_size) //gdk_pixbuf_new_from_file_at_size() just calls gdk_pixbuf_new_from_file_at_scale().
 
   /** Creates a new Gdk::Pixbuf out of in-memory image data.
    * Currently only RGB images with 8 bits per sample are supported.
@@ -301,13 +242,11 @@ public:
    * @param data_length Length in bytes of the @a data argument.
    * @param data Byte data containing a serialized GdkPixdata structure.
    * @param copy_pixels Whether to copy the pixel data, or use direct pointers
-   *        to @a data for the resulting pixbuf.
+   * to @a data for the resulting pixbuf.
    * @throw Gdk::PixbufError
-   *
-   * @deprecated Use Gio::Resource instead.
    */
   _WRAP_METHOD(static Glib::RefPtr<Pixbuf> create_from_inline(int data_length, const guint8* data,
-               bool copy_pixels = false), gdk_pixbuf_new_from_inline, errthrow, deprecated "Use Gio::Resource instead.")
+                                                 bool copy_pixels = false), gdk_pixbuf_new_from_inline, errthrow)
 
   _WRAP_METHOD(static Glib::RefPtr<Pixbuf> create_from_stream(const Glib::RefPtr<Gio::InputStream>& stream, const Glib::RefPtr<Gio::Cancellable>& cancellable), gdk_pixbuf_new_from_stream, errthrow)
   static Glib::RefPtr<Pixbuf> create_from_stream(const Glib::RefPtr<Gio::InputStream>& stream);
@@ -322,12 +261,9 @@ public:
   _WRAP_METHOD(bool get_has_alpha() const, gdk_pixbuf_get_has_alpha)
   _WRAP_METHOD(int get_bits_per_sample() const, gdk_pixbuf_get_bits_per_sample)
   _WRAP_METHOD(guint8* get_pixels() const, gdk_pixbuf_get_pixels)
-  //TODO: _WRAP_METHOD(guint8* get_pixels(guint& length) const, gdk_pixbuf_get_pixels_with_length)
   _WRAP_METHOD(int get_width() const, gdk_pixbuf_get_width)
   _WRAP_METHOD(int get_height() const, gdk_pixbuf_get_height)
   _WRAP_METHOD(int get_rowstride() const, gdk_pixbuf_get_rowstride)
-  _WRAP_METHOD(gsize get_byte_length() const, gdk_pixbuf_get_byte_length)
-
 
   _WRAP_METHOD(void fill(guint32 pixel), gdk_pixbuf_fill)
 
@@ -554,10 +490,12 @@ gboolean gdk_pixbuf_save_to_callbackv   (GdkPixbuf  *pixbuf,
   _WRAP_METHOD(Glib::RefPtr<Gdk::Pixbuf> rotate_simple(PixbufRotation angle) const, gdk_pixbuf_rotate_simple)
   _WRAP_METHOD(Glib::RefPtr<Gdk::Pixbuf> flip(bool horizontal = true) const, gdk_pixbuf_flip)
 
+  //Use Gdk::Drawable::draw_pixbuf() instead of gdk_pixbuf_render_to_drawable(), gdk_pixbuf_render_to_drawable_alpha().
+  _IGNORE(gdk_pixbuf_render_to_drawable, gdk_pixbuf_render_to_drawable_alpha,)
+
   _WRAP_METHOD(Glib::ustring get_option(const Glib::ustring& key) const, gdk_pixbuf_get_option)
-  _WRAP_METHOD(bool set_option(const Glib::ustring& key, const Glib::ustring& value), gdk_pixbuf_set_option)
-  _WRAP_METHOD(bool remove_option(const Glib::ustring& key), gdk_pixbuf_remove_option)
-  _WRAP_METHOD(bool copy_options(const Glib::RefPtr<Pixbuf>& dest_pixbuf) const, gdk_pixbuf_copy_options)
+
+  _IGNORE(gdk_pixbuf_set_option) //gdk_pixbuf_set_option() is only available when GDK_PIXBUF_ENABLE_BACKEND is defined.
 
   //This creates a new GdkPixbuf or returns the original with a reference.
   _WRAP_METHOD(Glib::RefPtr<Pixbuf> apply_embedded_orientation(), gdk_pixbuf_apply_embedded_orientation)

@@ -57,7 +57,7 @@ void RadioButton::set_group(Group& group)
 
 void RadioButton::reset_group()
 {
-  gtk_radio_button_set_group(gobj(), nullptr);
+  gtk_radio_button_set_group(gobj(), 0);
 }
 
 } //namespace Gtk

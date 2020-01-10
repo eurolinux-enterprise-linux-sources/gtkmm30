@@ -24,13 +24,6 @@
 
 _DEFS(gtkmm,gtk)
 
-#m4 _PUSH(SECTION_CC_PRE_INCLUDES)
-#undef GTK_DISABLE_DEPRECATED
-#define GDK_DISABLE_DEPRECATION_WARNINGS 1
-#m4 _POP()
-
-_IS_DEPRECATED // This whole file is deprecated.
-
 namespace Gtk
 {
 
@@ -42,9 +35,8 @@ class Widget;
 /** This manages a set of variants of a particular icon
  * An IconSet contains variants for different sizes and widget states.
  * Icons in an icon factory are named by a stock ID, which is a simple string identifying the icon. Each GtkStyle has a list of GtkIconFactory derived from the current theme; those icon factories are consulted first when searching for an icon. If the theme doesn't set a particular icon, GTK+ looks for the icon in a list of default icon factories, maintained by gtk_icon_factory_add_default() and gtk_icon_factory_remove_default(). Applications with icons should add a default icon factory with their icons, which will allow themes to override the icons for the application.
- * @deprecated Use Gtk::IconTheme instead.
  */
-class IconSet final
+class IconSet
 {
   //GtkIconSet is registered as a boxed type, but it has ref/unref functions instead of copy/free,
   //so we use it via RefPtr.
@@ -65,8 +57,6 @@ public:
   std::vector<IconSize> get_sizes() const;
 
   _WRAP_METHOD(static Glib::RefPtr<IconSet> lookup_default(const Gtk::StockID& stock_id), gtk_icon_factory_lookup_default, refreturn)
-
-  _IGNORE(gtk_icon_set_render_icon_surface)
 };
 
 } //namespace Gtk

@@ -19,7 +19,7 @@
 
 #include <gtkmm/textbuffer.h>
 #include <gdkmm/pixbuf.h>
-#include <glibmm/utility.h> //For make_unique_ptr_gfree<>.
+#include <glibmm/utility.h> //For ScopedPtr<>.
 #include <gtk/gtk.h>
 
 
@@ -74,7 +74,7 @@ std::string SelectionData::get_target() const
 
 std::vector<std::string> SelectionData::get_targets() const
 {
-  GdkAtom* targets = nullptr;
+  GdkAtom* targets = 0;
   int n_targets = 0;
 
   if(!gtk_selection_data_get_targets(const_cast<GtkSelectionData*>(gobj()), &targets, &n_targets))

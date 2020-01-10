@@ -18,7 +18,6 @@
 #include <gdk/gdk.h>
 #include <gdkmm/cursor.h>
 #include <gdkmm/display.h>
-#include <gdkmm/seat.h>
 #include <gdkmm/window.h>
 
 namespace Gdk
@@ -26,7 +25,7 @@ namespace Gdk
 
 std::vector<TimeCoord> Device::get_history(const Glib::RefPtr<Window>& window, guint32 start, guint32 stop) const
 {
-  GdkTimeCoord** coords = nullptr;
+  GdkTimeCoord** coords = 0;
   int events_count = 0;
 
   // we don't care about returned value - false means that either getting history is unsupported or no motion events happened.
@@ -37,31 +36,19 @@ std::vector<TimeCoord> Device::get_history(const Glib::RefPtr<Window>& window, g
 
 void Device::get_position(int& x, int& y) const
 {
-  gdk_device_get_position(const_cast<GdkDevice*>(gobj()), nullptr, &x, &y);
+  gdk_device_get_position(const_cast<GdkDevice*>(gobj()), 0, &x, &y);
 }
 
 void Device::get_position(Glib::RefPtr<Screen>& screen, int& x, int& y) const
 {
-  GdkScreen* cScreen = nullptr;
+  GdkScreen* cScreen = 0;
   gdk_device_get_position(const_cast<GdkDevice*>(gobj()), &cScreen, &x, &y);
-  screen = Glib::wrap(cScreen, true);
-}
-
-void Device::get_position(double& x, double& y) const
-{
-  gdk_device_get_position_double(const_cast<GdkDevice*>(gobj()), nullptr, &x, &y);
-}
-
-void Device::get_position(Glib::RefPtr<Screen>& screen, double& x, double& y) const
-{
-  GdkScreen* cScreen = nullptr;
-  gdk_device_get_position_double(const_cast<GdkDevice*>(gobj()), &cScreen, &x, &y);
   screen = Glib::wrap(cScreen, true);
 }
 
 Glib::RefPtr<Window> Device::get_window_at_position()
 {
-  auto retvalue = Glib::wrap(gdk_device_get_window_at_position(gobj(), nullptr, nullptr));
+  Glib::RefPtr<Window> retvalue = Glib::wrap(gdk_device_get_window_at_position(gobj(), 0, 0));
   if(retvalue)
     retvalue->reference(); //The function does not do a ref for us.
   return retvalue;
@@ -72,18 +59,14 @@ Glib::RefPtr<const Window> Device::get_window_at_position() const
   return const_cast<Device*>(this)->get_window_at_position();
 }
 
-_DEPRECATE_IFDEF_START
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 GrabStatus Device::grab(const Glib::RefPtr<Window>& window, GrabOwnership grab_ownership, bool owner_events, EventMask event_mask, guint32 time_)
 {
-  return static_cast<GrabStatus>(gdk_device_grab(gobj(), Glib::unwrap(window), static_cast<GdkGrabOwnership>(grab_ownership), static_cast<int>(owner_events), static_cast<GdkEventMask>(event_mask), nullptr, time_));
+  return static_cast<GrabStatus>(gdk_device_grab(gobj(), Glib::unwrap(window), static_cast<GdkGrabOwnership>(grab_ownership), static_cast<int>(owner_events), static_cast<GdkEventMask>(event_mask), 0, time_));
 }
-G_GNUC_END_IGNORE_DEPRECATIONS
-_DEPRECATE_IFDEF_END
 
 std::vector<std::string> Device::list_axes() const
 {
-  auto glist = gdk_device_list_axes(const_cast<GdkDevice*>(gobj()));
+  GList* glist = gdk_device_list_axes(const_cast<GdkDevice*>(gobj()));
   return Glib::ListHandler<std::string, AtomStringTraits>::list_to_vector(glist, Glib::OWNERSHIP_SHALLOW);
 }
 

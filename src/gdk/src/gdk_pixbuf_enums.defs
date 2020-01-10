@@ -41,8 +41,7 @@
 ;;         GDK_PIXBUF_ERROR_UNKNOWN_TYPE,
 ;;         /* unsupported operation (load, save) for image type */
 ;;         GDK_PIXBUF_ERROR_UNSUPPORTED_OPERATION,
-;;         GDK_PIXBUF_ERROR_FAILED,
-;;         GDK_PIXBUF_ERROR_INCOMPLETE_ANIMATION
+;;         GDK_PIXBUF_ERROR_FAILED
 ;; } GdkPixbufError;
 
 (define-enum-extended PixbufError
@@ -55,7 +54,6 @@
     '("unknown-type" "GDK_PIXBUF_ERROR_UNKNOWN_TYPE" "3")
     '("unsupported-operation" "GDK_PIXBUF_ERROR_UNSUPPORTED_OPERATION" "4")
     '("failed" "GDK_PIXBUF_ERROR_FAILED" "5")
-    '("incomplete-animation" "GDK_PIXBUF_ERROR_INCOMPLETE_ANIMATION" "6")
   )
 )
 

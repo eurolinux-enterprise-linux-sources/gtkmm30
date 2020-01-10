@@ -2,35 +2,21 @@
 # first two digits of version
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
-%global atkmm_version 2.24.2
-%global cairomm_version 1.12.0
-%global gdk_pixbuf2_version 2.35.5
-%global glibmm24_version 2.49.1
-%global gtk3_version 3.22.0
-%global pangomm_version 2.38.2
-
 Name:           gtkmm30
-Version:        3.22.2
+Version:        3.8.1
 Release:        1%{?dist}
 Summary:        C++ interface for the GTK+ library
 
+Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
-Source0:        http://download.gnome.org/sources/gtkmm/%{release_version}/gtkmm-%{version}.tar.xz
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/gtkmm/%{release_version}/gtkmm-%{version}.tar.xz
 
-BuildRequires:  atkmm-devel >= %{atkmm_version}
-BuildRequires:  cairomm-devel >= %{cairomm_version}
-BuildRequires:  gdk-pixbuf2-devel >= %{gdk_pixbuf2_version}
-BuildRequires:  glibmm24-devel >= %{glibmm24_version}
-BuildRequires:  gtk3-devel >= %{gtk3_version}
-BuildRequires:  pangomm-devel >= %{pangomm_version}
-
-Requires:       atkmm%{?_isa} >= %{atkmm_version}
-Requires:       cairomm%{?_isa} >= %{cairomm_version}
-Requires:       gdk-pixbuf2%{?_isa} >= %{gdk_pixbuf2_version}
-Requires:       glibmm24%{?_isa} >= %{glibmm24_version}
-Requires:       gtk3%{?_isa} >= %{gtk3_version}
-Requires:       pangomm%{?_isa} >= %{pangomm_version}
+BuildRequires:  atkmm-devel
+BuildRequires:  cairomm-devel
+BuildRequires:  glibmm24-devel
+BuildRequires:  gtk3-devel
+BuildRequires:  pangomm-devel
 
 %description
 gtkmm is the official C++ interface for the popular GUI library GTK+.
@@ -40,7 +26,8 @@ widgets that are easily extensible via inheritance.
 
 %package        devel
 Summary:        Development files for %{name}
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+Group:          Development/Libraries
+Requires:       %{name} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
@@ -49,6 +36,7 @@ developing applications that use %{name}.
 
 %package        doc
 Summary:        API documentation for %{name}
+Group:          Documentation
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 Requires:       glibmm24-doc
@@ -79,8 +67,12 @@ make %{?_smp_mflags}
 
 
 %install
-%make_install
+make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+
+
+%check
+make check %{?_smp_mflags}
 
 
 %post -p /sbin/ldconfig
@@ -89,8 +81,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %files
-%license COPYING
-%doc AUTHORS NEWS README
+%doc AUTHORS COPYING NEWS README
 %{_libdir}/*.so.*
 
 %files devel
@@ -108,24 +99,6 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
-* Fri Nov 03 2017 Kalev Lember <klember@redhat.com> - 3.22.2-1
-- Update to 3.22.2
-- Related: #1488581
-
-* Mon Oct  2 2017 Matthias Clasen <mclasen@redhat.com> - 3.22.0-2
-- Rebuild for Wayland support
-- Resolves: #1488581
-
-* Tue Sep 20 2016 Kalev Lember <klember@redhat.com> - 3.22.0-1
-- Update to 3.22.0
-- Resolves: #1386982
-
-* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 3.8.1-3
-- Mass rebuild 2014-01-24
-
-* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 3.8.1-2
-- Mass rebuild 2013-12-27
-
 * Thu May 02 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
 - Update to 3.8.1
 

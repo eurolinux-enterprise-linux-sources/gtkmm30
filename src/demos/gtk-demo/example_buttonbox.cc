@@ -3,14 +3,14 @@
  * The Button Box widgets are used to arrange buttons with padding.
  */
 
-#include <gtkmm.h>
-#include <gtk/gtk.h>
+#include "gtkmm.h"
+#include "gtk/gtk.h"
 
 class Example_ButtonBox : public Gtk::Window
 {
 public:
   Example_ButtonBox();
-  ~Example_ButtonBox() override;
+  virtual ~Example_ButtonBox();
 
 protected:
   Gtk::Frame* create_button_box(bool horizontal, const Glib::ustring& title,
@@ -71,7 +71,7 @@ Gtk::Frame* Example_ButtonBox::create_button_box(bool horizontal, const Glib::us
 {
   Gtk::Frame* pFrame = Gtk::manage(new Gtk::Frame(title));
 
-  Gtk::ButtonBox* pButtonBox = nullptr;
+  Gtk::ButtonBox* pButtonBox = 0;
   if (horizontal)
     pButtonBox = Gtk::manage(new Gtk::ButtonBox(Gtk::ORIENTATION_HORIZONTAL));
   else
@@ -83,16 +83,13 @@ Gtk::Frame* Example_ButtonBox::create_button_box(bool horizontal, const Glib::us
   pButtonBox->set_layout(layout);
   pButtonBox->set_spacing(spacing);
 
-  Gtk::Button* pButton = Gtk::manage(new Gtk::Button("_OK", true));
+  Gtk::Button* pButton = Gtk::manage(new Gtk::Button(Gtk::Stock::OK));
   pButtonBox->add(*pButton);
 
-  pButton = Gtk::manage(new Gtk::Button("_Cancel", true));
+  pButton = Gtk::manage(new Gtk::Button(Gtk::Stock::CANCEL));
   pButtonBox->add(*pButton);
 
-  pButton = Gtk::manage(new Gtk::Button());
-  Gtk::Image* pImage = Gtk::manage(new Gtk::Image());
-  pImage->set_from_icon_name("help-browser", Gtk::ICON_SIZE_BUTTON);
-  pButton->add(*pImage);
+  pButton = Gtk::manage(new Gtk::Button(Gtk::Stock::HELP));
   pButtonBox->add(*pButton);
 
   return pFrame;

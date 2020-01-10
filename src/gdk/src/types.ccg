@@ -30,30 +30,6 @@ Point::Point(int x, int y)
   gobject_.y = y;
 }
 
-Point::Point(const Point& other) noexcept
-: gobject_(other.gobject_)
-{
-}
-
-Point& Point::operator=(const Point&& other) noexcept
-{
-  gobject_ = other.gobject_;
-
-  return *this;
-}
-
-Point::Point(Point&& other) noexcept
-: gobject_(std::move(other.gobject_))
-{
-}
-
-Point& Point::operator=(Point&& other) noexcept
-{
-  gobject_ = std::move(other.gobject_);
-
-  return *this;
-}
-
 bool Point::equal(const Gdk::Point& rhs) const
 {
   return (gobject_.x == rhs.gobject_.x) && (gobject_.y == rhs.gobject_.y);
@@ -68,8 +44,8 @@ GdkAtom AtomStringTraits::to_c_type(const std::string& atom_name)
 // static
 std::string AtomStringTraits::to_cpp_type(GdkAtom atom)
 {
-  if(const auto atom_name = gdk_atom_name(atom))
-    return std::string(Glib::make_unique_ptr_gfree(atom_name).get());
+  if(char *const atom_name = gdk_atom_name(atom))
+    return std::string(Glib::ScopedPtr<char>(atom_name).get());
   else
     return std::string();
 }
@@ -83,8 +59,8 @@ GdkAtom AtomUstringTraits::to_c_type(const Glib::ustring& atom_name)
 // static
 Glib::ustring AtomUstringTraits::to_cpp_type(GdkAtom atom)
 {
-  if(const auto atom_name = gdk_atom_name(atom))
-    return Glib::ustring(Glib::make_unique_ptr_gfree(atom_name).get());
+  if(char *const atom_name = gdk_atom_name(atom))
+    return Glib::ustring(Glib::ScopedPtr<char>(atom_name).get());
   else
     return Glib::ustring();
 }

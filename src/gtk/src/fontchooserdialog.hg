@@ -44,7 +44,6 @@ class FontChooserDialog
 {
   _CLASS_GTKOBJECT(FontChooserDialog, GtkFontChooserDialog, GTK_FONT_CHOOSER_DIALOG, Gtk::Dialog, GtkDialog)
   _IMPLEMENTS_INTERFACE(FontChooser)
-  _UNMANAGEABLE
 public:
   _CTOR_DEFAULT()
   explicit FontChooserDialog(const Glib::ustring& title);

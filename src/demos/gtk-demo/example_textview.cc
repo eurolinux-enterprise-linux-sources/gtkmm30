@@ -1,15 +1,17 @@
 /* Text Widget
  *
- * The Gtk::TextView widget displays a Gtk::TextBuffer. One Gtk::TextBuffer
- * can be displayed by multiple Gtk::TextViews. This demo has two views
+ * The GtkTextView widget displays a GtkTextBuffer. One GtkTextBuffer
+ * can be displayed by multiple GtkTextViews. This demo has two views
  * displaying a single buffer, and shows off the widget's text
  * formatting features.
  *
  */
 
+#include <cstdlib>
 #include <gtkmm.h>
 #include <gtk/gtk.h>
-#include <iostream> //For std::cout.
+
+#include "demo-common.h"
 
 using std::exit;
 
@@ -17,7 +19,7 @@ class Window_EasterEgg : public Gtk::Window
 {
 public:
   Window_EasterEgg();
-  ~Window_EasterEgg() override;
+  virtual ~Window_EasterEgg();
 
 protected:
   virtual void recursive_attach_view(int depth, Gtk::TextView& view, Glib::RefPtr<Gtk::TextChildAnchor> refAnchor);
@@ -31,7 +33,7 @@ class Example_TextView : public Gtk::Window
 {
 public:
   Example_TextView();
-  ~Example_TextView() override;
+  virtual ~Example_TextView();
 
 protected:
   virtual void create_tags(Glib::RefPtr<Gtk::TextBuffer>& refBuffer);
@@ -171,17 +173,17 @@ void Example_TextView::create_tags(Glib::RefPtr<Gtk::TextBuffer>& refBuffer)
 
 void Example_TextView::insert_text(Glib::RefPtr<Gtk::TextBuffer>& refBuffer)
 {
-  Glib::RefPtr<Gdk::Pixbuf> refPixbuf;
-  try
+  Glib::RefPtr<Gdk::Pixbuf> refPixbuf = Gdk::Pixbuf::create_from_file(demo_find_file("gtk-logo-rgb.gif"));
+
+  if(!refPixbuf)
   {
-    refPixbuf = Gdk::Pixbuf::create_from_resource("/textview/gtk-logo-rgb.gif");
-    Glib::RefPtr<Gdk::Pixbuf> refScaled = refPixbuf->scale_simple(32, 32, Gdk::INTERP_BILINEAR);
-    refPixbuf = refScaled;
+    //TODO: This is not real error handling.
+    g_printerr ("Failed to load image file gtk-logo-rgb.gif\n");
+    exit (1);
   }
-  catch (const Glib::Error& error)
-  {
-    std::cout << "Failed to load image gtk-logo-rgb.gif: " << error.what() << std::endl;
-  }
+
+  Glib::RefPtr<Gdk::Pixbuf> refScaled = refPixbuf->scale_simple(32, 32, Gdk::INTERP_BILINEAR);
+  refPixbuf = refScaled;
 
   /* get start of buffer; each insertion will revalidate the
    * iterator to point to just after the inserted text.
@@ -241,12 +243,9 @@ void Example_TextView::insert_text(Glib::RefPtr<Gtk::TextBuffer>& refBuffer)
   iter = refBuffer->insert_with_tag(iter, "Images. ", "heading");
 
   iter = refBuffer->insert(iter, "The buffer can have images in it: ");
-  if (refPixbuf)
-  {
-    iter = refBuffer->insert_pixbuf(iter, refPixbuf);
-    iter = refBuffer->insert_pixbuf(iter, refPixbuf);
-    iter = refBuffer->insert_pixbuf(iter, refPixbuf);
-  }
+  iter = refBuffer->insert_pixbuf(iter, refPixbuf);
+  iter = refBuffer->insert_pixbuf(iter, refPixbuf);
+  iter = refBuffer->insert_pixbuf(iter, refPixbuf);
   iter = refBuffer->insert(iter, " for example.\n\n");
 
   iter = refBuffer->insert_with_tag(iter, "Spacing. ", "heading");
@@ -381,7 +380,7 @@ void Example_TextView::attach_widgets(Gtk::TextView& text_view)
   while(find_anchor(iter)) //previously created with create_child_anchor().
   {
     Glib::RefPtr<Gtk::TextChildAnchor> refAnchor = iter.get_child_anchor();
-    Gtk::Widget* pWidget = nullptr;
+    Gtk::Widget* pWidget = 0;
     if (i == 0)
     {
       Gtk::Button* pButton = Gtk::manage( new Gtk::Button("Click Me") );
@@ -407,9 +406,7 @@ void Example_TextView::attach_widgets(Gtk::TextView& text_view)
     }
     else if (i == 3)
       {
-        Gtk::Image* pImage = Gtk::manage( new Gtk::Image() );
-        pImage->set_from_resource("/textview/floppybuddy.gif");
-        pWidget = pImage;
+        pWidget = Gtk::manage( new Gtk::Image(demo_find_file("floppybuddy.gif")) );
       }
     else if (i == 4)
     {
@@ -417,7 +414,7 @@ void Example_TextView::attach_widgets(Gtk::TextView& text_view)
     }
     else
     {
-      pWidget = nullptr;
+      pWidget = 0;
       g_assert_not_reached ();
     }
 
@@ -467,11 +464,17 @@ void Window_EasterEgg::recursive_attach_view(int depth, Gtk::TextView& view, Gli
 
   Gtk::TextView* pChildView = Gtk::manage( new Gtk::TextView(view.get_buffer()));
 
-  /* Frame is to add a black border around each child view */
-  Gtk::Frame* pFrame = Gtk::manage( new Gtk::Frame());
+  /* Event box is to add a black border around each child view */
+  Gtk::EventBox* pEventBox = Gtk::manage( new Gtk::EventBox());
+  Gdk::RGBA color("black");
+  pEventBox->override_background_color(color);
 
-  pFrame->add(*pChildView);
+  Gtk::Alignment* pAlign = Gtk::manage( new Gtk::Alignment(0.5, 0.5, 1.0, 1.0));
+  pAlign->set_border_width(1);
 
-  view.add_child_at_anchor(*pFrame, refAnchor);
+  pEventBox->add(*pAlign);
+  pAlign->add(*pChildView);
+
+  view.add_child_at_anchor(*pEventBox, refAnchor);
   recursive_attach_view (depth + 1, *pChildView, refAnchor);
 }

@@ -21,7 +21,7 @@ namespace Gdk
 
 bool PixbufAnimationIter::advance()
 {
-  return gdk_pixbuf_animation_iter_advance(gobj(), nullptr);
+  return gdk_pixbuf_animation_iter_advance(gobj(), NULL);
 }
 
 } //namespace Gdk

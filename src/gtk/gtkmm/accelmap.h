@@ -1,5 +1,8 @@
+// -*- c++ -*-
 #ifndef _GTKMM_ACCELMAP_H
 #define _GTKMM_ACCELMAP_H
+
+/* $Id$ */
 
 /* accelmap.h
  *
@@ -39,7 +42,7 @@ namespace AccelMap
  * To change the accelerator during runtime programatically, use
  * change_entry().
  * The accelerator path must consist of "<WINDOWTYPE>/Category1/Category2/.../Action",
- * where \<WINDOWTYPE\> should be a unique application-specific identifier, that
+ * where <WINDOWTYPE> should be a unique application-specific identifier, that
  * corresponds to the kind of window the accelerator is being used in, e.g. "Gimp-Image",
  * "Abiword-Document" or "Gnumeric-Settings".
  * The Category1/.../Action portion is most appropriately chosen by the action the
@@ -53,8 +56,8 @@ namespace AccelMap
  * @param accel_mods the accelerator modifiers
  *
  */
-void add_entry(const std::string& accel_path,
-               guint accel_key,
+void add_entry(const std::string& accel_path, 
+               guint accel_key, 
                Gdk::ModifierType accel_mods);
 
 /** Changes the accel_key and accel_mods currently associated with accel_path.
@@ -69,9 +72,9 @@ void add_entry(const std::string& accel_path,
  * @param accel_mods  the new accelerator modifiers
  * @param replace     true if other accelerators may be deleted upon conflicts
  * @result     true if the accelerator could be changed, false otherwise
- */
-bool change_entry(const std::string& accel_path,
-                  guint accel_key,
+ */               
+bool change_entry(const std::string& accel_path, 
+                  guint accel_key, 
                   Gdk::ModifierType accel_mods,
                   bool replace);
 
@@ -79,7 +82,7 @@ bool change_entry(const std::string& accel_path,
  * accelerator specifications, and propagates them accordingly.
  *
  * @param filename a file containing accelerator specifications
- */
+ */                  
 void load(const std::string& filename);
 
 /** Saves current accelerator specifications (accelerator path, key
@@ -99,7 +102,7 @@ void save(const std::string& filename);
  * about runtime accelerator changes.
  *
  * Note that locking of individual accelerator paths is independent from
- * locking the AccelGroup containing them. For runtime accelerator
+ * locking the #GtkAccelGroup containing them. For runtime accelerator
  * changes to be possible both the accelerator path and its AccelGroup
  * have to be unlocked.
  *

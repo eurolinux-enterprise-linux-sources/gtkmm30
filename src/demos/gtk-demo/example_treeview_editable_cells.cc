@@ -7,8 +7,9 @@
  */
 
 #include <cstdlib>
-#include <iostream>
 #include <gtkmm.h>
+
+using std::strtod;
 
 class CellItem_Product
 {
@@ -26,7 +27,7 @@ class Example_TreeView_EditableCells : public Gtk::Window
 {
 public:
   Example_TreeView_EditableCells();
-  ~Example_TreeView_EditableCells() override;
+  virtual ~Example_TreeView_EditableCells();
 
 protected:
   //signal handlers:
@@ -120,6 +121,7 @@ Example_TreeView_EditableCells::Example_TreeView_EditableCells()
 
   /* create tree view */
   m_TreeView.set_model(m_refListStore);
+  m_TreeView.set_rules_hint();
   Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = m_TreeView.get_selection();
   refTreeSelection->set_mode(Gtk::SELECTION_SINGLE);
 
@@ -203,16 +205,8 @@ void Example_TreeView_EditableCells::on_column_number_edited(const Glib::ustring
     if(iter)
     {
       //Convert the text to a number, using the same logic used by GtkCellRendererText when it stores numbers.
-      int new_value = 0;
-      try
-      {
-        new_value = std::stoi(new_text);
-      }
-      catch (const std::exception& err)
-      {
-        std::cout << "Could not convert \"" << new_text << "\" to an integer. ("
-          << err.what() << ")" << std::endl;
-      }
+      char* pchEnd = 0;
+      int new_value = (int) strtod(new_text.c_str(), &pchEnd);
 
       //Store the user's new text in the model:
       Gtk::TreeRow row = *iter;

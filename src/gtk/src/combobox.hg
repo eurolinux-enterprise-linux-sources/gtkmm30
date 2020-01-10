@@ -28,6 +28,7 @@
 _DEFS(gtkmm,gtk)
 _PINCLUDE(gtkmm/private/bin_p.h)
 
+
 namespace Gtk
 {
 
@@ -88,7 +89,9 @@ public:
    */
   explicit ComboBox(const Glib::RefPtr<CellArea>& cell_area, bool has_entry = false);
   _IGNORE(gtk_combo_box_new_with_area, gtk_combo_box_new_with_area_and_entry)
-  _IGNORE(gtk_combo_box_new)
+
+  _IGNORE(gtk_combo_box_new, gtk_combo_box_new_text) //See ComboBoxText for an equivalent of gtk_combo_box_new_text().
+
 
   _WRAP_METHOD(void set_wrap_width(int width), gtk_combo_box_set_wrap_width)
   _WRAP_METHOD(int get_wrap_width() const, gtk_combo_box_get_wrap_width)
@@ -99,16 +102,14 @@ public:
   _WRAP_METHOD(void set_column_span_column(int column_span), gtk_combo_box_set_column_span_column)
   _WRAP_METHOD(int get_column_span_column() const, gtk_combo_box_get_column_span_column)
 
-  _WRAP_METHOD(bool get_add_tearoffs() const, gtk_combo_box_get_add_tearoffs, deprecated "No replacement available.")
-  _WRAP_METHOD(void set_add_tearoffs(bool add_tearoffs = true), gtk_combo_box_set_add_tearoffs, deprecated "No replacement available.")
+  _WRAP_METHOD(bool get_add_tearoffs() const, gtk_combo_box_get_add_tearoffs)
+  _WRAP_METHOD(void set_add_tearoffs(bool add_tearoffs = true), gtk_combo_box_set_add_tearoffs)
 
-  _WRAP_METHOD(Glib::ustring get_title() const, gtk_combo_box_get_title, deprecated "No replacement available.")
-  _WRAP_METHOD(void set_title(const Glib::ustring& title), gtk_combo_box_set_title, deprecated "No replacement available.")
+  _WRAP_METHOD(Glib::ustring get_title() const, gtk_combo_box_get_title)
+  _WRAP_METHOD(void set_title(const Glib::ustring& title), gtk_combo_box_set_title)
 
-  _WRAP_METHOD(bool get_focus_on_click() const, gtk_combo_box_get_focus_on_click,
-    deprecated "Use Widget::get_focus_on_click() instead.")
-  _WRAP_METHOD(void set_focus_on_click(bool focus_on_click = true), gtk_combo_box_set_focus_on_click,
-    deprecated "Use Widget::set_focus_on_click() instead.")
+  _WRAP_METHOD(bool get_focus_on_click() const, gtk_combo_box_get_focus_on_click)
+  _WRAP_METHOD(void set_focus_on_click(bool focus_on_click = true), gtk_combo_box_set_focus_on_click)
 
 /* get/set active item */
   _WRAP_METHOD(int get_active_row_number() const, gtk_combo_box_get_active)
@@ -193,7 +194,7 @@ public:
   /** Changes the active row of the combo box to the one that has an ID equal to
    * @a active_id.
    *
-   * If property_id_column() is unset or if no row has the given ID then the function
+   * If property_id_column() is unset or if no row has the given ID then the function 
    * does nothing and returns false.
    *
    * @param active_id The ID of the row that should be set to active.
@@ -202,6 +203,8 @@ public:
    * @newin{3,6}
    */
   _WRAP_METHOD(bool set_active_id(const Glib::ustring& active_id), gtk_combo_box_set_active_id)
+
+  _IGNORE(gtk_combo_box_append_text, gtk_combo_box_insert_text, gtk_combo_box_prepend_text, gtk_combo_box_remove_text, gtk_combo_box_get_active_text) //deprecated
 
   /** @see Bin::get_child().
    * @newin{2,24}
@@ -219,31 +222,10 @@ public:
   _WRAP_PROPERTY("row_span_column", int)
   _WRAP_PROPERTY("column_span_column", int)
   _WRAP_PROPERTY("active", int)
-  _WRAP_PROPERTY("add-tearoffs", bool, deprecated "No replacement available.")
+  _WRAP_PROPERTY("add-tearoffs", bool)
   _WRAP_PROPERTY("has-frame", bool)
-
-  // GtkComboBox:focus-on-click has been removed from gtk+.
-  // TODO: At ABI-break, remove it from gtkmm.
-#ifndef GTKMM_DISABLE_DEPRECATED
-  /** Whether the combo box grabs focus when it is clicked with the mouse.
-   * @deprecated Use Widget::property_focus_on_click() instead.
-   *
-   * @return A PropertyProxy that allows you to get or set the value of the property,
-   * or receive notification when the value of the property changes.
-   */
-  Glib::PropertyProxy< bool > property_focus_on_click() ;
-
-  /** Whether the combo box grabs focus when it is clicked with the mouse.
-   * @deprecated Use Widget::property_focus_on_click() instead.
-   *
-   * @return A PropertyProxy_ReadOnly that allows you to get the value of the property,
-   * or receive notification when the value of the property changes.
-   */
-  Glib::PropertyProxy_ReadOnly< bool > property_focus_on_click() const;
-#endif // GTKMM_DISABLE_DEPRECATED
-  //_WRAP_PROPERTY("focus-on-click", bool, deprecated "Use Widget::property_focus_on_click() instead.")
-
-  _WRAP_PROPERTY("tearoff-title", Glib::ustring, deprecated "No replacement available.")
+  _WRAP_PROPERTY("focus-on-click", bool)
+  _WRAP_PROPERTY("tearoff-title", Glib::ustring)
   _WRAP_PROPERTY("popup-shown", bool)
   _WRAP_PROPERTY("button-sensitivity", SensitivityType)
   _WRAP_PROPERTY("popup-fixed-width", bool)
@@ -255,7 +237,7 @@ public:
 
   _WRAP_SIGNAL(void changed(), "changed")
 
-//TODO: Remove no_default_handler when we can break ABI
+//TODO: Remove no_defualt_handler when we can break ABI
 #m4 dnl// The ::format_value signal handler should return a newly allocated string.
 #m4 dnl// (which is obviously not a const gchar*)
 #m4 _CONVERSION(`Glib::ustring',`const gchar*',`(strlen($3.c_str()) ? g_strdup($3.c_str()) : 0)')

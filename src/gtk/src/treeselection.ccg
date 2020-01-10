@@ -24,7 +24,7 @@
 static void proxy_foreach_selection_iter_callback(GtkTreeModel* model, GtkTreePath*, GtkTreeIter* iter, void* data)
 {
   typedef Gtk::TreeSelection::SlotForeachIter SlotType;
-  auto& slot = *static_cast<SlotType*>(data);
+  SlotType& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -39,7 +39,7 @@ static void proxy_foreach_selection_iter_callback(GtkTreeModel* model, GtkTreePa
 static void proxy_foreach_selection_path_callback(GtkTreeModel*, GtkTreePath* path, GtkTreeIter*, void* data)
 {
   typedef Gtk::TreeSelection::SlotForeachPath SlotType;
-  auto& slot = *static_cast<SlotType*>(data);
+  SlotType& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -55,7 +55,7 @@ static void proxy_foreach_selection_path_and_iter_callback(GtkTreeModel* model, 
                                                     GtkTreeIter* iter, void* data)
 {
   typedef Gtk::TreeSelection::SlotForeachPathAndIter SlotType;
-  auto& slot = *static_cast<SlotType*>(data);
+  SlotType& slot = *static_cast<SlotType*>(data);
 
   try
   {
@@ -71,7 +71,7 @@ static void proxy_foreach_selection_path_and_iter_callback(GtkTreeModel* model, 
 static gboolean SignalProxy_Select_gtk_callback(GtkTreeSelection*, GtkTreeModel* model, GtkTreePath* path,
                                           gboolean path_currently_selected, void* data)
 {
-  const auto the_slot = static_cast<Gtk::TreeSelection::SlotSelect*>(data);
+  const Gtk::TreeSelection::SlotSelect* the_slot = static_cast<Gtk::TreeSelection::SlotSelect*>(data);
 
   try
   {
@@ -101,7 +101,7 @@ void TreeSelection::set_select_function(const SlotSelect& slot)
   // Create a copy of the slot.  A pointer to this will be passed
   // through the callback's data parameter.  It will be deleted
   // when SignalProxy_Select_gtk_callback_destroy() is called.
-  auto slot_copy = new SlotSelect(slot);
+  SlotSelect* slot_copy = new SlotSelect(slot);
 
   gtk_tree_selection_set_select_function(gobj(),
       &SignalProxy_Select_gtk_callback, slot_copy,
@@ -110,20 +110,20 @@ void TreeSelection::set_select_function(const SlotSelect& slot)
 
 Glib::RefPtr<TreeModel> TreeSelection::get_model()
 {
-  const auto tree_view = gtk_tree_selection_get_tree_view(gobj());
+  GtkTreeView *const tree_view = gtk_tree_selection_get_tree_view(gobj());
   return Glib::wrap(gtk_tree_view_get_model(tree_view), true);
 }
 
 Glib::RefPtr<const TreeModel> TreeSelection::get_model() const
 {
-  const auto tree_view = gtk_tree_selection_get_tree_view(const_cast<GtkTreeSelection*>(gobj()));
+  GtkTreeView *const tree_view = gtk_tree_selection_get_tree_view(const_cast<GtkTreeSelection*>(gobj()));
   return Glib::wrap(gtk_tree_view_get_model(tree_view), true);
 }
 
 TreeModel::iterator TreeSelection::get_selected()
 {
   TreeModel::iterator iter;
-  GtkTreeModel* model_gobject = nullptr;
+  GtkTreeModel* model_gobject = 0;
 
   gtk_tree_selection_get_selected(gobj(), &model_gobject, iter.gobj());
 
@@ -134,7 +134,7 @@ TreeModel::iterator TreeSelection::get_selected()
 TreeModel::iterator TreeSelection::get_selected(Glib::RefPtr<TreeModel>& model)
 {
   TreeModel::iterator iter;
-  GtkTreeModel* model_gobject = nullptr;
+  GtkTreeModel* model_gobject = 0;
 
   gtk_tree_selection_get_selected(gobj(), &model_gobject, iter.gobj());
 
@@ -165,12 +165,12 @@ void TreeSelection::selected_foreach(const SlotForeachPathAndIter& slot) const
 std::vector<TreeModel::Path> TreeSelection::get_selected_rows() const
 {
   return Glib::ListHandler<TreeModel::Path, TreePathTraits>::list_to_vector(gtk_tree_selection_get_selected_rows(
-      const_cast<GtkTreeSelection*>(gobj()), nullptr), Glib::OWNERSHIP_DEEP);
+      const_cast<GtkTreeSelection*>(gobj()), 0), Glib::OWNERSHIP_DEEP);
 }
 
 std::vector<TreeModel::Path> TreeSelection::get_selected_rows(Glib::RefPtr<TreeModel>& model)
 {
-  GtkTreeModel* model_gobject = nullptr;
+  GtkTreeModel* model_gobject = 0;
 
   const std::vector<TreeModel::Path> result (Glib::ListHandler<TreeModel::Path, TreePathTraits>::list_to_vector(gtk_tree_selection_get_selected_rows(
       const_cast<GtkTreeSelection*>(gobj()), &model_gobject), Glib::OWNERSHIP_DEEP));

@@ -45,10 +45,7 @@ class ColorChooser : public Glib::Interface
   _CLASS_INTERFACE(ColorChooser, GtkColorChooser, GTK_COLOR_CHOOSER, GtkColorChooserInterface)
 
 public:
-  /** Gets the currently selected color.
-   * @return The currently selected color.
-   * @newin{3,4}
-   */
+  //TODO: Documentation.
   Gdk::RGBA get_rgba() const;
   _IGNORE(gtk_color_chooser_get_rgba)
 
